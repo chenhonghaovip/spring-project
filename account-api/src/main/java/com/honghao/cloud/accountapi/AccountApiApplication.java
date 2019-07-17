@@ -1,19 +1,17 @@
-package com.honghao.cloud.eurekaserver;
+package com.honghao.cloud.accountapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
 /**
  * @author chenhonghao
  * @date 2019-7-17
  */
 @SpringBootApplication
-@EnableEurekaServer
-public class EurekaServerApplication {
+public class AccountApiApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(EurekaServerApplication.class, args);
+        SpringApplication.run(AccountApiApplication.class, args);
     }
 
 }

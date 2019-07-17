@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.honghao.cloud</groupId>
-    <artifactId>dispatch-api</artifactId>
+    <artifactId>account-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>dispatch-api</name>
-    <description>调度服务</description>
+    <name>account-api</name>
+    <description>账户服务接口</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -26,6 +26,10 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
@@ -36,14 +40,6 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
         </dependency>
 
         <dependency>
@@ -104,13 +100,8 @@
             <artifactId>spring-cloud-starter-feign</artifactId>
             <version>1.4.5.RELEASE</version>
         </dependency>
-        <!--添加dozer依赖,对象间属性复制-->
-        <dependency>
-            <groupId>net.sf.dozer</groupId>
-            <artifactId>dozer</artifactId>
-            <version>5.5.1</version>
-        </dependency>
     </dependencies>
+
 
     <dependencyManagement>
         <dependencies>
