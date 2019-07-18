@@ -7,8 +7,8 @@ import com.honghao.cloud.userapi.dto.common.TokenInfoDTO;
 import com.honghao.cloud.userapi.dto.request.Operator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.messaging.handler.HandlerMethod;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +49,8 @@ public class UserInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (handler instanceof Method){
+        log.info("类型为：{}",handler.getClass());
+        if (handler instanceof HandlerMethod){
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
 
@@ -65,6 +66,7 @@ public class UserInterceptor implements HandlerInterceptor {
             }
             Operator operator = Operator.builder().agentNo("111111").build();
             UserInfoHolder.setOperator(operator);
+            return true;
         }
         return false;
     }
