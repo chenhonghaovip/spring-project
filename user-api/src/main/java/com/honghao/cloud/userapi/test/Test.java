@@ -1,15 +1,14 @@
 package com.honghao.cloud.userapi.test;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author chenhonghao
  * @date 2019-07-17 09:23
  */
+@Slf4j
 public class Test {
-        private static Logger logger= LoggerFactory.getLogger(Test.class);
     public static void main(String[] args) {
-            logger.info("");
+        log.info("");
     }
 }
