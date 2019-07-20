@@ -21,7 +21,7 @@ public class MessageSender {
 	 * 用户信息推送队列
 	 * @param message 请求报文
 	 */
-	public void pushInfoToUser(String message){
+	public void pushInfoUser(String message){
 		rabbitTemplate.convertAndSend(RabbitConfig.USER_PUSH_QUEUE,message);
 	}
 	/**
