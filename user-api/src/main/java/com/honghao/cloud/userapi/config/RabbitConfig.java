@@ -1,5 +1,6 @@
 package com.honghao.cloud.userapi.config;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
@@ -100,7 +101,7 @@ public class RabbitConfig {
      * @return queue
      */
     @Bean
-    public Queue delayQueue(){
+    public Queue delayTenQueue(){
         Map<String, Object> arguments = new HashMap<>(16);
         arguments.put("x-dead-letter-exchange", "");
         arguments.put("x-dead-letter-routing-key", DELAY_TEN_MIN);
