@@ -7,4 +7,9 @@ package com.honghao.cloud.userapi.facade;
  * @date 2019-07-18 17:27
  */
 public interface WaybillBcListFacade {
+    /**
+     *
+     * @return
+     */
+    Boolean createUser();
 }
