@@ -6,7 +6,6 @@ import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
  * @author CHH
  */
 public interface WaybillBcListMapper {
-    int deleteByPrimaryKey(String wId);
 
     int insert(WaybillBcList record);
 
@@ -16,5 +15,4 @@ public interface WaybillBcListMapper {
 
     int updateByPrimaryKeySelective(WaybillBcList record);
 
-    int updateByPrimaryKey(WaybillBcList record);
 }

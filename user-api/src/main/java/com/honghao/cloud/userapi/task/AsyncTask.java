@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.Task;
+package com.honghao.cloud.userapi.task;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;

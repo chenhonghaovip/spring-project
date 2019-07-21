@@ -61,10 +61,6 @@
     from waybill_bc_list
     where w_id = #{wId,jdbcType=CHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from waybill_bc_list
-    where w_id = #{wId,jdbcType=CHAR}
-  </delete>
   <insert id="insert" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillBcList">
     insert into waybill_bc_list (w_id, batch_id, user_id, 
       ship_id, send_name, send_phone, 
@@ -492,52 +488,6 @@
         delete_flag = #{deleteFlag,jdbcType=TINYINT},
       </if>
     </set>
-    where w_id = #{wId,jdbcType=CHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillBcList">
-    update waybill_bc_list
-    set batch_id = #{batchId,jdbcType=CHAR},
-      user_id = #{userId,jdbcType=CHAR},
-      ship_id = #{shipId,jdbcType=VARCHAR},
-      send_name = #{sendName,jdbcType=VARCHAR},
-      send_phone = #{sendPhone,jdbcType=VARCHAR},
-      send_province = #{sendProvince,jdbcType=VARCHAR},
-      send_city = #{sendCity,jdbcType=VARCHAR},
-      send_county = #{sendCounty,jdbcType=VARCHAR},
-      send_adcode = #{sendAdcode,jdbcType=CHAR},
-      send_address = #{sendAddress,jdbcType=VARCHAR},
-      send_longitude = #{sendLongitude,jdbcType=DECIMAL},
-      send_latitude = #{sendLatitude,jdbcType=DECIMAL},
-      receive_name = #{receiveName,jdbcType=VARCHAR},
-      receive_phone = #{receivePhone,jdbcType=VARCHAR},
-      receive_province = #{receiveProvince,jdbcType=VARCHAR},
-      receive_county = #{receiveCounty,jdbcType=VARCHAR},
-      receive_city = #{receiveCity,jdbcType=VARCHAR},
-      receive_adcode = #{receiveAdcode,jdbcType=CHAR},
-      receive_address = #{receiveAddress,jdbcType=VARCHAR},
-      receive_longitude = #{receiveLongitude,jdbcType=DECIMAL},
-      receive_latitude = #{receiveLatitude,jdbcType=DECIMAL},
-      is_timely = #{isTimely,jdbcType=TINYINT},
-      et_start_time = #{etStartTime,jdbcType=TIMESTAMP},
-      et_arrive_time = #{etArriveTime,jdbcType=TIMESTAMP},
-      cargo_weight = #{cargoWeight,jdbcType=DECIMAL},
-      cargo_type = #{cargoType,jdbcType=VARCHAR},
-      order_status = #{orderStatus,jdbcType=TINYINT},
-      order_payment = #{orderPayment,jdbcType=TINYINT},
-      order_pay_status = #{orderPayStatus,jdbcType=TINYINT},
-      delivery_fee = #{deliveryFee,jdbcType=DECIMAL},
-      total_prices = #{totalPrices,jdbcType=DECIMAL},
-      order_remark = #{orderRemark,jdbcType=VARCHAR},
-      order_source = #{orderSource,jdbcType=TINYINT},
-      order_type = #{orderType,jdbcType=TINYINT},
-      single_way = #{singleWay,jdbcType=TINYINT},
-      delivery_mode = #{deliveryMode,jdbcType=TINYINT},
-      order_time = #{orderTime,jdbcType=TIMESTAMP},
-      create_date = #{createDate,jdbcType=DATE},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_by = #{updateBy,jdbcType=CHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      delete_flag = #{deleteFlag,jdbcType=TINYINT}
     where w_id = #{wId,jdbcType=CHAR}
   </update>
 </mapper>
