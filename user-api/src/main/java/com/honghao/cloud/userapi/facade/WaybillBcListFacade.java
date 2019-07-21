@@ -8,8 +8,9 @@ package com.honghao.cloud.userapi.facade;
  */
 public interface WaybillBcListFacade {
     /**
-     *
-     * @return
+     * 创建用户
+     * @param data data
+     * @return Boolean
      */
-    Boolean createUser();
+    Boolean createUser(String data);
 }
