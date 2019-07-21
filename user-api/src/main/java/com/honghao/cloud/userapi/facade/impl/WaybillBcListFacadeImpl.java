@@ -1,7 +1,10 @@
 package com.honghao.cloud.userapi.facade.impl;
 
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
+import com.honghao.cloud.userapi.service.WaybillBcListService;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
  * 订单操作实现类
@@ -11,4 +14,12 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
+    @Resource
+    private WaybillBcListService waybillBcListService;
+
+
+    @Override
+    public Boolean createUser() {
+        return null;
+    }
 }
