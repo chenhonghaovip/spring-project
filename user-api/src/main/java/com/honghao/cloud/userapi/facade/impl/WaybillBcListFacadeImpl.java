@@ -8,6 +8,7 @@ import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;
 import com.honghao.cloud.userapi.service.WaybillBcListService;
 import com.honghao.cloud.userapi.task.AsyncTask;
 import com.honghao.cloud.userapi.utils.JedisOperator;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,7 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
     private JedisOperator jedisOperator;
 
     @Override
+    @HystrixCommand(fallbackMethod = "createUserFallback")
     public Boolean createUser(String data) {
         JSONObject jsonObject1=JSONObject.parseObject(data);
         String batchId=jsonObject1.getString("batchId");
