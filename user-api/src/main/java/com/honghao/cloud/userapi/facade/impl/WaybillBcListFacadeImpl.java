@@ -1,5 +1,6 @@
 package com.honghao.cloud.userapi.facade.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.userapi.dto.request.EventDTO;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import com.honghao.cloud.userapi.listener.event.EventDemo;
@@ -44,14 +45,14 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
 //        log.info("start create user ,requestParam:{}",data);
 //        String agentNo = UserInfoHolder.getOperator().getAgentNo();
 //        messageSender.pushInfoUser("userinfo");
-//        JSONObject jsonObject=new JSONObject();
-//        jsonObject.put("value","chenwenliang");
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("value","chenwenliang");
 //        messageSender.delayDoAction(jsonObject);
 //        jedisOperator.set(DICTIONARY+batchId,batchId);
 //        asyncTask.sendInfo();
 //        WaybillBcList waybillBcList=new WaybillBcList();
 //        waybillBcListService.createUser(waybillBcList);
-
+        messageSender.sendMessage(jsonObject);
         EventDTO eventDTO= EventDTO.builder().code(Integer.valueOf(1))
                 .desc("chenhonghao").build();
 

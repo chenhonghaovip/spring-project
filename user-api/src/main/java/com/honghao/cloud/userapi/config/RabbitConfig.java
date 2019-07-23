@@ -2,6 +2,9 @@ package com.honghao.cloud.userapi.config;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -41,7 +44,20 @@ public class RabbitConfig {
      * 10分钟复活
      */
     public static final String DELAY_TEN_MIN = "delay_ten_min";
+    /** 短信发送队列 */
+    public static final String QUEUE_MSG_SMS_SEND = "msg:sms:send";
 
+    /** 短信发送队列 DLX */
+    public static final String DLX_MSG_SMS_SEND = "msg:sms:send:dlx";
+    /** 短信发送队列 DLX */
+    public static final String DLX_MSG_SMS_SEND1 = "msg:sms:send:dlx1";
+
+    /** 短信发送队列 延迟缓冲（按消息） */
+    public static final String QUEUE_DELAY_PER_MESSAGE_TTL_MSG_SMS_SEND = "delay:per:message:msg:sms:send";
+    /** 短信发送队列 */
+    public static final String QUEUE_MSG_SMS_SEND_NAME = "msg:sms:send:name";
+    /** 短信发送队列 */
+    public static final String QUEUE_MSG_SMS_SEND_NAME1 = "msg:sms:send:name1";
     /**
      * 默认的线程数
      */
@@ -85,6 +101,51 @@ public class RabbitConfig {
         factory.setConcurrentConsumers(DEFAULT_CONCURRENT);
         configurer.configure(factory, connectionFactory);
         return factory;
+    }
+
+    /**
+     * 短信发送队列
+     * @return
+     */
+    @Bean
+    public Queue smsQueue() {
+        return new Queue(QUEUE_MSG_SMS_SEND, true);
+    }
+
+    /**
+     * 短信发送队列
+     * @return
+     */
+    @Bean
+    public Queue smsQueueDelayPerMessageTTL() {
+        Map<String, Object> arguments = new HashMap<>(16);
+        arguments.put("x-dead-letter-exchange", DLX_MSG_SMS_SEND);
+        arguments.put("x-dead-letter-routing-key", QUEUE_MSG_SMS_SEND_NAME);
+        return new Queue(QUEUE_DELAY_PER_MESSAGE_TTL_MSG_SMS_SEND,true,false,false,arguments);
+    }
+
+    @Bean
+    public DirectExchange smsDelayExchange(){
+        return new DirectExchange(DLX_MSG_SMS_SEND);
+    }
+
+    @Bean
+    public DirectExchange smsDelayExchange1(){
+        return new DirectExchange(DLX_MSG_SMS_SEND1);
+    }
+
+    @Bean
+    public Binding smsDelayBinding() {
+        return BindingBuilder.bind(smsQueue())
+                .to(smsDelayExchange())
+                .with(QUEUE_MSG_SMS_SEND_NAME);
+    }
+
+    @Bean
+    public Binding smsDelayBinding1() {
+        return BindingBuilder.bind(smsQueueDelayPerMessageTTL())
+                .to(smsDelayExchange1())
+                .with(QUEUE_MSG_SMS_SEND_NAME1);
     }
 
     /**
