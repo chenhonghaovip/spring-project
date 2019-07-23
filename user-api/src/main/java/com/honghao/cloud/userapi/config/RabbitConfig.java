@@ -2,12 +2,13 @@ package com.honghao.cloud.userapi.config;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +62,30 @@ public class RabbitConfig {
      */
     public static final String PUSH_TO_ORDER_QUEUE_FAIL = "push_to_order_queue_fail";
     /**
+     * 延迟队列 TTL 名称
+     * todo
+     */
+    private static final String REGISTER_DELAY_QUEUE = "dev.book.register.delay.queue";
+    private static final String DELAY_PROCESS_QUEUE_NAME = "delay_process_queue_name";
+    /**
+     * DLX，dead letter发送到的 exchange
+     */
+    public static final String DELAY_EXCHANGE_NAME = "delay_exchange_name";
+
+    /**
+     * TTL，延迟发送到的 exchange
+     */
+    public static final String QUEUE_TTL_EXCHANGE_NAME = "queue_ttl_exchange_name";
+    /**
+     * routing key 名称
+     * TODO 此处的 routingKey 很重要要,具体消息发送在该 routingKey 的
+     */
+    public static final String DELAY_ROUTING_KEY = "";
+    public static final String DELAY_ROUTING_UNIQUE_KEY = "unique";
+    public static final String ROUTING_KEY = "all";
+
+
+    /**
      * 默认的线程数
      */
     private static final int DEFAULT_CONCURRENT = 5;
@@ -104,20 +129,86 @@ public class RabbitConfig {
         configurer.configure(factory, connectionFactory);
         return factory;
     }
-
-    @Bean(name = "rabbitAdmin")
-    @Primary
-    public RabbitAdmin rabbitAdmin(@Qualifier("connectionFactory") ConnectionFactory connectionFactory) {
-        return new RabbitAdmin(connectionFactory);
+    /**
+     * 实际消费队列
+     * @return
+     */
+    @Bean
+    public Queue delayQueue() {
+        return new Queue(RabbitConfig.DELAY_PROCESS_QUEUE_NAME,true,false,false);
+    }
+    /**
+     * 延迟队列配置,超时时间不一致
+     * @return Queue
+     */
+    @Bean
+    public Queue delayProcessQueue() {
+        Map<String, Object> params = new HashMap<>(8);
+        // x-dead-letter-exchange 声明了队列里的死信转发到的DLX名称，
+        params.put("x-dead-letter-exchange", QUEUE_TTL_EXCHANGE_NAME);
+        // x-dead-letter-routing-key 声明了这些死信在转发时携带的 routing-key 名称。
+        params.put("x-dead-letter-routing-key", ROUTING_KEY);
+        return new Queue(REGISTER_DELAY_QUEUE, true, false, false, params);
+    }
+    /**
+     * 延迟队列配置,超时时间一致
+     * @return Queue
+     */
+    @Bean
+    public Queue delayProcessQueueUnique() {
+        Map<String, Object> params = new HashMap<>(8);
+        // x-dead-letter-exchange 声明了队列里的死信转发到的DLX名称，
+        params.put("x-dead-letter-exchange", QUEUE_TTL_EXCHANGE_NAME);
+        // x-dead-letter-routing-key 声明了这些死信在转发时携带的 routing-key 名称。
+        params.put("x-dead-letter-routing-key", ROUTING_KEY);
+        params.put("x-message-ttl", 5000);
+        return new Queue(REGISTER_DELAY_QUEUE, true, false, false, params);
     }
 
+    /**
+     * 死信交换机配置
+     * @return DirectExchange
+     */
     @Bean
-    public DirectExchange directExchange(@Qualifier("rabbitAdmin") RabbitAdmin rabbitAdmin) {
-        DirectExchange directExchange = new DirectExchange(PAY_DIRECT_EXCHANGE);
-//        directExchange.setAdminsThatShouldDeclare(rabbitAdmin);
+    public DirectExchange delayExchange() {
+        return new DirectExchange(RabbitConfig.DELAY_EXCHANGE_NAME);
+    }
+    /**
+     * 延迟交换机
+     * @return
+     */
+    @Bean
+    public DirectExchange  perQueueTTLExchange(){
+        DirectExchange directExchange = new DirectExchange(QUEUE_TTL_EXCHANGE_NAME,true,false);
         return directExchange;
     }
 
+    /**
+     * 绑定死信队列
+     * @return Binding
+     */
+    @Bean
+    public Binding dlxBinding() {
+        return BindingBuilder.bind(delayQueue()).to(delayExchange()).with(ROUTING_KEY);
+    }
+
+    /**
+     * 绑定延迟队列之延时相同
+     * @return Binding
+     */
+    @Bean
+    public Binding queueTTLBinding() {
+        return BindingBuilder.bind(delayProcessQueue()).to(perQueueTTLExchange()).with(RabbitConfig.DELAY_ROUTING_KEY);
+    }
+
+    /**
+     * 绑定延迟队列之延时不同
+     * @return Binding
+     */
+    @Bean
+    public Binding queueTTLBinding2() {
+        return BindingBuilder.bind(delayProcessQueueUnique()).to(perQueueTTLExchange()).with(RabbitConfig.DELAY_ROUTING_UNIQUE_KEY);
+    }
 
     /**
      * 用户信息推送队列
@@ -165,7 +256,6 @@ public class RabbitConfig {
     public Queue pushOrderQueueRetry(){
         Map<String, Object> map = new HashMap<>(8);
         //失败后重新将消息路由到具体exchange上
-//        map.put("x-dead-letter-exchange", PAY_DIRECT_EXCHANGE);
         map.put("x-dead-letter-exchange", "");
         //失败后重新将消息路由到具体routeKey上
         map.put("x-dead-letter-routing-key", PUSH_TO_ORDER_QUEUE);
