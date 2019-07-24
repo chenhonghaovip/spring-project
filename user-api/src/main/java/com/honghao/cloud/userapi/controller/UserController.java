@@ -1,6 +1,5 @@
 package com.honghao.cloud.userapi.controller;
 
-import com.honghao.cloud.userapi.aspect.Auth;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import io.swagger.annotations.Api;
@@ -27,7 +26,7 @@ public class UserController {
     @Resource
     private WaybillBcListFacade waybillBcListFacade;
 
-    @Auth
+//    @Auth
     @PostMapping("/create")
     @ApiOperation(value = "创建用户",notes = "创建用户")
     BaseResponse<Boolean> createUser(@RequestBody String data) {
