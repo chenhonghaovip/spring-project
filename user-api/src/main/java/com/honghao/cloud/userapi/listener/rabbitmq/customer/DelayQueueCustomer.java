@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RabbitListener(queues = RabbitConfig.DELAY_TEN_MIN,containerFactory = "factory")
-public class DelayQueue {
+public class DelayQueueCustomer {
     /**
      * 延迟消费队列信息
      * @param jsonObject json字符串
