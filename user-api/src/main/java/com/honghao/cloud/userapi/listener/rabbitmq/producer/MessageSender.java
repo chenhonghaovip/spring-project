@@ -1,6 +1,7 @@
 package com.honghao.cloud.userapi.listener.rabbitmq.producer;
 
 import com.honghao.cloud.userapi.config.RabbitConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 /**
  * @author CHH
  */
+@Slf4j
 @Component
 public class MessageSender {
 	@Autowired
@@ -34,5 +36,23 @@ public class MessageSender {
 			return message;
 		};
 		rabbitTemplate.convertAndSend(RabbitConfig.DELAY_TEN_MIN_DEATH, content, messagePostProcessor);
+	}
+
+	public void sendMessage(Object content) {
+		log.info("开始短信消息发送");
+		MessagePostProcessor messagePostProcessor = message -> {
+			message.getMessageProperties().setExpiration(String.valueOf(60*1000));
+			return message;
+		};
+		rabbitTemplate.convertAndSend(RabbitConfig.QUEUE_DELAY_PER_MESSAGE_TTL_MSG_SMS_SEND, content, messagePostProcessor);
+	}
+
+	public void sendMessage1(Object content) {
+		log.info("转到等待队列");
+		MessagePostProcessor messagePostProcessor = message -> {
+			message.getMessageProperties().setExpiration(String.valueOf(60*1000));
+			return message;
+		};
+		rabbitTemplate.convertAndSend(RabbitConfig.QUEUE_DELAY_PER_MESSAGE_TTL_MSG_SMS_SEND, content, messagePostProcessor);
 	}
 }
