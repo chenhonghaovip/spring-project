@@ -1,6 +1,7 @@
 package com.honghao.cloud.userapi.facade.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.dto.request.EventDTO;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import com.honghao.cloud.userapi.interceptor.UserInfoHolder;
@@ -10,7 +11,6 @@ import com.honghao.cloud.userapi.service.WaybillBcListService;
 import com.honghao.cloud.userapi.task.AsyncTask;
 import com.honghao.cloud.userapi.utils.JedisOperator;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.cache.annotation.CacheResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,6 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
     private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
-    @CacheResult
     @HystrixCommand(fallbackMethod = "createUserFallback")
     public Boolean createUser(String data) {
         JSONObject jsonObject1=JSONObject.parseObject(data);
@@ -53,8 +52,8 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
 
         jedisOperator.set(DICTIONARY+batchId,batchId);
         asyncTask.sendInfo();
-//        WaybillBcList waybillBcList=new WaybillBcList();
-//        waybillBcListService.createUser(waybillBcList);
+        WaybillBcList waybillBcList=new WaybillBcList();
+        waybillBcListService.createUser(waybillBcList);
         messageSender.sendMessage(jsonObject);
         EventDTO eventDTO= EventDTO.builder().code(Integer.valueOf(1))
                 .desc("chenhonghao").build();
@@ -64,10 +63,8 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
         return null;
     }
 
-    public Boolean createUserFallback(String data,Throwable e){
-        if (e instanceof RuntimeException){
-            log.info("运行时服务异常");
-        }
+    public Boolean createUserFallback(String data){
+
         log.info("服务熔断，返回默认值！");
         return false;
     }
