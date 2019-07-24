@@ -27,8 +27,10 @@ public class SendMessage {
             log.info("发送短信");
             throw new RuntimeException("yichang");
         }catch (Exception e){
-            messageSender.sendMessage(jsonObject);
+//            messageSender.sendMessage(jsonObject);
+            log.info("消息队列发送操作异常");
         }
+
 
     }
 }
