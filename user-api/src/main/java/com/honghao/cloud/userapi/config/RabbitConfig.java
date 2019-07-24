@@ -45,23 +45,14 @@ public class RabbitConfig {
      */
     public static final String DELAY_TEN_MIN = "delay_ten_min";
     /** 短信发送队列 */
-    public static final String QUEUE_MSG_SMS_SEND = "msg:sms:send";
-
-    /** 短信发送队列 DLX */
-    public static final String DLX_MSG_SMS_SEND = "msg:sms:send:dlx";
-    /** 短信发送队列 DLX */
-    public static final String DLX_MSG_SMS_SEND1 = "msg:sms:send:dlx1";
-
+    public static final String QUEUE_MSG_SMS_SEND = "queue_msg_sms_send";
     /** 短信发送队列 延迟缓冲（按消息） */
-    public static final String QUEUE_DELAY_PER_MESSAGE_TTL_MSG_SMS_SEND = "delay:per:message:msg:sms:send";
-    /** 短信发送队列 */
-    public static final String QUEUE_MSG_SMS_SEND_NAME = "msg:sms:send:name";
-    /** 短信发送队列 */
-    public static final String QUEUE_MSG_SMS_SEND_NAME1 = "msg:sms:send:name1";
-    /**
-     * 支付系统的mq交换机
-     */
-    public static final String PAY_DIRECT_EXCHANGE = "pay_direct_exchange";
+    public static final String QUEUE_MSG_SMS_SEND_TTL = "queue_msg_sms_send_ttl";
+    /** 短信发送队列交换机*/
+    public static final String QUEUE_MSG_SMS_SEND_EXCHANGE = "queue_msg_sms_send_exchange";
+    /** 短信发送队列 routing-key*/
+    public static final String QUEUE_MSG_SMS_SEND_NAME = "queue_msg_sms_send_name";
+
     /**
      * 推送订单系统两分钟延迟队列
      */
@@ -74,29 +65,11 @@ public class RabbitConfig {
      * 推送订单系统失败队列
      */
     public static final String PUSH_TO_ORDER_QUEUE_FAIL = "push_to_order_queue_fail";
+
     /**
-     * 延迟队列 TTL 名称
-     * todo
+     * 消费队列
      */
-    private static final String REGISTER_DELAY_QUEUE = "dev.book.register.delay.queue";
     private static final String DELAY_PROCESS_QUEUE_NAME = "delay_process_queue_name";
-    /**
-     * DLX，dead letter发送到的 exchange
-     */
-    public static final String DELAY_EXCHANGE_NAME = "delay_exchange_name";
-
-    /**
-     * TTL，延迟发送到的 exchange
-     */
-    public static final String QUEUE_TTL_EXCHANGE_NAME = "queue_ttl_exchange_name";
-    /**
-     * routing key 名称
-     * TODO 此处的 routingKey 很重要要,具体消息发送在该 routingKey 的
-     */
-    public static final String DELAY_ROUTING_KEY = "";
-    public static final String DELAY_ROUTING_UNIQUE_KEY = "unique";
-    public static final String ROUTING_KEY = "all";
-
 
     /**
      * 默认的线程数
@@ -150,78 +123,6 @@ public class RabbitConfig {
     public Queue delayQueue() {
         return new Queue(RabbitConfig.DELAY_PROCESS_QUEUE_NAME,true,false,false);
     }
-    /**
-     * 延迟队列配置,超时时间不一致
-     * @return Queue
-     */
-    @Bean
-    public Queue delayProcessQueue() {
-        Map<String, Object> params = new HashMap<>(8);
-        // x-dead-letter-exchange 声明了队列里的死信转发到的DLX名称，
-        params.put("x-dead-letter-exchange", QUEUE_TTL_EXCHANGE_NAME);
-        // x-dead-letter-routing-key 声明了这些死信在转发时携带的 routing-key 名称。
-        params.put("x-dead-letter-routing-key", ROUTING_KEY);
-        return new Queue(REGISTER_DELAY_QUEUE, true, false, false, params);
-    }
-    /**
-     * 延迟队列配置,超时时间一致
-     * @return Queue
-     */
-    @Bean
-    public Queue delayProcessQueueUnique() {
-        Map<String, Object> params = new HashMap<>(8);
-        // x-dead-letter-exchange 声明了队列里的死信转发到的DLX名称，
-        params.put("x-dead-letter-exchange", QUEUE_TTL_EXCHANGE_NAME);
-        // x-dead-letter-routing-key 声明了这些死信在转发时携带的 routing-key 名称。
-        params.put("x-dead-letter-routing-key", ROUTING_KEY);
-        params.put("x-message-ttl", 5000);
-        return new Queue(REGISTER_DELAY_QUEUE, true, false, false, params);
-    }
-
-    /**
-     * 死信交换机配置
-     * @return DirectExchange
-     */
-    @Bean
-    public DirectExchange delayExchange() {
-        return new DirectExchange(RabbitConfig.DELAY_EXCHANGE_NAME);
-    }
-    /**
-     * 延迟交换机
-     * @return
-     */
-    @Bean
-    public DirectExchange  perQueueTTLExchange(){
-        DirectExchange directExchange = new DirectExchange(QUEUE_TTL_EXCHANGE_NAME,true,false);
-        return directExchange;
-    }
-
-    /**
-     * 绑定死信队列
-     * @return Binding
-     */
-    @Bean
-    public Binding dlxBinding() {
-        return BindingBuilder.bind(delayQueue()).to(delayExchange()).with(ROUTING_KEY);
-    }
-
-    /**
-     * 绑定延迟队列之延时相同
-     * @return Binding
-     */
-    @Bean
-    public Binding queueTTLBinding() {
-        return BindingBuilder.bind(delayProcessQueue()).to(perQueueTTLExchange()).with(RabbitConfig.DELAY_ROUTING_KEY);
-    }
-
-    /**
-     * 绑定延迟队列之延时不同
-     * @return Binding
-     */
-    @Bean
-    public Binding queueTTLBinding2() {
-        return BindingBuilder.bind(delayProcessQueueUnique()).to(perQueueTTLExchange()).with(RabbitConfig.DELAY_ROUTING_UNIQUE_KEY);
-    }
 
     /**
      * 短信发送队列
@@ -233,39 +134,31 @@ public class RabbitConfig {
     }
 
     /**
-     * 短信发送队列
+     * 短信发送队列延时
      * @return
      */
     @Bean
     public Queue smsQueueDelayPerMessageTTL() {
         Map<String, Object> arguments = new HashMap<>(16);
-        arguments.put("x-dead-letter-exchange", DLX_MSG_SMS_SEND);
+        arguments.put("x-dead-letter-exchange", QUEUE_MSG_SMS_SEND_EXCHANGE);
         arguments.put("x-dead-letter-routing-key", QUEUE_MSG_SMS_SEND_NAME);
-        return new Queue(QUEUE_DELAY_PER_MESSAGE_TTL_MSG_SMS_SEND,true,false,false,arguments);
+        return new Queue(QUEUE_MSG_SMS_SEND_TTL,true,false,false,arguments);
     }
 
     @Bean
     public DirectExchange smsDelayExchange(){
-        return new DirectExchange(DLX_MSG_SMS_SEND);
+        return new DirectExchange(QUEUE_MSG_SMS_SEND_EXCHANGE);
     }
 
-    @Bean
-    public DirectExchange smsDelayExchange1(){
-        return new DirectExchange(DLX_MSG_SMS_SEND1);
-    }
-
+    /**
+     * 绑定队列到指定的
+     * @return
+     */
     @Bean
     public Binding smsDelayBinding() {
         return BindingBuilder.bind(smsQueue())
                 .to(smsDelayExchange())
                 .with(QUEUE_MSG_SMS_SEND_NAME);
-    }
-
-    @Bean
-    public Binding smsDelayBinding1() {
-        return BindingBuilder.bind(smsQueueDelayPerMessageTTL())
-                .to(smsDelayExchange1())
-                .with(QUEUE_MSG_SMS_SEND_NAME1);
     }
 
     /**
@@ -319,7 +212,7 @@ public class RabbitConfig {
         map.put("x-dead-letter-routing-key", PUSH_TO_ORDER_QUEUE);
         //消息延迟时间
         map.put("x-message-ttl", 5000);
-        return new Queue(PUSH_TO_ORDER_QUEUE_RETRY);
+        return new Queue(PUSH_TO_ORDER_QUEUE_RETRY, true, false, false, map);
     }
     /**
      * 三次失败后转入失败队列

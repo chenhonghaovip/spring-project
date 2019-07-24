@@ -44,15 +44,6 @@ public class MessageSender {
 			message.getMessageProperties().setExpiration(String.valueOf(60*1000));
 			return message;
 		};
-		rabbitTemplate.convertAndSend(RabbitConfig.QUEUE_DELAY_PER_MESSAGE_TTL_MSG_SMS_SEND, content, messagePostProcessor);
-	}
-
-	public void sendMessage1(Object content) {
-		log.info("转到等待队列");
-		MessagePostProcessor messagePostProcessor = message -> {
-			message.getMessageProperties().setExpiration(String.valueOf(60*1000));
-			return message;
-		};
-		rabbitTemplate.convertAndSend(RabbitConfig.QUEUE_DELAY_PER_MESSAGE_TTL_MSG_SMS_SEND, content, messagePostProcessor);
+		rabbitTemplate.convertAndSend(RabbitConfig.QUEUE_MSG_SMS_SEND_TTL, content, messagePostProcessor);
 	}
 }
