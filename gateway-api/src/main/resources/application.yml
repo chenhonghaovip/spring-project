@@ -1,0 +1,40 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: gateway-api
+  cloud:
+    gateway:
+      routes:
+        - predicates:
+            - Path=/user-api/**
+          filters:
+            - StripPrefix=1
+          uri: lb://user-api
+          id: user-api
+
+        - predicates:
+            - Path=/account-api/**
+          filters:
+            - StripPrefix=1
+          uri: lb://account-api
+          id: account-api
+
+        - predicates:
+            - Path=/order-api/**
+          filters:
+            - StripPrefix=1
+          uri: lb://order-api
+          id: order-api
+
+        - predicates:
+            - Path=/dispatch-api/**
+          filters:
+            - StripPrefix=1
+          uri: lb://dispatch-api
+          id: dispatch-api
+eureka:
+  client:
+    service-url:
+      defaultZone : http://localhost:8079/eureka/

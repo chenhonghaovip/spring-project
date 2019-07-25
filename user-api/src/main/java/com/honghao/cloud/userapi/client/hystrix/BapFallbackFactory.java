@@ -14,6 +14,6 @@ import org.springframework.stereotype.Component;
 public class BapFallbackFactory implements FallbackFactory<BapClient> {
     @Override
     public BapClient create(Throwable throwable) {
-        return () -> null;
+        return () -> "";
     }
 }
