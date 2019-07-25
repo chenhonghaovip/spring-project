@@ -50,7 +50,7 @@ public class RabbitConfig {
     public static final String QUEUE_MSG_SMS_SEND_TTL = "queue_msg_sms_send_ttl";
     /** 短信发送队列交换机*/
     public static final String QUEUE_MSG_SMS_SEND_EXCHANGE = "queue_msg_sms_send_exchange";
-    /** 短信发送队列 routing-key*/
+    /** 短信发送队列 通过路由关键字 routing-key*/
     public static final String QUEUE_MSG_SMS_SEND_NAME = "queue_msg_sms_send_name";
 
     /**
