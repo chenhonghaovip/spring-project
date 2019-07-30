@@ -1,7 +1,6 @@
 package com.honghao.cloud.userapi.controller;
 
 import com.honghao.cloud.userapi.base.BaseResponse;
-import com.honghao.cloud.userapi.config.ThreadPoolInitConfig;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.concurrent.Executor;
 
 /**
  * 用户信息controller
@@ -39,10 +37,11 @@ public class UserController {
     @PostMapping("/create1")
     @ApiOperation(value = "测试" ,notes = "测试")
     BaseResponse<String> getUser(@RequestBody String data) {
-        Executor executor= ThreadPoolInitConfig.build("create");
+
 //        ThreadPoolExecutor threadPoolExecutor=new ThreadPoolExecutor(2,10,60, TimeUnit.SECONDS,new LinkedBlockingQueue<>());
 //        ThreadPoolExecutor threadPoolExecutor= ThreadPoolInitConfig.b
-        executor.execute(()-> log.info("1111111"));
+        waybillBcListFacade.createUser1(data);
+
 
         return null;
     }
