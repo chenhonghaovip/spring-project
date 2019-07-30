@@ -12,8 +12,11 @@ import com.honghao.cloud.userapi.listener.event.EventDemo;
 import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;
 import com.honghao.cloud.userapi.service.WaybillBcListService;
 import com.honghao.cloud.userapi.task.AsyncTask;
+import com.honghao.cloud.userapi.utils.DozerUtils;
 import com.honghao.cloud.userapi.utils.JedisOperator;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.extern.slf4j.Slf4j;
+import org.dozer.DozerBeanMapper;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +50,7 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
     private OrderClient orderClient;
 
     @Override
-//    @HystrixCommand(fallbackMethod = "createUserFallback")
+    @HystrixCommand(fallbackMethod = "createUserFallback")
     public Boolean createUser(String data) {
         JSONObject jsonObject1=JSONObject.parseObject(data);
         String batchId=jsonObject1.getString("batchId");
@@ -82,6 +85,8 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
 
     @Override
     public Boolean createUser1(String data) {
+        DozerBeanMapper dozerBeanMapper = DozerUtils.dozerBeanMapper;
+//        dozerBeanMapper.map();
         ThreadPoolExecutor executor= ThreadPoolInitConfig.build("create");
         CompletableFuture<String> future = CompletableFuture.supplyAsync(()->{
             try {
@@ -100,7 +105,8 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
             }
             return "name is honghao";
         },executor);
-        CompletableFuture<Void> voidCompletableFuture = CompletableFuture.allOf(future, future1)
+
+        CompletableFuture.allOf(future, future1)
                 .whenCompleteAsync((aVoid, throwable) -> {
                         String name= null;
                         String xing= null;
@@ -117,6 +123,11 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
         return null;
     }
 
+    /**
+     * 服务降级
+     * @param data data
+     * @return Boolean
+     */
     public Boolean createUserFallback(String data){
         log.info("服务熔断，返回默认值！");
         return false;
