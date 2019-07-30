@@ -1,5 +1,6 @@
 package com.honghao.cloud.orderapi.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.dozer.DozerBeanMapper;
 
 /**
@@ -8,6 +9,18 @@ import org.dozer.DozerBeanMapper;
  * @author chenhonghao
  * @date 2019-07-30 17:31
  */
+@Slf4j
 public class DozerUtils {
-    private static final DozerBeanMapper dozerBeanMapper=new DozerBeanMapper();
+    private static volatile DozerBeanMapper dozerBeanMapper;
+    private DozerUtils(){}
+    public static DozerBeanMapper createDozer(){
+        if (dozerBeanMapper==null){
+            synchronized (dozerBeanMapper){
+                if (dozerBeanMapper==null){
+                    dozerBeanMapper=new DozerBeanMapper();
+                }
+            }
+        }
+        return dozerBeanMapper;
+    }
 }
