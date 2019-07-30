@@ -39,8 +39,10 @@ public class RedisConfig {
 	@Bean(name = "spring.redis.pool.config")
 	public JedisPoolConfig jedisPoolConfig() {
 		JedisPoolConfig config = new JedisPoolConfig();
+		log.info("init redis config...");
 		config.setMaxTotal(maxActive);
 		config.setMaxIdle(maxIdle);
+		//设置获取连接池超时时间
 		config.setMaxWaitMillis(maxWaitMillis);
 		return config;
 	}

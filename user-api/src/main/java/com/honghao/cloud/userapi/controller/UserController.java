@@ -37,6 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/create1")
+    @ApiOperation(value = "测试" ,notes = "测试")
     BaseResponse<String> getUser(@RequestBody String data) {
         Executor executor= ThreadPoolInitConfig.build("create");
 //        ThreadPoolExecutor threadPoolExecutor=new ThreadPoolExecutor(2,10,60, TimeUnit.SECONDS,new LinkedBlockingQueue<>());
