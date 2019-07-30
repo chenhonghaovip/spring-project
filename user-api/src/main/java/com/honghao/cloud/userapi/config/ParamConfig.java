@@ -4,6 +4,8 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+
 /**
  * 参数类配置
  *
@@ -18,4 +20,9 @@ public class ParamConfig {
      * 名字
      */
     private String name;
+
+    @PostConstruct
+    void beforeInfo(){
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    }
 }

@@ -3,6 +3,7 @@ package com.honghao.cloud.userapi.facade.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
+import com.honghao.cloud.userapi.config.ThreadPoolInitConfig;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.dto.request.EventDTO;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
@@ -17,6 +18,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 订单操作实现类
@@ -76,8 +80,44 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
         return null;
     }
 
-    public Boolean createUserFallback(String data){
+    @Override
+    public Boolean createUser1(String data) {
+        ThreadPoolExecutor executor= ThreadPoolInitConfig.build("create");
+        CompletableFuture<String> future = CompletableFuture.supplyAsync(()->{
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return "xing is chen";
+        },executor);
 
+        CompletableFuture<String> future1 = CompletableFuture.supplyAsync(()->{
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return "name is honghao";
+        },executor);
+        CompletableFuture<Void> voidCompletableFuture = CompletableFuture.allOf(future, future1)
+                .whenCompleteAsync((aVoid, throwable) -> {
+                        String name= null;
+                        String xing= null;
+                        try {
+                            name = future1.get();
+                            xing = future.get();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                        System.out.println(name+" and "+xing);
+                },executor);
+        return null;
+    }
+
+    public Boolean createUserFallback(String data){
         log.info("服务熔断，返回默认值！");
         return false;
     }
