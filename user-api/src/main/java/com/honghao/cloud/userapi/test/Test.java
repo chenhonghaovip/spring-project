@@ -13,12 +13,12 @@ public class Test {
     public static void main(String[] args) {
         //数字字符串
         String name="1048576.1024";
-//构造以字符串内容为值的BigDecimal类型的变量bd
+        //构造以字符串内容为值的BigDecimal类型的变量bd
         BigDecimal bd=new BigDecimal(name);
-//设置小数位数，第一个变量是小数位数，第二个变量是取舍方法(四舍五入)
+        //设置小数位数，第一个变量是小数位数，第二个变量是取舍方法(四舍五入)
         bd=bd.setScale(2, BigDecimal.ROUND_HALF_UP);
-//转化为字符串输出
-        String outString=bd.toString();
+        //转化为字符串输出
         System.out.println(bd);
+
     }
 }
