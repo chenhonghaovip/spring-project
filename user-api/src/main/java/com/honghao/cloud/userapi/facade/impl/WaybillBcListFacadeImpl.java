@@ -87,6 +87,7 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
     public Boolean createUser1(String data) {
         DozerBeanMapper dozerBeanMapper = DozerUtils.dozerBeanMapper;
 //        dozerBeanMapper.map();
+        messageSender.testQueue("name is chenhonghao");
         ThreadPoolExecutor executor= ThreadPoolInitConfig.build("create");
         CompletableFuture<String> future = CompletableFuture.supplyAsync(()->{
             try {
@@ -120,7 +121,16 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
                         }
                         System.out.println(name+" and "+xing);
                 },executor);
+        log.info("start time is :{}",System.currentTimeMillis());
         return null;
+    }
+
+    @Override
+    public Boolean createUser2(String data) {
+        if (true){
+            throw new RuntimeException("aaaaaaaaaaa");
+        }
+        return false;
     }
 
     /**

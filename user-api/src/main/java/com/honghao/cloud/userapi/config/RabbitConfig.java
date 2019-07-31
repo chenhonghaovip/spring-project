@@ -34,7 +34,10 @@ public class RabbitConfig {
      * 用户信息推送队列
      */
     public static final String USER_PUSH_QUEUE = "user_push_queue";
-
+    /**
+     * Test测试队列
+     */
+    public static final String TEST_QUEUE = "test_queue";
     /**
      * 延迟10分钟
      */
@@ -221,5 +224,10 @@ public class RabbitConfig {
     @Bean
     public Queue pushOrderQueueFail(){
         return new Queue(PUSH_TO_ORDER_QUEUE_FAIL);
+    }
+
+    @Bean
+    public Queue testQueue(){
+        return new Queue(TEST_QUEUE);
     }
 }
