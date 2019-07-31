@@ -26,7 +26,13 @@ public class UserController {
     @Resource
     private WaybillBcListFacade waybillBcListFacade;
 
-//    @Auth
+    /**
+     * 创建用户
+     * @param data shuju
+     * @return BaseResponse
+     * @Auth
+     */
+
     @PostMapping("/create")
     @ApiOperation(value = "创建用户",notes = "创建用户")
     BaseResponse<Boolean> createUser(@RequestBody String data) {
@@ -34,15 +40,15 @@ public class UserController {
         return BaseResponse.success();
     }
 
+    /**
+     * 创建用户
+     * @param data
+     * @return
+     */
     @PostMapping("/create1")
     @ApiOperation(value = "测试" ,notes = "测试")
     BaseResponse<String> getUser(@RequestBody String data) {
-
-//        ThreadPoolExecutor threadPoolExecutor=new ThreadPoolExecutor(2,10,60, TimeUnit.SECONDS,new LinkedBlockingQueue<>());
-//        ThreadPoolExecutor threadPoolExecutor= ThreadPoolInitConfig.b
         waybillBcListFacade.createUser1(data);
-
-
         return null;
     }
 }

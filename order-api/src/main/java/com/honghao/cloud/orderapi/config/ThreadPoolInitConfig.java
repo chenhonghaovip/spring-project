@@ -16,15 +16,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 @Component
 public class ThreadPoolInitConfig {
-    private static final AtomicInteger atomicInteger=new AtomicInteger(0);
+    private static AtomicInteger atomicInteger=new AtomicInteger(0);
 
     public static ThreadPoolExecutor build(String name){
         String namePrefix = "ThreadPool-" +
                 name + atomicInteger.getAndIncrement();
-        ThreadPoolExecutor threadPoolExecutor=new ThreadPoolExecutor(2,10,60, TimeUnit.SECONDS,new LinkedBlockingQueue<>());
-        threadPoolExecutor.setThreadFactory(r -> {
-            Thread t = new Thread(r,namePrefix);
-            return t;
+        ThreadPoolExecutor threadPoolExecutor=new ThreadPoolExecutor(2, 10, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                return new Thread(r,namePrefix);
+            }
         });
         threadPoolExecutor.allowCoreThreadTimeOut(true);
         return threadPoolExecutor;

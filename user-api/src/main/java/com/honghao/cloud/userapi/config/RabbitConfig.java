@@ -138,7 +138,7 @@ public class RabbitConfig {
 
     /**
      * 短信发送队列延时
-     * @return
+     * @return smsQueueDelayPerMessageTTL
      */
     @Bean
     public Queue smsQueueDelayPerMessageTTL() {

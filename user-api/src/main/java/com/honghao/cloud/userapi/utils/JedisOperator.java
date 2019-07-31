@@ -177,7 +177,7 @@ public class JedisOperator {
 		Map<String, String> hashMap = null;
 		Jedis jedis = null;
 		try {
-			hashMap = new HashMap<>();
+
 			Map<byte[], byte[]> map = null;
 			jedis = getResource();
 			Pipeline pipeline = jedis.pipelined();
@@ -185,6 +185,7 @@ public class JedisOperator {
 			// Response<Map<String, String>> response = pipeline.hgetAll(key);
 			pipeline.sync();
 			map = response.get();
+			hashMap = new HashMap<>(map.size()*2);
 			for (Entry<byte[], byte[]> entry : map.entrySet()) {
 				hashMap.put(new String(entry.getKey()), new String(entry.getValue()));
 			}

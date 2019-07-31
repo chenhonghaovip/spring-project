@@ -85,8 +85,7 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
 
     @Override
     public Boolean createUser1(String data) {
-        DozerBeanMapper dozerBeanMapper = DozerUtils.dozerBeanMapper;
-//        dozerBeanMapper.map();
+        DozerBeanMapper dozerBeanMapper = DozerUtils.createDozer();
         messageSender.testQueue("name is chenhonghao");
         ThreadPoolExecutor executor= ThreadPoolInitConfig.build("create");
         CompletableFuture<String> future = CompletableFuture.supplyAsync(()->{
