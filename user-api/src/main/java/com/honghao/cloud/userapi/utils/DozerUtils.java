@@ -9,5 +9,16 @@ import org.dozer.DozerBeanMapper;
  * @date 2019-07-30 17:31
  */
 public class DozerUtils {
-    public static final DozerBeanMapper dozerBeanMapper=new DozerBeanMapper();
+    private static volatile DozerBeanMapper dozerBeanMapper;
+    private DozerUtils(){}
+    public static DozerBeanMapper createDozer(){
+        if (dozerBeanMapper==null){
+            synchronized (dozerBeanMapper){
+                if (dozerBeanMapper==null){
+                    dozerBeanMapper=new DozerBeanMapper();
+                }
+            }
+        }
+        return dozerBeanMapper;
+    }
 }

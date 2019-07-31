@@ -21,15 +21,15 @@ import java.io.Serializable;
 public class CardDTO implements Serializable {
 
     @JSONField(name = "isBindCard")
-    private boolean isBindCard;
+    private Boolean isBindCard;
     @JSONField(name = "isSign")
-    private boolean isSign;
+    private Boolean isSign;
     @JSONField(name = "cardInfo")
     private CardInfoBean cardInfo;
     @JSONField(name = "accountInfo")
     private AccountInfoBean accountInfo;
     @JSONField(name = "isOpen")
-    private boolean isOpen;
+    private Boolean isOpen;
 
     @Data
     @AllArgsConstructor
@@ -41,7 +41,7 @@ public class CardDTO implements Serializable {
         @JSONField(name = "pinYin")
         private String pinYin;
         @JSONField(name = "isSign")
-        private boolean isSign;
+        private Boolean isSign;
         @JSONField(name = "cardName")
         private String cardName;
         @JSONField(name = "accBankNo")

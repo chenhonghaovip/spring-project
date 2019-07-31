@@ -1,5 +1,6 @@
 package com.honghao.cloud.userapi.listener.rabbitmq.customer;
 
+import com.honghao.cloud.userapi.common.constant.QueueConstant;
 import com.honghao.cloud.userapi.config.RabbitConfig;
 import com.honghao.cloud.userapi.config.RabbitExchangeConfig;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
@@ -42,7 +43,7 @@ public class RabbitReceive
         container.setMessageListener((ChannelAwareMessageListener) (message, channel) -> {
             String msg = new String(message.getBody(), "UTF-8");
             System.out.println("receive msg : " + msg);
-            if ("test_queue".equals(message.getMessageProperties().getConsumerQueue())){
+            if (QueueConstant.TEST_QUEUE.equals(message.getMessageProperties().getConsumerQueue())){
                 try {
                     Boolean flag = waybillBcListFacade.createUser2(msg);
                     if (flag){

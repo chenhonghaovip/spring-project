@@ -17,6 +17,10 @@ import static com.honghao.cloud.orderapi.client.AccountClient.SERVICE_ID;
 public interface AccountClient {
     String SERVICE_ID="ACCOUNT-API";
 
+    /**
+     * 账户服务调用
+     * @param param string
+     */
     @PostMapping("/create")
     void create(@RequestBody String param);
 }
