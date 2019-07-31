@@ -2,8 +2,8 @@ package com.honghao.cloud.userapi.listener.rabbitmq.producer;
 
 import com.honghao.cloud.userapi.config.RabbitConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.MessagePostProcessor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -17,13 +17,27 @@ import org.springframework.stereotype.Component;
 public class MessageSender {
 	@Autowired
 	@Qualifier("rabbitTemplate")
-	private AmqpTemplate rabbitTemplate;
+	private RabbitTemplate rabbitTemplate;
 
 	/**
 	 * 用户信息推送队列
 	 * @param message 请求报文
 	 */
 	public void pushInfoUser(String message){
+		rabbitTemplate.setReturnCallback((message1, i, s, s1, s2) -> {
+			log.info("ackMQSender 发送消息被退回" + s1 + s2);
+		});
+		/**
+		 * 如果设置了spring.rabbitmq.publisher-confirms=true(默认是false),生产者会收到rabitmq-server返回的ack
+		 * 这个回调方法里面没有原始消息,相当于只是一个通知作用
+		 */
+		this.rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
+			if (!ack) {
+				log.info("ackMQSender 消息发送失败" + cause + correlationData.toString());
+			} else {
+				log.info("ackMQSender 消息发送成功 ");
+			}
+		});
 		rabbitTemplate.convertAndSend(RabbitConfig.USER_PUSH_QUEUE,message);
 	}
 	/**
@@ -45,5 +59,27 @@ public class MessageSender {
 			return message;
 		};
 		rabbitTemplate.convertAndSend(RabbitConfig.QUEUE_MSG_SMS_SEND_TTL, content, messagePostProcessor);
+	}
+
+	/**
+	 * 用户信息推送队列
+	 * @param message 请求报文
+	 */
+	public void testQueue(String message){
+		rabbitTemplate.setReturnCallback((message1, i, s, s1, s2) -> {
+			log.info("ackMQSender 发送消息被退回" + s1 + s2);
+		});
+		/**
+		 * 如果设置了spring.rabbitmq.publisher-confirms=true(默认是false),生产者会收到rabitmq-server返回的ack
+		 * 这个回调方法里面没有原始消息,相当于只是一个通知作用
+		 */
+		this.rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
+			if (!ack) {
+				log.info("ackMQSender 消息发送失败" + cause + correlationData.toString());
+			} else {
+				log.info("ackMQSender 消息发送成功 ");
+			}
+		});
+		rabbitTemplate.convertAndSend(RabbitConfig.TEST_QUEUE,message);
 	}
 }

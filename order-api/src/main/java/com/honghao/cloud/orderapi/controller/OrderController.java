@@ -1,6 +1,7 @@
 package com.honghao.cloud.orderapi.controller;
 
 import com.honghao.cloud.orderapi.base.BaseResponse;
+import com.honghao.cloud.orderapi.dto.request.CardDTO;
 import com.honghao.cloud.orderapi.facade.OrderFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +33,8 @@ public class OrderController {
 
     @PostMapping("/create1")
     BaseResponse<String> getUser(@RequestBody String data) {
+        CardDTO cardDTO=new CardDTO();
+        CardDTO.AccountInfoBean accountInfoBean=new CardDTO.AccountInfoBean();
         return null;
     }
 }
