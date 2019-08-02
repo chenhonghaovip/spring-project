@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.honghao.cloud.userapi.domain.mapper.OrderDeliveryMapper">
+  <resultMap id="BaseResultMap" type="com.honghao.cloud.userapi.domain.entity.OrderDelivery">
+    <id column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="shop_id" jdbcType="VARCHAR" property="shopId" />
+    <result column="delivery_id" jdbcType="VARCHAR" property="deliveryId" />
+    <result column="delivery_man_id" jdbcType="VARCHAR" property="deliveryManId" />
+    <result column="is_pay" jdbcType="TINYINT" property="isPay" />
+    <result column="team_pay" jdbcType="DOUBLE" property="teamPay" />
+    <result column="delivery_pay" jdbcType="DOUBLE" property="deliveryPay" />
+    <result column="knight_name" jdbcType="VARCHAR" property="knightName" />
+    <result column="knight_phone" jdbcType="CHAR" property="knightPhone" />
+    <result column="delivery_status" jdbcType="TINYINT" property="deliveryStatus" />
+    <result column="share_type" jdbcType="DOUBLE" property="shareType" />
+    <result column="receive_time" jdbcType="TIMESTAMP" property="receiveTime" />
+    <result column="arrival_time" jdbcType="TIMESTAMP" property="arrivalTime" />
+    <result column="pick_up_time" jdbcType="TIMESTAMP" property="pickUpTime" />
+    <result column="confirm_receive_time" jdbcType="TIMESTAMP" property="confirmReceiveTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="receive_longitude" jdbcType="DECIMAL" property="receiveLongitude" />
+    <result column="receive_latitude" jdbcType="DECIMAL" property="receiveLatitude" />
+    <result column="arrival_longitude" jdbcType="DECIMAL" property="arrivalLongitude" />
+    <result column="arrival_latitude" jdbcType="DECIMAL" property="arrivalLatitude" />
+    <result column="pick_up_longitude" jdbcType="DECIMAL" property="pickUpLongitude" />
+    <result column="pick_up_latitude" jdbcType="DECIMAL" property="pickUpLatitude" />
+    <result column="confirm_longitude" jdbcType="DECIMAL" property="confirmLongitude" />
+    <result column="confirm_latitude" jdbcType="DECIMAL" property="confirmLatitude" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    order_id, shop_id, delivery_id, delivery_man_id, is_pay, team_pay, delivery_pay, 
+    knight_name, knight_phone, delivery_status, share_type, receive_time, arrival_time, 
+    pick_up_time, confirm_receive_time, create_time, receive_longitude, receive_latitude, 
+    arrival_longitude, arrival_latitude, pick_up_longitude, pick_up_latitude, confirm_longitude, 
+    confirm_latitude
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from order_delivery
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from order_delivery
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.honghao.cloud.userapi.domain.entity.OrderDelivery">
+    insert into order_delivery (order_id, shop_id, delivery_id, 
+      delivery_man_id, is_pay, team_pay, 
+      delivery_pay, knight_name, knight_phone, 
+      delivery_status, share_type, receive_time, 
+      arrival_time, pick_up_time, confirm_receive_time, 
+      create_time, receive_longitude, receive_latitude, 
+      arrival_longitude, arrival_latitude, pick_up_longitude, 
+      pick_up_latitude, confirm_longitude, confirm_latitude
+      )
+    values (#{orderId,jdbcType=VARCHAR}, #{shopId,jdbcType=VARCHAR}, #{deliveryId,jdbcType=VARCHAR}, 
+      #{deliveryManId,jdbcType=VARCHAR}, #{isPay,jdbcType=TINYINT}, #{teamPay,jdbcType=DOUBLE}, 
+      #{deliveryPay,jdbcType=DOUBLE}, #{knightName,jdbcType=VARCHAR}, #{knightPhone,jdbcType=CHAR}, 
+      #{deliveryStatus,jdbcType=TINYINT}, #{shareType,jdbcType=DOUBLE}, #{receiveTime,jdbcType=TIMESTAMP}, 
+      #{arrivalTime,jdbcType=TIMESTAMP}, #{pickUpTime,jdbcType=TIMESTAMP}, #{confirmReceiveTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{receiveLongitude,jdbcType=DECIMAL}, #{receiveLatitude,jdbcType=DECIMAL}, 
+      #{arrivalLongitude,jdbcType=DECIMAL}, #{arrivalLatitude,jdbcType=DECIMAL}, #{pickUpLongitude,jdbcType=DECIMAL}, 
+      #{pickUpLatitude,jdbcType=DECIMAL}, #{confirmLongitude,jdbcType=DECIMAL}, #{confirmLatitude,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.honghao.cloud.userapi.domain.entity.OrderDelivery">
+    insert into order_delivery
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="shopId != null">
+        shop_id,
+      </if>
+      <if test="deliveryId != null">
+        delivery_id,
+      </if>
+      <if test="deliveryManId != null">
+        delivery_man_id,
+      </if>
+      <if test="isPay != null">
+        is_pay,
+      </if>
+      <if test="teamPay != null">
+        team_pay,
+      </if>
+      <if test="deliveryPay != null">
+        delivery_pay,
+      </if>
+      <if test="knightName != null">
+        knight_name,
+      </if>
+      <if test="knightPhone != null">
+        knight_phone,
+      </if>
+      <if test="deliveryStatus != null">
+        delivery_status,
+      </if>
+      <if test="shareType != null">
+        share_type,
+      </if>
+      <if test="receiveTime != null">
+        receive_time,
+      </if>
+      <if test="arrivalTime != null">
+        arrival_time,
+      </if>
+      <if test="pickUpTime != null">
+        pick_up_time,
+      </if>
+      <if test="confirmReceiveTime != null">
+        confirm_receive_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="receiveLongitude != null">
+        receive_longitude,
+      </if>
+      <if test="receiveLatitude != null">
+        receive_latitude,
+      </if>
+      <if test="arrivalLongitude != null">
+        arrival_longitude,
+      </if>
+      <if test="arrivalLatitude != null">
+        arrival_latitude,
+      </if>
+      <if test="pickUpLongitude != null">
+        pick_up_longitude,
+      </if>
+      <if test="pickUpLatitude != null">
+        pick_up_latitude,
+      </if>
+      <if test="confirmLongitude != null">
+        confirm_longitude,
+      </if>
+      <if test="confirmLatitude != null">
+        confirm_latitude,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null">
+        #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryId != null">
+        #{deliveryId,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryManId != null">
+        #{deliveryManId,jdbcType=VARCHAR},
+      </if>
+      <if test="isPay != null">
+        #{isPay,jdbcType=TINYINT},
+      </if>
+      <if test="teamPay != null">
+        #{teamPay,jdbcType=DOUBLE},
+      </if>
+      <if test="deliveryPay != null">
+        #{deliveryPay,jdbcType=DOUBLE},
+      </if>
+      <if test="knightName != null">
+        #{knightName,jdbcType=VARCHAR},
+      </if>
+      <if test="knightPhone != null">
+        #{knightPhone,jdbcType=CHAR},
+      </if>
+      <if test="deliveryStatus != null">
+        #{deliveryStatus,jdbcType=TINYINT},
+      </if>
+      <if test="shareType != null">
+        #{shareType,jdbcType=DOUBLE},
+      </if>
+      <if test="receiveTime != null">
+        #{receiveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="arrivalTime != null">
+        #{arrivalTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pickUpTime != null">
+        #{pickUpTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="confirmReceiveTime != null">
+        #{confirmReceiveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="receiveLongitude != null">
+        #{receiveLongitude,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveLatitude != null">
+        #{receiveLatitude,jdbcType=DECIMAL},
+      </if>
+      <if test="arrivalLongitude != null">
+        #{arrivalLongitude,jdbcType=DECIMAL},
+      </if>
+      <if test="arrivalLatitude != null">
+        #{arrivalLatitude,jdbcType=DECIMAL},
+      </if>
+      <if test="pickUpLongitude != null">
+        #{pickUpLongitude,jdbcType=DECIMAL},
+      </if>
+      <if test="pickUpLatitude != null">
+        #{pickUpLatitude,jdbcType=DECIMAL},
+      </if>
+      <if test="confirmLongitude != null">
+        #{confirmLongitude,jdbcType=DECIMAL},
+      </if>
+      <if test="confirmLatitude != null">
+        #{confirmLatitude,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.honghao.cloud.userapi.domain.entity.OrderDelivery">
+    update order_delivery
+    <set>
+      <if test="shopId != null">
+        shop_id = #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryId != null">
+        delivery_id = #{deliveryId,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryManId != null">
+        delivery_man_id = #{deliveryManId,jdbcType=VARCHAR},
+      </if>
+      <if test="isPay != null">
+        is_pay = #{isPay,jdbcType=TINYINT},
+      </if>
+      <if test="teamPay != null">
+        team_pay = #{teamPay,jdbcType=DOUBLE},
+      </if>
+      <if test="deliveryPay != null">
+        delivery_pay = #{deliveryPay,jdbcType=DOUBLE},
+      </if>
+      <if test="knightName != null">
+        knight_name = #{knightName,jdbcType=VARCHAR},
+      </if>
+      <if test="knightPhone != null">
+        knight_phone = #{knightPhone,jdbcType=CHAR},
+      </if>
+      <if test="deliveryStatus != null">
+        delivery_status = #{deliveryStatus,jdbcType=TINYINT},
+      </if>
+      <if test="shareType != null">
+        share_type = #{shareType,jdbcType=DOUBLE},
+      </if>
+      <if test="receiveTime != null">
+        receive_time = #{receiveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="arrivalTime != null">
+        arrival_time = #{arrivalTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pickUpTime != null">
+        pick_up_time = #{pickUpTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="confirmReceiveTime != null">
+        confirm_receive_time = #{confirmReceiveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="receiveLongitude != null">
+        receive_longitude = #{receiveLongitude,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveLatitude != null">
+        receive_latitude = #{receiveLatitude,jdbcType=DECIMAL},
+      </if>
+      <if test="arrivalLongitude != null">
+        arrival_longitude = #{arrivalLongitude,jdbcType=DECIMAL},
+      </if>
+      <if test="arrivalLatitude != null">
+        arrival_latitude = #{arrivalLatitude,jdbcType=DECIMAL},
+      </if>
+      <if test="pickUpLongitude != null">
+        pick_up_longitude = #{pickUpLongitude,jdbcType=DECIMAL},
+      </if>
+      <if test="pickUpLatitude != null">
+        pick_up_latitude = #{pickUpLatitude,jdbcType=DECIMAL},
+      </if>
+      <if test="confirmLongitude != null">
+        confirm_longitude = #{confirmLongitude,jdbcType=DECIMAL},
+      </if>
+      <if test="confirmLatitude != null">
+        confirm_latitude = #{confirmLatitude,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.userapi.domain.entity.OrderDelivery">
+    update order_delivery
+    set shop_id = #{shopId,jdbcType=VARCHAR},
+      delivery_id = #{deliveryId,jdbcType=VARCHAR},
+      delivery_man_id = #{deliveryManId,jdbcType=VARCHAR},
+      is_pay = #{isPay,jdbcType=TINYINT},
+      team_pay = #{teamPay,jdbcType=DOUBLE},
+      delivery_pay = #{deliveryPay,jdbcType=DOUBLE},
+      knight_name = #{knightName,jdbcType=VARCHAR},
+      knight_phone = #{knightPhone,jdbcType=CHAR},
+      delivery_status = #{deliveryStatus,jdbcType=TINYINT},
+      share_type = #{shareType,jdbcType=DOUBLE},
+      receive_time = #{receiveTime,jdbcType=TIMESTAMP},
+      arrival_time = #{arrivalTime,jdbcType=TIMESTAMP},
+      pick_up_time = #{pickUpTime,jdbcType=TIMESTAMP},
+      confirm_receive_time = #{confirmReceiveTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      receive_longitude = #{receiveLongitude,jdbcType=DECIMAL},
+      receive_latitude = #{receiveLatitude,jdbcType=DECIMAL},
+      arrival_longitude = #{arrivalLongitude,jdbcType=DECIMAL},
+      arrival_latitude = #{arrivalLatitude,jdbcType=DECIMAL},
+      pick_up_longitude = #{pickUpLongitude,jdbcType=DECIMAL},
+      pick_up_latitude = #{pickUpLatitude,jdbcType=DECIMAL},
+      confirm_longitude = #{confirmLongitude,jdbcType=DECIMAL},
+      confirm_latitude = #{confirmLatitude,jdbcType=DECIMAL}
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+</mapper>
