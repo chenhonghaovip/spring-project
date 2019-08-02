@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.honghao.cloud.userapi.domain.mapper.CloudDictMapper">
+  <resultMap id="BaseResultMap" type="com.honghao.cloud.userapi.domain.entity.CloudDict">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="parentId" jdbcType="VARCHAR" property="parentid" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="location" jdbcType="INTEGER" property="location" />
+    <result column="hasChildren" jdbcType="BIT" property="haschildren" />
+    <result column="opBy" jdbcType="VARCHAR" property="opby" />
+    <result column="opAt" jdbcType="INTEGER" property="opat" />
+    <result column="delFlag" jdbcType="BIT" property="delflag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, parentId, path, name, code, location, hasChildren, opBy, opAt, delFlag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cloud_dict
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from cloud_dict
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.honghao.cloud.userapi.domain.entity.CloudDict">
+    insert into cloud_dict (id, parentId, path, 
+      name, code, location, 
+      hasChildren, opBy, opAt, 
+      delFlag)
+    values (#{id,jdbcType=VARCHAR}, #{parentid,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{location,jdbcType=INTEGER}, 
+      #{haschildren,jdbcType=BIT}, #{opby,jdbcType=VARCHAR}, #{opat,jdbcType=INTEGER}, 
+      #{delflag,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.honghao.cloud.userapi.domain.entity.CloudDict">
+    insert into cloud_dict
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="parentid != null">
+        parentId,
+      </if>
+      <if test="path != null">
+        path,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="location != null">
+        location,
+      </if>
+      <if test="haschildren != null">
+        hasChildren,
+      </if>
+      <if test="opby != null">
+        opBy,
+      </if>
+      <if test="opat != null">
+        opAt,
+      </if>
+      <if test="delflag != null">
+        delFlag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null">
+        #{parentid,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null">
+        #{location,jdbcType=INTEGER},
+      </if>
+      <if test="haschildren != null">
+        #{haschildren,jdbcType=BIT},
+      </if>
+      <if test="opby != null">
+        #{opby,jdbcType=VARCHAR},
+      </if>
+      <if test="opat != null">
+        #{opat,jdbcType=INTEGER},
+      </if>
+      <if test="delflag != null">
+        #{delflag,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.honghao.cloud.userapi.domain.entity.CloudDict">
+    update cloud_dict
+    <set>
+      <if test="parentid != null">
+        parentId = #{parentid,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        path = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null">
+        location = #{location,jdbcType=INTEGER},
+      </if>
+      <if test="haschildren != null">
+        hasChildren = #{haschildren,jdbcType=BIT},
+      </if>
+      <if test="opby != null">
+        opBy = #{opby,jdbcType=VARCHAR},
+      </if>
+      <if test="opat != null">
+        opAt = #{opat,jdbcType=INTEGER},
+      </if>
+      <if test="delflag != null">
+        delFlag = #{delflag,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.userapi.domain.entity.CloudDict">
+    update cloud_dict
+    set parentId = #{parentid,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      location = #{location,jdbcType=INTEGER},
+      hasChildren = #{haschildren,jdbcType=BIT},
+      opBy = #{opby,jdbcType=VARCHAR},
+      opAt = #{opat,jdbcType=INTEGER},
+      delFlag = #{delflag,jdbcType=BIT}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
