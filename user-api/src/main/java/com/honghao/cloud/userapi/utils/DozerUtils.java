@@ -1,5 +1,6 @@
 package com.honghao.cloud.userapi.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.dozer.DozerBeanMapper;
 
 /**
@@ -8,6 +9,7 @@ import org.dozer.DozerBeanMapper;
  * @author chenhonghao
  * @date 2019-07-30 17:31
  */
+@Slf4j
 public class DozerUtils {
     private static volatile DozerBeanMapper dozerBeanMapper;
     private DozerUtils(){}
