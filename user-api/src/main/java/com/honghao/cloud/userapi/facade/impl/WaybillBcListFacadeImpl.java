@@ -126,9 +126,7 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
 
     @Override
     public Boolean createUser2(String data) {
-        if (true){
-            throw new RuntimeException("aaaaaaaaaaa");
-        }
+        messageSender.pushInfoUser("nnnnnnnnnnnnn");
         return false;
     }
 

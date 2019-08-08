@@ -40,6 +40,7 @@ public class ReachableTest {
         System.out.println("追加后：" + jedis.get(name)); // 追加后：qqww
 
         jedis.append("id", "ee");
+        jedis.expire("id",10);
         System.out.println("没此key：" + jedis.get(name));
         System.out.println("get此key：" + jedis.get("id"));
     }
@@ -65,29 +66,23 @@ public class ReachableTest {
         map.put("age", "12");
         // 存入一个map
         jedis.hmset("user", map);
-
         // map key的个数
         System.out.println("map的key的个数" + jedis.hlen("user"));
-
         // map key
         System.out.println("map的key" + jedis.hkeys("user"));
-
         // map value
         System.out.println("map的value" + jedis.hvals("user"));
-
         // (String key, String... fields)返回值是一个list
         List<String> list = jedis.hmget("user", "age", "name");
         System.out.println("redis中key的各个 fields值："
                 + jedis.hmget("user", "age", "name") + list.size());
-
         // 删除map中的某一个键 的值 password
         // 当然 (key, fields) 也可以是多个fields
         jedis.hdel("user", "age");
-
         System.out.println("删除后map的key" + jedis.hkeys("user"));
     }
     /**
-     * 简单添加
+     * list添加
      */
     @Test
     public void test04(){
@@ -101,10 +96,22 @@ public class ReachableTest {
         jedis.del("list");
     }
     /**
-     * 简单添加
+     * set添加
      */
     @Test
     public void test05(){
+        jedis.flushAll();
+        jedis.sadd("chen","hong","hao");
+        log.info("set集合数据："+jedis.smembers("chen"));
+    }
 
+    /**
+     * zset添加
+     */
+    @Test
+    public void test06(){
+//        jedis.flushAll();
+//        jedis.zadd("chen","hong","hao");
+//        log.info("set集合数据："+jedis.smembers("chen"));
     }
 }
