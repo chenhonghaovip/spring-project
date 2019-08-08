@@ -1,14 +1,13 @@
-package com.honghao.cloud.userapi.listener.rabbitmq.customer;
+package com.honghao.cloud.orderapi.listener.rabbitmq;
 
-import com.honghao.cloud.userapi.config.RabbitExchangeConfig;
-import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
+import com.honghao.cloud.orderapi.config.RabbitConfig;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 
 /**
@@ -16,12 +15,12 @@ import java.io.IOException;
  */
 @Slf4j
 @Component
-//@RabbitListener(queues = RabbitConfig.USER_PUSH_QUEUE, containerFactory = "factory")
+@RabbitListener(queues = RabbitConfig.USER_PUSH_QUEUE, containerFactory = "factory")
 public class TenMinDelay {
-	@Resource
-	private WaybillBcListFacade waybillBcListFacade;
-	@Resource
-	private RabbitExchangeConfig rabbitExchangeConfig;
+//	@Resource
+//	private WaybillBcListFacade waybillBcListFacade;
+//	@Resource
+//	private RabbitExchangeConfig rabbitExchangeConfig;
 	/**
 	 * 消费队列信息
 	 * @param str json字符串
@@ -30,7 +29,7 @@ public class TenMinDelay {
 	public void process(String str, Channel channel, Message message) throws IOException {
 		try {
 			log.info("发送短信");
-			waybillBcListFacade.createUser1("");
+//			waybillBcListFacade.createUser1("");
 			//手动ack通知队列成功
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 			log.info("ACK_QUEUE_A 接受信息成功");

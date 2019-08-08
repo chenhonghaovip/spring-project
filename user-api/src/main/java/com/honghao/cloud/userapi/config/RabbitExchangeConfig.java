@@ -29,6 +29,7 @@ public class RabbitExchangeConfig {
     @PostConstruct
     String[] initInfo(){
         JSONArray jsonArray= JSON.parseArray(queues);
+        log.info(jsonArray.toJSONString());
         List<JSONObject> list = jsonArray.toJavaList(JSONObject.class);
 
         List<String> values = list.stream().map(each->each.getString("queue")).collect(Collectors.toList());

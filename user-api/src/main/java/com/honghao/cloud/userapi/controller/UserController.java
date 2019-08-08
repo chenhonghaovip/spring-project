@@ -48,7 +48,8 @@ public class UserController {
     @PostMapping("/create1")
     @ApiOperation(value = "测试" ,notes = "测试")
     BaseResponse<String> getUser(@RequestBody String data) {
-        waybillBcListFacade.createUser1(data);
+//        waybillBcListFacade.createUser1(data);
+        waybillBcListFacade.createUser2("");
         return null;
     }
 }
