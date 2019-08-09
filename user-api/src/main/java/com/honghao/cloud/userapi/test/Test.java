@@ -1,13 +1,6 @@
 package com.honghao.cloud.userapi.test;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author chenhonghao
@@ -29,6 +22,16 @@ public class Test {
         List<JSONObject> list = jsonArray.toJavaList(JSONObject.class);
         List<String> values = list.stream().map(each->each.getString("queue")).collect(Collectors.toList());
         log.info(String.valueOf(values));
+
+    }
+    private int getStep(int k){
+        if (k == 1){
+            return 1;
+        } else if (k == 2){
+            return 2;
+        }else {
+            return getStep(k-1)+getStep(k-2);
+        }
 
     }
 }
