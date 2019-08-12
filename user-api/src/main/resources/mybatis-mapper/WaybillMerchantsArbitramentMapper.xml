@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.honghao.cloud.userapi.domain.mapper.WaybillMerchantsArbitramentMapper">
+  <resultMap id="BaseResultMap" type="com.honghao.cloud.userapi.domain.entity.WaybillMerchantsArbitrament">
+    <id column="order_id" jdbcType="CHAR" property="orderId" />
+    <result column="complain_id" jdbcType="VARCHAR" property="complainId" />
+    <result column="complain_phone" jdbcType="VARCHAR" property="complainPhone" />
+    <result column="complain_picture" jdbcType="CHAR" property="complainPicture" />
+    <result column="complain_remark" jdbcType="VARCHAR" property="complainRemark" />
+    <result column="complain_time" jdbcType="TIMESTAMP" property="complainTime" />
+    <result column="appeal_team_id" jdbcType="VARCHAR" property="appealTeamId" />
+    <result column="appeal_id" jdbcType="VARCHAR" property="appealId" />
+    <result column="appeal_phone" jdbcType="VARCHAR" property="appealPhone" />
+    <result column="appeal_picture" jdbcType="CHAR" property="appealPicture" />
+    <result column="appeal_remark" jdbcType="VARCHAR" property="appealRemark" />
+    <result column="appeal_time" jdbcType="TIMESTAMP" property="appealTime" />
+    <result column="complain_type" jdbcType="VARCHAR" property="complainType" />
+    <result column="fines" jdbcType="DOUBLE" property="fines" />
+    <result column="actual_fines" jdbcType="DOUBLE" property="actualFines" />
+    <result column="damage" jdbcType="DOUBLE" property="damage" />
+    <result column="actual_damage" jdbcType="DOUBLE" property="actualDamage" />
+    <result column="arbitration_remark" jdbcType="VARCHAR" property="arbitrationRemark" />
+    <result column="arbitration_object" jdbcType="VARCHAR" property="arbitrationObject" />
+    <result column="arbitration_result" jdbcType="TINYINT" property="arbitrationResult" />
+    <result column="arbitration_time" jdbcType="TIMESTAMP" property="arbitrationTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="delete_flag" jdbcType="TINYINT" property="deleteFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    order_id, complain_id, complain_phone, complain_picture, complain_remark, complain_time, 
+    appeal_team_id, appeal_id, appeal_phone, appeal_picture, appeal_remark, appeal_time, 
+    complain_type, fines, actual_fines, damage, actual_damage, arbitration_remark, arbitration_object, 
+    arbitration_result, arbitration_time, create_by, update_by, create_time, update_time, 
+    delete_flag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from waybill_merchants_arbitrament
+    where order_id = #{orderId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from waybill_merchants_arbitrament
+    where order_id = #{orderId,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillMerchantsArbitrament">
+    insert into waybill_merchants_arbitrament (order_id, complain_id, complain_phone, 
+      complain_picture, complain_remark, complain_time, 
+      appeal_team_id, appeal_id, appeal_phone, 
+      appeal_picture, appeal_remark, appeal_time, 
+      complain_type, fines, actual_fines, 
+      damage, actual_damage, arbitration_remark, 
+      arbitration_object, arbitration_result, arbitration_time, 
+      create_by, update_by, create_time, 
+      update_time, delete_flag)
+    values (#{orderId,jdbcType=CHAR}, #{complainId,jdbcType=VARCHAR}, #{complainPhone,jdbcType=VARCHAR}, 
+      #{complainPicture,jdbcType=CHAR}, #{complainRemark,jdbcType=VARCHAR}, #{complainTime,jdbcType=TIMESTAMP}, 
+      #{appealTeamId,jdbcType=VARCHAR}, #{appealId,jdbcType=VARCHAR}, #{appealPhone,jdbcType=VARCHAR}, 
+      #{appealPicture,jdbcType=CHAR}, #{appealRemark,jdbcType=VARCHAR}, #{appealTime,jdbcType=TIMESTAMP}, 
+      #{complainType,jdbcType=VARCHAR}, #{fines,jdbcType=DOUBLE}, #{actualFines,jdbcType=DOUBLE}, 
+      #{damage,jdbcType=DOUBLE}, #{actualDamage,jdbcType=DOUBLE}, #{arbitrationRemark,jdbcType=VARCHAR}, 
+      #{arbitrationObject,jdbcType=VARCHAR}, #{arbitrationResult,jdbcType=TINYINT}, #{arbitrationTime,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillMerchantsArbitrament">
+    insert into waybill_merchants_arbitrament
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="complainId != null">
+        complain_id,
+      </if>
+      <if test="complainPhone != null">
+        complain_phone,
+      </if>
+      <if test="complainPicture != null">
+        complain_picture,
+      </if>
+      <if test="complainRemark != null">
+        complain_remark,
+      </if>
+      <if test="complainTime != null">
+        complain_time,
+      </if>
+      <if test="appealTeamId != null">
+        appeal_team_id,
+      </if>
+      <if test="appealId != null">
+        appeal_id,
+      </if>
+      <if test="appealPhone != null">
+        appeal_phone,
+      </if>
+      <if test="appealPicture != null">
+        appeal_picture,
+      </if>
+      <if test="appealRemark != null">
+        appeal_remark,
+      </if>
+      <if test="appealTime != null">
+        appeal_time,
+      </if>
+      <if test="complainType != null">
+        complain_type,
+      </if>
+      <if test="fines != null">
+        fines,
+      </if>
+      <if test="actualFines != null">
+        actual_fines,
+      </if>
+      <if test="damage != null">
+        damage,
+      </if>
+      <if test="actualDamage != null">
+        actual_damage,
+      </if>
+      <if test="arbitrationRemark != null">
+        arbitration_remark,
+      </if>
+      <if test="arbitrationObject != null">
+        arbitration_object,
+      </if>
+      <if test="arbitrationResult != null">
+        arbitration_result,
+      </if>
+      <if test="arbitrationTime != null">
+        arbitration_time,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=CHAR},
+      </if>
+      <if test="complainId != null">
+        #{complainId,jdbcType=VARCHAR},
+      </if>
+      <if test="complainPhone != null">
+        #{complainPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="complainPicture != null">
+        #{complainPicture,jdbcType=CHAR},
+      </if>
+      <if test="complainRemark != null">
+        #{complainRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="complainTime != null">
+        #{complainTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appealTeamId != null">
+        #{appealTeamId,jdbcType=VARCHAR},
+      </if>
+      <if test="appealId != null">
+        #{appealId,jdbcType=VARCHAR},
+      </if>
+      <if test="appealPhone != null">
+        #{appealPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="appealPicture != null">
+        #{appealPicture,jdbcType=CHAR},
+      </if>
+      <if test="appealRemark != null">
+        #{appealRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="appealTime != null">
+        #{appealTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="complainType != null">
+        #{complainType,jdbcType=VARCHAR},
+      </if>
+      <if test="fines != null">
+        #{fines,jdbcType=DOUBLE},
+      </if>
+      <if test="actualFines != null">
+        #{actualFines,jdbcType=DOUBLE},
+      </if>
+      <if test="damage != null">
+        #{damage,jdbcType=DOUBLE},
+      </if>
+      <if test="actualDamage != null">
+        #{actualDamage,jdbcType=DOUBLE},
+      </if>
+      <if test="arbitrationRemark != null">
+        #{arbitrationRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="arbitrationObject != null">
+        #{arbitrationObject,jdbcType=VARCHAR},
+      </if>
+      <if test="arbitrationResult != null">
+        #{arbitrationResult,jdbcType=TINYINT},
+      </if>
+      <if test="arbitrationTime != null">
+        #{arbitrationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null">
+        #{deleteFlag,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillMerchantsArbitrament">
+    update waybill_merchants_arbitrament
+    <set>
+      <if test="complainId != null">
+        complain_id = #{complainId,jdbcType=VARCHAR},
+      </if>
+      <if test="complainPhone != null">
+        complain_phone = #{complainPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="complainPicture != null">
+        complain_picture = #{complainPicture,jdbcType=CHAR},
+      </if>
+      <if test="complainRemark != null">
+        complain_remark = #{complainRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="complainTime != null">
+        complain_time = #{complainTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appealTeamId != null">
+        appeal_team_id = #{appealTeamId,jdbcType=VARCHAR},
+      </if>
+      <if test="appealId != null">
+        appeal_id = #{appealId,jdbcType=VARCHAR},
+      </if>
+      <if test="appealPhone != null">
+        appeal_phone = #{appealPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="appealPicture != null">
+        appeal_picture = #{appealPicture,jdbcType=CHAR},
+      </if>
+      <if test="appealRemark != null">
+        appeal_remark = #{appealRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="appealTime != null">
+        appeal_time = #{appealTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="complainType != null">
+        complain_type = #{complainType,jdbcType=VARCHAR},
+      </if>
+      <if test="fines != null">
+        fines = #{fines,jdbcType=DOUBLE},
+      </if>
+      <if test="actualFines != null">
+        actual_fines = #{actualFines,jdbcType=DOUBLE},
+      </if>
+      <if test="damage != null">
+        damage = #{damage,jdbcType=DOUBLE},
+      </if>
+      <if test="actualDamage != null">
+        actual_damage = #{actualDamage,jdbcType=DOUBLE},
+      </if>
+      <if test="arbitrationRemark != null">
+        arbitration_remark = #{arbitrationRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="arbitrationObject != null">
+        arbitration_object = #{arbitrationObject,jdbcType=VARCHAR},
+      </if>
+      <if test="arbitrationResult != null">
+        arbitration_result = #{arbitrationResult,jdbcType=TINYINT},
+      </if>
+      <if test="arbitrationTime != null">
+        arbitration_time = #{arbitrationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag = #{deleteFlag,jdbcType=TINYINT},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillMerchantsArbitrament">
+    update waybill_merchants_arbitrament
+    set complain_id = #{complainId,jdbcType=VARCHAR},
+      complain_phone = #{complainPhone,jdbcType=VARCHAR},
+      complain_picture = #{complainPicture,jdbcType=CHAR},
+      complain_remark = #{complainRemark,jdbcType=VARCHAR},
+      complain_time = #{complainTime,jdbcType=TIMESTAMP},
+      appeal_team_id = #{appealTeamId,jdbcType=VARCHAR},
+      appeal_id = #{appealId,jdbcType=VARCHAR},
+      appeal_phone = #{appealPhone,jdbcType=VARCHAR},
+      appeal_picture = #{appealPicture,jdbcType=CHAR},
+      appeal_remark = #{appealRemark,jdbcType=VARCHAR},
+      appeal_time = #{appealTime,jdbcType=TIMESTAMP},
+      complain_type = #{complainType,jdbcType=VARCHAR},
+      fines = #{fines,jdbcType=DOUBLE},
+      actual_fines = #{actualFines,jdbcType=DOUBLE},
+      damage = #{damage,jdbcType=DOUBLE},
+      actual_damage = #{actualDamage,jdbcType=DOUBLE},
+      arbitration_remark = #{arbitrationRemark,jdbcType=VARCHAR},
+      arbitration_object = #{arbitrationObject,jdbcType=VARCHAR},
+      arbitration_result = #{arbitrationResult,jdbcType=TINYINT},
+      arbitration_time = #{arbitrationTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_flag = #{deleteFlag,jdbcType=TINYINT}
+    where order_id = #{orderId,jdbcType=CHAR}
+  </update>
+</mapper>
