@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.honghao.cloud.userapi.domain.mapper.CloudDocumentMapper">
+  <resultMap id="BaseResultMap" type="com.honghao.cloud.userapi.domain.entity.CloudDocument">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="document_name" jdbcType="VARCHAR" property="documentName" />
+    <result column="document_type" jdbcType="VARCHAR" property="documentType" />
+    <result column="document_address" jdbcType="VARCHAR" property="documentAddress" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="delete_flag" jdbcType="TINYINT" property="deleteFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, document_name, document_type, document_address, create_time, create_by, delete_flag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cloud_document
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from cloud_document
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.honghao.cloud.userapi.domain.entity.CloudDocument">
+    insert into cloud_document (id, document_name, document_type, 
+      document_address, create_time, create_by, 
+      delete_flag)
+    values (#{id,jdbcType=INTEGER}, #{documentName,jdbcType=VARCHAR}, #{documentType,jdbcType=VARCHAR}, 
+      #{documentAddress,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
+      #{deleteFlag,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.honghao.cloud.userapi.domain.entity.CloudDocument">
+    insert into cloud_document
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="documentName != null">
+        document_name,
+      </if>
+      <if test="documentType != null">
+        document_type,
+      </if>
+      <if test="documentAddress != null">
+        document_address,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="documentName != null">
+        #{documentName,jdbcType=VARCHAR},
+      </if>
+      <if test="documentType != null">
+        #{documentType,jdbcType=VARCHAR},
+      </if>
+      <if test="documentAddress != null">
+        #{documentAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null">
+        #{deleteFlag,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.honghao.cloud.userapi.domain.entity.CloudDocument">
+    update cloud_document
+    <set>
+      <if test="documentName != null">
+        document_name = #{documentName,jdbcType=VARCHAR},
+      </if>
+      <if test="documentType != null">
+        document_type = #{documentType,jdbcType=VARCHAR},
+      </if>
+      <if test="documentAddress != null">
+        document_address = #{documentAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag = #{deleteFlag,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.userapi.domain.entity.CloudDocument">
+    update cloud_document
+    set document_name = #{documentName,jdbcType=VARCHAR},
+      document_type = #{documentType,jdbcType=VARCHAR},
+      document_address = #{documentAddress,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      delete_flag = #{deleteFlag,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
