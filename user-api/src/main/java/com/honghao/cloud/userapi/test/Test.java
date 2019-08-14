@@ -22,7 +22,7 @@ public class Test {
 //        List<JSONObject> list = jsonArray.toJavaList(JSONObject.class);
 //        List<String> values = list.stream().map(each->each.getString("queue")).collect(Collectors.toList());
 //        log.info(String.valueOf(values));
-
+        boolean b = false;
         int n=50;
         Test test = new Test();
         int sum = test.getStep(4);
