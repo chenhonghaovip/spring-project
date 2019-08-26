@@ -17,10 +17,6 @@ import java.io.IOException;
 @Component
 @RabbitListener(queues = RabbitConfig.USER_PUSH_QUEUE, containerFactory = "factory")
 public class TenMinDelay {
-//	@Resource
-//	private WaybillBcListFacade waybillBcListFacade;
-//	@Resource
-//	private RabbitExchangeConfig rabbitExchangeConfig;
 	/**
 	 * 消费队列信息
 	 * @param str json字符串
@@ -28,8 +24,7 @@ public class TenMinDelay {
 	@RabbitHandler
 	public void process(String str, Channel channel, Message message) throws IOException {
 		try {
-			log.info("发送短信");
-//			waybillBcListFacade.createUser1("");
+			log.info("发送短信,{}",str);
 			//手动ack通知队列成功
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 			log.info("ACK_QUEUE_A 接受信息成功");
