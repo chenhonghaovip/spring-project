@@ -22,18 +22,15 @@ public class Test {
 //        List<JSONObject> list = jsonArray.toJavaList(JSONObject.class);
 //        List<String> values = list.stream().map(each->each.getString("queue")).collect(Collectors.toList());
 //        log.info(String.valueOf(values));
-        boolean b = false;
-        int n=50;
+        int n=10;
         Test test = new Test();
-        int sum = test.getStep(4);
+        int sum = test.getStep(n);
         log.info("方法有：{}",sum);
 
     }
     private int getStep(int k){
-        if (k == 1){
+        if (k == 1 || k==2){
             return 1;
-        } else if (k == 2){
-            return 2;
         }else {
             return getStep(k-1)+getStep(k-2);
         }
