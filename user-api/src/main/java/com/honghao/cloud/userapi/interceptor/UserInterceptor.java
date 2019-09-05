@@ -26,25 +26,10 @@ import java.lang.reflect.Method;
 @Slf4j
 public class UserInterceptor implements HandlerInterceptor {
     /**
-     * 请求人员编号
-     */
-    private final String REQUEST_HEADER_MEMBER_NO = "code";
-    /**
-     * 操作人名字
-     */
-    private final String REQUEST_HEADER_USERNAME = "userName";
-    /**
      * 超级管理员编号
      */
     private final String REQUEST_HEADER_USER_TAG = "tag";
-    /**
-     * 属性编码
-     */
-    private final String REQUEST_HEADER_USER_TAG_CODE = "tagCode";
-    /**
-     * 渠道商编码
-     */
-    private final String REQUEST_HEADER_AGENT_NO = "agentNo";
+
 
 
     @Override
