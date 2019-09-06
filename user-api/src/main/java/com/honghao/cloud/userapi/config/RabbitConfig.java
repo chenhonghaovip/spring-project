@@ -1,6 +1,7 @@
 package com.honghao.cloud.userapi.config;
 
 
+import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -28,6 +29,7 @@ import java.util.Map;
  * @date 2019-07-18 22:19
  */
 @Slf4j
+@EnableApolloConfig
 @Configuration
 public class RabbitConfig {
     /**
