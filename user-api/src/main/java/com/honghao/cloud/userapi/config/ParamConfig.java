@@ -1,5 +1,6 @@
 package com.honghao.cloud.userapi.config;
 
+import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import javax.annotation.PostConstruct;
  */
 @Data
 @Component
+@EnableApolloConfig
 @ConfigurationProperties(prefix = "honghao")
 public class ParamConfig {
     /**

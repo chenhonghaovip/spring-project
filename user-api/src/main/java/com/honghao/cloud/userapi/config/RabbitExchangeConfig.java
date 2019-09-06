@@ -3,6 +3,7 @@ package com.honghao.cloud.userapi.config;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 @Data
 @Slf4j
 @Component
+@EnableApolloConfig
 @ConfigurationProperties(prefix = "rabbit.config")
 public class RabbitExchangeConfig {
     private String queues;
