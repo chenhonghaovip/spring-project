@@ -21,7 +21,7 @@ public class ReachableTest {
 
     @Before
     public void before() {
-        jedis = new Jedis("127.0.0.1");
+        jedis = new Jedis("49.235.212.2");
     }
 
     /**
