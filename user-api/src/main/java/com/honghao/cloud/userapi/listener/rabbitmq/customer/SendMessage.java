@@ -24,10 +24,8 @@ public class SendMessage {
     @RabbitListener(queues = RabbitConfig.QUEUE_MSG_SMS_SEND)
     public void sendMessage(JSONObject jsonObject){
         try {
-            log.info("发送短信");
-            throw new RuntimeException("yichang");
+            log.info("发送短信,{}",jsonObject);
         }catch (Exception e){
-//            messageSender.sendMessage(jsonObject);
             log.info("消息队列发送操作异常");
         }
 

@@ -13,7 +13,7 @@ public class UserInfoHolder {
      * 请求线程获取用户信息
      * 切换多线程前请先获取
      */
-    private static final ThreadLocal<Operator> OPERATOR_CONTAINER = new ThreadLocal<>();
+    private static final ThreadLocal<Operator> OPERATOR_CONTAINER = new InheritableThreadLocal<>();
 
     /**
      * 移除用户信息
