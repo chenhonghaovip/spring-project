@@ -12,12 +12,13 @@
     <result column="platform_income" jdbcType="DECIMAL" property="platformIncome" />
     <result column="discount" jdbcType="DECIMAL" property="discount" />
     <result column="coupon_user_id" jdbcType="CHAR" property="couponUserId" />
+    <result column="coupon_type" jdbcType="TINYINT" property="couponType" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="delete_flag" jdbcType="TINYINT" property="deleteFlag" />
   </resultMap>
   <sql id="Base_Column_List">
     w_id, distance, basics, overhang, fastigium, weather, platform_subsidy, platform_income, 
-    discount, coupon_user_id, create_time, delete_flag
+    discount, coupon_user_id, coupon_type, create_time, delete_flag
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -33,13 +34,13 @@
     insert into waybill_order_shipping (w_id, distance, basics, 
       overhang, fastigium, weather, 
       platform_subsidy, platform_income, discount, 
-      coupon_user_id, create_time, delete_flag
-      )
+      coupon_user_id, coupon_type, create_time, 
+      delete_flag)
     values (#{wId,jdbcType=CHAR}, #{distance,jdbcType=DECIMAL}, #{basics,jdbcType=DECIMAL}, 
       #{overhang,jdbcType=DECIMAL}, #{fastigium,jdbcType=DECIMAL}, #{weather,jdbcType=DECIMAL}, 
       #{platformSubsidy,jdbcType=DECIMAL}, #{platformIncome,jdbcType=DECIMAL}, #{discount,jdbcType=DECIMAL}, 
-      #{couponUserId,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=TINYINT}
-      )
+      #{couponUserId,jdbcType=CHAR}, #{couponType,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{deleteFlag,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillOrderShipping">
     insert into waybill_order_shipping
@@ -73,6 +74,9 @@
       </if>
       <if test="couponUserId != null">
         coupon_user_id,
+      </if>
+      <if test="couponType != null">
+        coupon_type,
       </if>
       <if test="createTime != null">
         create_time,
@@ -112,6 +116,9 @@
       <if test="couponUserId != null">
         #{couponUserId,jdbcType=CHAR},
       </if>
+      <if test="couponType != null">
+        #{couponType,jdbcType=TINYINT},
+      </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -150,6 +157,9 @@
       <if test="couponUserId != null">
         coupon_user_id = #{couponUserId,jdbcType=CHAR},
       </if>
+      <if test="couponType != null">
+        coupon_type = #{couponType,jdbcType=TINYINT},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -170,6 +180,7 @@
       platform_income = #{platformIncome,jdbcType=DECIMAL},
       discount = #{discount,jdbcType=DECIMAL},
       coupon_user_id = #{couponUserId,jdbcType=CHAR},
+      coupon_type = #{couponType,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       delete_flag = #{deleteFlag,jdbcType=TINYINT}
     where w_id = #{wId,jdbcType=CHAR}
