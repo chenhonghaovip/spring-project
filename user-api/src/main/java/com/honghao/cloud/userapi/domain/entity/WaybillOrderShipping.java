@@ -24,6 +24,8 @@ public class WaybillOrderShipping {
 
     private String couponUserId;
 
+    private Byte couponType;
+
     private Date createTime;
 
     private Byte deleteFlag;
@@ -106,6 +108,14 @@ public class WaybillOrderShipping {
 
     public void setCouponUserId(String couponUserId) {
         this.couponUserId = couponUserId == null ? null : couponUserId.trim();
+    }
+
+    public Byte getCouponType() {
+        return couponType;
+    }
+
+    public void setCouponType(Byte couponType) {
+        this.couponType = couponType;
     }
 
     public Date getCreateTime() {
