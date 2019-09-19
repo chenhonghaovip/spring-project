@@ -28,6 +28,8 @@ public class RabbitConfig {
      * 用户信息推送队列
      */
     public static final String USER_PUSH_QUEUE = "user_push_queue";
+
+    public static final String TEST_QUEUE_1 = "test_queue_1";
     /**
      * 默认的线程数
      */
@@ -76,5 +78,10 @@ public class RabbitConfig {
     @Bean
     public Queue USER_PUSH_QUEUE(){
         return new Queue(USER_PUSH_QUEUE);
+    }
+
+    @Bean
+    public Queue TEST_QUEUE_1(){
+        return new Queue(TEST_QUEUE_1);
     }
 }
