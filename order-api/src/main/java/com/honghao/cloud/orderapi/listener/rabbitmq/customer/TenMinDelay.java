@@ -1,4 +1,4 @@
-package com.honghao.cloud.orderapi.listener.rabbitmq;
+package com.honghao.cloud.orderapi.listener.rabbitmq.customer;
 
 import com.honghao.cloud.orderapi.config.RabbitConfig;
 import com.rabbitmq.client.Channel;

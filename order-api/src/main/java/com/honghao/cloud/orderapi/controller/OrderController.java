@@ -1,8 +1,8 @@
 package com.honghao.cloud.orderapi.controller;
 
 import com.honghao.cloud.orderapi.base.BaseResponse;
-import com.honghao.cloud.orderapi.dto.request.CardDTO;
 import com.honghao.cloud.orderapi.facade.OrderFacade;
+import com.honghao.cloud.orderapi.listener.rabbitmq.producer.MessageSender;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +23,8 @@ import javax.annotation.Resource;
 public class OrderController {
     @Resource
     private OrderFacade orderFacade;
+    @Resource
+    private MessageSender messageSender;
 
     @PostMapping("/create")
     @ApiOperation(value = "创建订单",notes = "创建订单")
@@ -33,8 +35,9 @@ public class OrderController {
 
     @PostMapping("/create1")
     BaseResponse<String> getUser(@RequestBody String data) {
-        CardDTO cardDTO=new CardDTO();
-        CardDTO.AccountInfoBean accountInfoBean=new CardDTO.AccountInfoBean();
+//        CardDTO cardDTO=new CardDTO();
+        messageSender.pushInfoUser("chenhonghao");
+//        CardDTO.AccountInfoBean accountInfoBean=new CardDTO.AccountInfoBean();
         return null;
     }
 }
