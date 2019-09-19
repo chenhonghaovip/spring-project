@@ -37,10 +37,6 @@ public class Test02 {
             sum += nodeDTO.getWeight();
         }
         log.info("sum的值为：{}",sum);
-
-
-
-
     }
 
     private NodeDTO[] initNodes(){
