@@ -32,13 +32,12 @@ public class GeoHashTest {
      */
     public String getLaCode(BigDecimal value,BigDecimal low,BigDecimal high ,String code){
         log.info("code为：{}",code);
-        if (StringUtils.isNotBlank(code) && code.length() > 20){
+        if (StringUtils.isNotBlank(code) && code.length() >= 20){
             return code;
         }
-        BigDecimal middle = BigDecimal.ZERO;
-        if (BigDecimal.ZERO.compareTo(low.multiply(high)) <= 0){
-            middle = high.subtract(low).divide(BigDecimal.valueOf(2));
-        }
+        BigDecimal middle;
+        middle = high.add(low).divide(BigDecimal.valueOf(2));
+
         if (value.compareTo(middle) > 0){
             low = middle;
             code = code + "1";
