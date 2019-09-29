@@ -2,6 +2,8 @@ package com.honghao.cloud.orderapi.algorithm;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
+
 /**
  * 算法测试01
  *
@@ -23,5 +25,10 @@ public class Test01 {
         long num = (1 + n) * n ;
         long endTime = System.currentTimeMillis();
         log.info("时间为：{}，结果为：{}",endTime - middleTime ,num);
+
+        BigDecimal bigDecimal = BigDecimal.valueOf(1);
+        BigDecimal bigDecimal1 = BigDecimal.valueOf(2);
+        log.info(":{}",bigDecimal.equals(bigDecimal1));
+        log.info("{}",bigDecimal.add(bigDecimal1));
     }
 }
