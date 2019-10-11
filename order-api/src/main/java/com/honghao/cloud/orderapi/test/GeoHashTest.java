@@ -28,17 +28,8 @@ public class GeoHashTest {
         List<String> list1 = Arrays.asList();
         //纬度范围
         List<String> laLodeList = geoHashTest.getLaCode(BigDecimal.valueOf(39.92324),low,high,"",list );
-
-//        String laLode = String.join(",", laLodeList).replaceAll(",","");
         //经度范围
         List<String> loCodeList = geoHashTest.getLaCode(BigDecimal.valueOf(116.3906),BigDecimal.valueOf(-180),BigDecimal.valueOf(180),"",list1);
-//        String loCode = String.join(",", loCodeList).replaceAll(",","");
-//        log.info("纬度范围:{}",laLode);
-//        log.info("经度范围:{}",loCode);
-//        System.out.println(laLodeList);
-//        System.out.println(loCodeList);
-//        String areaCode = geoHashTest.getAreaCode(loCodeList,laLodeList);
-//        log.info(areaCode);
     }
 
     /**
