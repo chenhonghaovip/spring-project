@@ -2,10 +2,11 @@ package com.honghao.cloud.orderapi.test;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,12 +25,15 @@ public class GeoHashTest {
         BigDecimal low = BigDecimal.valueOf(-90);
         BigDecimal high = BigDecimal.valueOf(90);
         GeoHashTest geoHashTest = new GeoHashTest();
-        List<String> list = Arrays.asList();
-        List<String> list1 = Arrays.asList();
+        List<String> list = Collections.emptyList();
+        List<String> list1 = Collections.emptyList();
         //纬度范围
         List<String> laLodeList = geoHashTest.getLaCode(BigDecimal.valueOf(39.92324),low,high,"",list );
         //经度范围
         List<String> loCodeList = geoHashTest.getLaCode(BigDecimal.valueOf(116.3906),BigDecimal.valueOf(-180),BigDecimal.valueOf(180),"",list1);
+        if (CollectionUtils.isEmpty(laLodeList) || CollectionUtils.isEmpty(loCodeList)){
+
+        }
     }
 
     /**
