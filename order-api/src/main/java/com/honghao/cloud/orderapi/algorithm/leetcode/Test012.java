@@ -21,7 +21,7 @@ public class Test012 {
     private static int romanToInt(String s) {
         int[] arr = new int[]{1,4,5,9,10,40,50,90,100,400,500,900,1000};
         String[] strs = new String[]{"I","IV","V","IX","X","XL","L","XC","C","CD","D","CM","M"};
-        Map<String,Integer> map = new HashMap<>();
+        Map<String,Integer> map = new HashMap<>(strs.length*2);
         for (int i = 0; i < arr.length; i++) {
             map.put(strs[i],arr[i]);
         }
