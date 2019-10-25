@@ -57,7 +57,7 @@ public class UserController {
      * @param kappId 骑士id
      * @return BaseResponse
      */
-    @Auth
+//    @Auth
     @GetMapping("/create2")
     @ApiOperation(value = "测试" ,notes = "测试")
     BaseResponse<String> create2(@RequestParam("kappId") String kappId) {

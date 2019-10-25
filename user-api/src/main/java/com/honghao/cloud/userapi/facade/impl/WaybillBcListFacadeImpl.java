@@ -63,10 +63,8 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
 
         jedisOperator.set(DICTIONARY+batchId,batchId);
         asyncTask.sendInfo();
-//        WaybillBcList waybillBcList=new WaybillBcList();
-//        waybillBcListService.createUser(waybillBcList);
         messageSender.sendMessage(jsonObject);
-        EventDTO eventDTO= EventDTO.builder().code(Integer.valueOf(1))
+        EventDTO eventDTO= EventDTO.builder().code(1)
                 .desc("chenhonghao").build();
 
         EventDemo eventListener=new EventDemo(this,eventDTO);
@@ -127,8 +125,10 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
 
     @Override
     public Boolean createUser2(String data) {
-        messageSender.pushInfoUser("nnnnnnnnnnnnn");
+//        messageSender.pushInfoUser("nnnnnnnnnnnnn");
+        messageSender.outQueue("广播消息");
         return false;
+
     }
 
     /**

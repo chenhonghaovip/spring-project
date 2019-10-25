@@ -25,6 +25,6 @@ public class ParamConfig {
 
     @PostConstruct
     void beforeInfo(){
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>"+name);
     }
 }

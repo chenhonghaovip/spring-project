@@ -55,7 +55,7 @@ public class MessageSender {
 	public void sendMessage(Object content) {
 		log.info("开始短信消息发送");
 		MessagePostProcessor messagePostProcessor = message -> {
-			message.getMessageProperties().setExpiration(String.valueOf(60*1000));
+			message.getMessageProperties().setExpiration(String.valueOf(2*1000));
 			return message;
 		};
 		rabbitTemplate.convertAndSend(RabbitConfig.QUEUE_MSG_SMS_SEND_TTL, content, messagePostProcessor);
@@ -81,5 +81,14 @@ public class MessageSender {
 			}
 		});
 		rabbitTemplate.convertAndSend(RabbitConfig.TEST_QUEUE,message);
+	}
+
+	/**
+	 * 用户信息推送队列
+	 * @param message 请求报文
+	 */
+	public void outQueue(String message){
+		System.out.println("用户信息推送队列");
+		rabbitTemplate.convertAndSend(RabbitConfig.WAYBILL_ORDER_EXCHANGE,"",message);
 	}
 }

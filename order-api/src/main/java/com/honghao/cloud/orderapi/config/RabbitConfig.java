@@ -2,6 +2,9 @@ package com.honghao.cloud.orderapi.config;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -83,5 +86,32 @@ public class RabbitConfig {
     @Bean
     public Queue TEST_QUEUE_1(){
         return new Queue(TEST_QUEUE_1);
+    }
+    /**
+     * 订单状态变更
+     */
+    public static final String WAYBILL_ORDER_EXCHANGE = "waybill_order_exchange";
+
+    @Bean
+    public Queue test03(){
+        return new Queue("33333");
+    }
+    /**
+     * 创建广播交换机
+     * @return FanoutExchange
+     */
+    @Bean
+    public FanoutExchange waybillOrderExchange(){
+        return new FanoutExchange(WAYBILL_ORDER_EXCHANGE);
+    }
+
+    /**
+     * 绑定队列3到指定的广播交换机
+     * @return Binding
+     */
+    @Bean
+    public Binding test03Binding() {
+        return BindingBuilder.bind(test03())
+                .to(waybillOrderExchange());
     }
 }
