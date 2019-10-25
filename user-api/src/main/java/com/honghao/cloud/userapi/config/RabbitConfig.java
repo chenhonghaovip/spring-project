@@ -3,10 +3,7 @@ package com.honghao.cloud.userapi.config;
 
 import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -231,5 +228,47 @@ public class RabbitConfig {
     @Bean
     public Queue testQueue(){
         return new Queue(TEST_QUEUE);
+    }
+
+    /**
+     * 订单状态变更
+     */
+    public static final String WAYBILL_ORDER_EXCHANGE = "waybill_order_exchange";
+
+    @Bean
+    public Queue test01(){
+        return new Queue("11111");
+    }
+    @Bean
+    public Queue test02(){
+        return new Queue("22222");
+    }
+    /**
+     * 创建广播交换机
+     * @return FanoutExchange
+     */
+    @Bean
+    public FanoutExchange waybillOrderExchange(){
+        return new FanoutExchange(WAYBILL_ORDER_EXCHANGE);
+    }
+
+    /**
+     * 绑定队列1到指定的广播交换机
+     * @return Binding
+     */
+    @Bean
+    public Binding test01Binding() {
+        return BindingBuilder.bind(test01())
+                .to(waybillOrderExchange());
+    }
+
+    /**
+     * 绑定队列2到指定的广播交换机
+     * @return Binding
+     */
+    @Bean
+    public Binding test02Binding() {
+        return BindingBuilder.bind(test02())
+                .to(waybillOrderExchange());
     }
 }

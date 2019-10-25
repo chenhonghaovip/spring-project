@@ -1,7 +1,5 @@
 package com.honghao.cloud.userapi.aspect;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -51,9 +49,9 @@ public class AuthAspect {
         for (Object arg : args) {
             log.info("arg = {}",arg);
         }
-        JSONObject jsonObject = JSON.parseObject(args[0].toString());
-        String kappId = jsonObject.getString("kappId");
-        log.info("kappId = {}",kappId);
+//        JSONObject jsonObject = JSON.parseObject(args[0].toString());
+//        String kappId = jsonObject.getString("kappId");
+//        log.info("kappId = {}",kappId);
         //动态修改其参数
         //注意，如果调用joinPoint.proceed()方法，则修改的参数值不会生效，必须调用joinPoint.proceed(Object[] args)
         Object result = joinPoint.proceed(args);
