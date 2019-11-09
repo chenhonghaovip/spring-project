@@ -1,5 +1,8 @@
 package com.honghao.cloud.userapi.aspect;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Aspect
 public class AuthAspect {
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     @Pointcut("@annotation(Auth)")
     public void controller(){
     }
@@ -46,12 +50,18 @@ public class AuthAspect {
         //获取方法参数类型数组
         Class[] paramTypeArray = methodSignature.getParameterTypes();
         log.info("请求参数为{}",args);
-        for (Object arg : args) {
-            log.info("arg = {}",arg);
+        for (int i = 0; i < args.length; i++) {
+            JSONObject jsonObject = JSON.parseObject(args[i].toString());
+            String wId = jsonObject.getString("wId");
+            if ("111".equals(wId)){
+                jsonObject.put("wId","222");
+            }
+            args[i] = MAPPER.writeValueAsString(jsonObject);
         }
-//        JSONObject jsonObject = JSON.parseObject(args[0].toString());
-//        String kappId = jsonObject.getString("kappId");
-//        log.info("kappId = {}",kappId);
+
+        JSONObject jsonObject = JSON.parseObject(args[0].toString());
+        String wId = jsonObject.getString("wId");
+        log.info("wId = {}",wId);
         //动态修改其参数
         //注意，如果调用joinPoint.proceed()方法，则修改的参数值不会生效，必须调用joinPoint.proceed(Object[] args)
         Object result = joinPoint.proceed(args);
