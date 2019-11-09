@@ -21,17 +21,18 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateUserDTO implements Serializable {
+public class UpdateUserDTO implements Serializable {
     private static final long serialVersionUID = -2845044232541422362L;
 
     /**
      * 是否使用优惠券
      */
     @NotBlank
+    private String dto;
+
     private String name;
 
     @NotEmpty
-    //用于对list集合内部对象进行校验
     @Valid
-    private List<Operator> list;
+    private List<UserDTO> list;
 }

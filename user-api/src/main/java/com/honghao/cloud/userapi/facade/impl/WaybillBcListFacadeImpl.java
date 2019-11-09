@@ -5,6 +5,8 @@ import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.config.ThreadPoolInitConfig;
 import com.honghao.cloud.userapi.dto.request.EventDTO;
+import com.honghao.cloud.userapi.dto.request.Operator;
+import com.honghao.cloud.userapi.dto.request.UpdateUserDTO;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import com.honghao.cloud.userapi.interceptor.UserInfoHolder;
 import com.honghao.cloud.userapi.listener.event.EventDemo;
@@ -137,7 +139,13 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
      * @return Boolean
      */
     public Boolean createUserFallback(String data){
+        Operator operator = new Operator();
+        packRabbitMq(new UpdateUserDTO(),operator,operator.getClass());
         log.info("服务熔断，返回默认值！");
         return false;
+    }
+
+    private <T> T  packRabbitMq(UpdateUserDTO updateUserDTO, T data, Class<?> cl){
+        return data;
     }
 }

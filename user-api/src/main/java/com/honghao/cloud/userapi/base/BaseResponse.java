@@ -49,5 +49,11 @@ public class BaseResponse<T> implements Serializable {
         return new BaseResponse(false, -1, null, "请求失败");
     }
 
+    public static BaseResponse parameterChangeError() {
+        return new BaseResponse(false, -2, null, "无法转换指定对象");
+    }
+    public static BaseResponse paramValidateError() {
+        return new BaseResponse(false, -3, null, "参数校验不通过");
+    }
 
 }
