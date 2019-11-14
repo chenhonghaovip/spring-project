@@ -5,13 +5,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.*;
 import redis.clients.jedis.exceptions.JedisException;
+import redis.clients.jedis.params.geo.GeoRadiusParam;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.UUID;
 
 /**
  * redis 基本操作
@@ -531,8 +529,9 @@ public class JedisOperator {
 		Jedis jedis = null;
 		try {
 			jedis = getResource();
-			return (Long) jedis.eval("return redis.call('GEOADD',KEYS[1],KEYS[2],KEYS[3],KEYS[4])", 4, key, longitude,
-					latitude, dName);
+			return
+//					(Long) jedis.eval("return redis.call('GEOADD',KEYS[1],KEYS[2],KEYS[3],KEYS[4])", 4, key, longitude, latitude, dName);
+					jedis.geoadd(key,Double.valueOf(longitude),Double.valueOf(latitude),dName);
 		} catch (Exception e) {
 			log.error("Redis geoADD error: " + e.getMessage());
 		} finally {
@@ -540,5 +539,155 @@ public class JedisOperator {
 		}
 		return 0L;
 	}
+
+	/**
+	 * 添加位置
+	 * @param key 键值
+	 * @param longitude 经度
+	 * @param latitude 纬度
+	 * @param dName key值
+	 * @return 位置集合
+	 */
+	public Long geoadd(String key, double longitude, double latitude, String dName) {
+		Jedis jedis = null;
+		try {
+			jedis = getResource();
+			return
+					jedis.geoadd(key,longitude,latitude,dName);
+		} catch (Exception e) {
+			log.error("Redis geoADD error: " + e.getMessage());
+		} finally {
+			returnResource(jedis);
+		}
+		return 0L;
+	}
+
+
+	/**
+	 * 批次添加位置
+	 * @param key 键值
+	 * @param map 位置的key和键值对的map
+	 * @return 位置集合
+	 */
+	public Long geoadd(String key, Map<String ,GeoCoordinate> map) {
+		Jedis jedis = null;
+		try {
+			jedis = getResource();
+			return jedis.geoadd(key,map);
+		} catch (Exception e) {
+			log.error("Redis geoBatchADD error: " + e.getMessage());
+		} finally {
+			returnResource(jedis);
+		}
+		return 0L;
+	}
+
+	/**
+	 * 获取指定经纬度周围半径内的位置集合
+	 * @param key 键值
+	 * @param longitude 经度
+	 * @param latitude  纬度
+	 * @param radius 半径
+	 * @param unit 半径单位
+	 * @param geoRadiusParam 排序方式
+	 * @return 位置集合
+	 */
+    public List<GeoRadiusResponse> georadius(String key, double longitude, double latitude, double radius, GeoUnit unit, GeoRadiusParam geoRadiusParam) {
+        Jedis jedis = null;
+        try {
+            jedis = getResource();
+            return jedis.georadius(key,longitude,latitude,radius,unit,geoRadiusParam);
+        } catch (Exception e) {
+            log.error("Redis georadius error: " + e.getMessage());
+        } finally {
+            returnResource(jedis);
+        }
+        return Collections.emptyList();
+    }
+
+	/**
+	 * 获取指定key周围半径内的位置集合
+	 * @param key 键值
+	 * @param member1 指定key
+	 * @param radius 半径
+	 * @param unit 半径单位
+	 * @param geoRadiusParam 排序方式
+	 * @return 位置集合
+	 */
+	public List<GeoRadiusResponse> georadiusByMember(String key, String member1, double radius , GeoUnit unit,GeoRadiusParam geoRadiusParam) {
+		Jedis jedis = null;
+		try {
+			jedis = getResource();
+			return jedis.georadiusByMember(key,member1,radius,unit,geoRadiusParam);
+		} catch (Exception e) {
+			log.error("Redis georadiusByMember error: " + e.getMessage());
+		} finally {
+			returnResource(jedis);
+		}
+		return Collections.emptyList();
+	}
+
+	/**
+	 * 获取两个指定key的距离
+	 * @param key 键值
+	 * @param member1 成员1
+	 * @param member2 成员2
+	 * @param unit 半径单位
+	 * @return 距离
+	 */
+	public Double geodist(String key, String member1, String member2,  GeoUnit unit) {
+		Jedis jedis = null;
+		try {
+			jedis = getResource();
+			return jedis.geodist(key,member1,member2,unit);
+		} catch (Exception e) {
+			log.error("Redis geodist error: " + e.getMessage());
+		} finally {
+			returnResource(jedis);
+		}
+		return 0.00;
+	}
+
+	/**
+	 * 获取指定位置的经纬度
+	 * @param key 键值
+	 * @param member1 成员1
+	 * @return 距离
+	 */
+	public List<GeoCoordinate> geopos(String key, String... member1) {
+		Jedis jedis = null;
+		try {
+			jedis = getResource();
+			return jedis.geopos(key,member1);
+		} catch (Exception e) {
+			log.error("Redis geopos error: " + e.getMessage());
+		} finally {
+			returnResource(jedis);
+		}
+		return Collections.emptyList();
+	}
+
+	/**
+	 * 获取某个地理位置的geohash值
+	 * @param key 键值
+	 * @param member1 成员1
+	 * @return 地理位置的geohash值
+	 */
+	public List<String> geohash(String key, String[] member1) {
+		Jedis jedis = null;
+		try {
+			jedis = getResource();
+			return jedis.geohash(key,member1);
+		} catch (Exception e) {
+			log.error("Redis geohash error: " + e.getMessage());
+		} finally {
+			returnResource(jedis);
+		}
+		return Collections.emptyList();
+	}
+
+
+
+
 
 }
