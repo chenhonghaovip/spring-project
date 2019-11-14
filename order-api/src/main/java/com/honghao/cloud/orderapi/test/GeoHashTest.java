@@ -6,7 +6,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,14 +24,15 @@ public class GeoHashTest {
         BigDecimal low = BigDecimal.valueOf(-90);
         BigDecimal high = BigDecimal.valueOf(90);
         GeoHashTest geoHashTest = new GeoHashTest();
-        List<String> list = Collections.emptyList();
-        List<String> list1 = Collections.emptyList();
-        //纬度范围
-        List<String> laLodeList = geoHashTest.getLaCode(BigDecimal.valueOf(39.92324),low,high,"",list );
-        //经度范围
-        List<String> loCodeList = geoHashTest.getLaCode(BigDecimal.valueOf(116.3906),BigDecimal.valueOf(-180),BigDecimal.valueOf(180),"",list1);
-        if (CollectionUtils.isEmpty(laLodeList) || CollectionUtils.isEmpty(loCodeList)){
+        List<String> list = new ArrayList<>();
+        List<String> list1 = new ArrayList<>();
 
+        //纬度范围
+        List<String> laLodeList = geoHashTest.getLaCode(BigDecimal.valueOf(31.17091010199653),low,high,"",list );
+        //经度范围
+        List<String> loCodeList = geoHashTest.getLaCode(BigDecimal.valueOf(121.3718579101563),BigDecimal.valueOf(-180),BigDecimal.valueOf(180),"",list1);
+        if (CollectionUtils.isEmpty(laLodeList) || CollectionUtils.isEmpty(loCodeList)){
+            System.out.println(getAreaCode(loCodeList,laLodeList));
         }
     }
 
@@ -70,7 +70,7 @@ public class GeoHashTest {
      * @param la 纬度
      * @return string
      */
-    private String getAreaCode(List<String> lo,List<String> la){
+    private static String getAreaCode(List<String> lo,List<String> la){
         List<String> areaCodeList = new ArrayList<>();
         for (int i = 0; i < la.size(); i++) {
             areaCodeList.add(lo.get(i));
