@@ -179,7 +179,7 @@ public class ConvertShortUrlUtil {
         try {
             String wId = "2019111500000088";
             String temp = "MUdlAoWtseETdiCyuPmkFideqNuL1qTl";
-            String sign = MD5Util.md5Encode(wId + temp.toUpperCase());
+            String sign = null;
 
             ResultBean<String> resultBean = ConvertShortUrlUtil.convertBaiDuShortUrl("http://uat.ydp.yundasys.com/cloudhts/msgLink/toHtml" + "?sign=" + sign + "&orderId=" + wId);
             if (!org.springframework.util.StringUtils.isEmpty(resultBean)){

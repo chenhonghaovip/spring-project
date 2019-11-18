@@ -4,9 +4,10 @@ import com.honghao.cloud.userapi.config.RabbitConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 
 /**
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class MessageSender {
-	@Autowired
+	@Resource
 	@Qualifier("rabbitTemplate")
 	private RabbitTemplate rabbitTemplate;
 
@@ -90,5 +91,14 @@ public class MessageSender {
 	public void outQueue(String message){
 		System.out.println("用户信息推送队列");
 		rabbitTemplate.convertAndSend(RabbitConfig.WAYBILL_ORDER_EXCHANGE,"",message);
+	}
+
+	/**
+	 * 数据迁移测试
+	 * @param message 请求报文
+	 */
+	public void test01(String message){
+//		log.info("数据迁移测试{}",message);
+		rabbitTemplate.convertAndSend(RabbitConfig.TEST_1,message);
 	}
 }

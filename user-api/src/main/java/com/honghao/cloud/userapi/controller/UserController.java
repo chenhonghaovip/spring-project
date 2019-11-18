@@ -158,12 +158,11 @@ public class UserController {
 
     @PostMapping("/test005")
     BaseResponse<LOO> test05(@RequestBody String data){
+//        log.info("数据迁移{}",data);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("name_1","111");
         LOO test = JSON.parseObject(jsonObject.toJSONString(), LOO.class);
-//        LOO sameCityOrderVo = JSONObject.toJavaObject(jsonObject, LOO.class);
-
-
+        waybillBcListFacade.test01(data);
         return BaseResponse.successData(test);
     }
 

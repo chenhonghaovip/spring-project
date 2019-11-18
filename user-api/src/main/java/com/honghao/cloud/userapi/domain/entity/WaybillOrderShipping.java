@@ -24,11 +24,11 @@ public class WaybillOrderShipping {
 
     private String couponUserId;
 
-    private Byte couponType;
+    private Integer couponType;
 
     private Date createTime;
 
-    private Byte deleteFlag;
+    private Integer deleteFlag;
 
     public String getwId() {
         return wId;
@@ -110,11 +110,11 @@ public class WaybillOrderShipping {
         this.couponUserId = couponUserId == null ? null : couponUserId.trim();
     }
 
-    public Byte getCouponType() {
+    public Integer getCouponType() {
         return couponType;
     }
 
-    public void setCouponType(Byte couponType) {
+    public void setCouponType(Integer couponType) {
         this.couponType = couponType;
     }
 
@@ -126,11 +126,11 @@ public class WaybillOrderShipping {
         this.createTime = createTime;
     }
 
-    public Byte getDeleteFlag() {
+    public Integer getDeleteFlag() {
         return deleteFlag;
     }
 
-    public void setDeleteFlag(Byte deleteFlag) {
+    public void setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
     }
 }

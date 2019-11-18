@@ -50,7 +50,7 @@ public class WaybillBcList {
 
     private BigDecimal receiveLatitude;
 
-    private Byte isTimely;
+    private Integer isTimely;
 
     private Date etStartTime;
 
@@ -62,11 +62,11 @@ public class WaybillBcList {
 
     private String cargoType;
 
-    private Byte orderStatus;
+    private Integer orderStatus;
 
-    private Byte orderPayment;
+    private Integer orderPayment;
 
-    private Byte orderPayStatus;
+    private Integer orderPayStatus;
 
     private BigDecimal deliveryFee;
 
@@ -76,13 +76,13 @@ public class WaybillBcList {
 
     private String orderRemark;
 
-    private Byte orderSource;
+    private Integer orderSource;
 
-    private Byte orderType;
+    private Integer orderType;
 
-    private Byte singleWay;
+    private Integer singleWay;
 
-    private Byte deliveryMode;
+    private Integer deliveryMode;
 
     private Date orderTime;
 
@@ -94,11 +94,11 @@ public class WaybillBcList {
 
     private Date updateTime;
 
-    private Byte deleteFlag;
+    private Integer deleteFlag;
 
-    private Byte isOverdistance;
+    private Integer isOverdistance;
 
-    private Byte isOvertime;
+    private Integer isOvertime;
 
     public String getwId() {
         return wId;
@@ -284,11 +284,11 @@ public class WaybillBcList {
         this.receiveLatitude = receiveLatitude;
     }
 
-    public Byte getIsTimely() {
+    public Integer getIsTimely() {
         return isTimely;
     }
 
-    public void setIsTimely(Byte isTimely) {
+    public void setIsTimely(Integer isTimely) {
         this.isTimely = isTimely;
     }
 
@@ -332,27 +332,27 @@ public class WaybillBcList {
         this.cargoType = cargoType == null ? null : cargoType.trim();
     }
 
-    public Byte getOrderStatus() {
+    public Integer getOrderStatus() {
         return orderStatus;
     }
 
-    public void setOrderStatus(Byte orderStatus) {
+    public void setOrderStatus(Integer orderStatus) {
         this.orderStatus = orderStatus;
     }
 
-    public Byte getOrderPayment() {
+    public Integer getOrderPayment() {
         return orderPayment;
     }
 
-    public void setOrderPayment(Byte orderPayment) {
+    public void setOrderPayment(Integer orderPayment) {
         this.orderPayment = orderPayment;
     }
 
-    public Byte getOrderPayStatus() {
+    public Integer getOrderPayStatus() {
         return orderPayStatus;
     }
 
-    public void setOrderPayStatus(Byte orderPayStatus) {
+    public void setOrderPayStatus(Integer orderPayStatus) {
         this.orderPayStatus = orderPayStatus;
     }
 
@@ -388,35 +388,35 @@ public class WaybillBcList {
         this.orderRemark = orderRemark == null ? null : orderRemark.trim();
     }
 
-    public Byte getOrderSource() {
+    public Integer getOrderSource() {
         return orderSource;
     }
 
-    public void setOrderSource(Byte orderSource) {
+    public void setOrderSource(Integer orderSource) {
         this.orderSource = orderSource;
     }
 
-    public Byte getOrderType() {
+    public Integer getOrderType() {
         return orderType;
     }
 
-    public void setOrderType(Byte orderType) {
+    public void setOrderType(Integer orderType) {
         this.orderType = orderType;
     }
 
-    public Byte getSingleWay() {
+    public Integer getSingleWay() {
         return singleWay;
     }
 
-    public void setSingleWay(Byte singleWay) {
+    public void setSingleWay(Integer singleWay) {
         this.singleWay = singleWay;
     }
 
-    public Byte getDeliveryMode() {
+    public Integer getDeliveryMode() {
         return deliveryMode;
     }
 
-    public void setDeliveryMode(Byte deliveryMode) {
+    public void setDeliveryMode(Integer deliveryMode) {
         this.deliveryMode = deliveryMode;
     }
 
@@ -460,27 +460,27 @@ public class WaybillBcList {
         this.updateTime = updateTime;
     }
 
-    public Byte getDeleteFlag() {
+    public Integer getDeleteFlag() {
         return deleteFlag;
     }
 
-    public void setDeleteFlag(Byte deleteFlag) {
+    public void setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
     }
 
-    public Byte getIsOverdistance() {
+    public Integer getIsOverdistance() {
         return isOverdistance;
     }
 
-    public void setIsOverdistance(Byte isOverdistance) {
+    public void setIsOverdistance(Integer isOverdistance) {
         this.isOverdistance = isOverdistance;
     }
 
-    public Byte getIsOvertime() {
+    public Integer getIsOvertime() {
         return isOvertime;
     }
 
-    public void setIsOvertime(Byte isOvertime) {
+    public void setIsOvertime(Integer isOvertime) {
         this.isOvertime = isOvertime;
     }
 }

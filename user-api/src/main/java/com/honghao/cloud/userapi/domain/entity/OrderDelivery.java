@@ -12,7 +12,7 @@ public class OrderDelivery {
 
     private String deliveryManId;
 
-    private Byte isPay;
+    private Integer isPay;
 
     private Double teamPay;
 
@@ -22,7 +22,7 @@ public class OrderDelivery {
 
     private String knightPhone;
 
-    private Byte deliveryStatus;
+    private Integer deliveryStatus;
 
     private Double shareType;
 
@@ -84,11 +84,11 @@ public class OrderDelivery {
         this.deliveryManId = deliveryManId == null ? null : deliveryManId.trim();
     }
 
-    public Byte getIsPay() {
+    public Integer getIsPay() {
         return isPay;
     }
 
-    public void setIsPay(Byte isPay) {
+    public void setIsPay(Integer isPay) {
         this.isPay = isPay;
     }
 
@@ -124,11 +124,11 @@ public class OrderDelivery {
         this.knightPhone = knightPhone == null ? null : knightPhone.trim();
     }
 
-    public Byte getDeliveryStatus() {
+    public Integer getDeliveryStatus() {
         return deliveryStatus;
     }
 
-    public void setDeliveryStatus(Byte deliveryStatus) {
+    public void setDeliveryStatus(Integer deliveryStatus) {
         this.deliveryStatus = deliveryStatus;
     }
 

@@ -13,9 +13,9 @@ public class WaybillBcListDetailAction {
 
     private String kappPhone;
 
-    private Byte kappAction;
+    private Integer kappAction;
 
-    private Byte isSingle;
+    private Integer isSingle;
 
     private Date sSingleTime;
 
@@ -25,7 +25,7 @@ public class WaybillBcListDetailAction {
 
     private Date updateTime;
 
-    private Byte deleteFlag;
+    private Integer deleteFlag;
 
     public String getwId() {
         return wId;
@@ -67,19 +67,19 @@ public class WaybillBcListDetailAction {
         this.kappPhone = kappPhone == null ? null : kappPhone.trim();
     }
 
-    public Byte getKappAction() {
+    public Integer getKappAction() {
         return kappAction;
     }
 
-    public void setKappAction(Byte kappAction) {
+    public void setKappAction(Integer kappAction) {
         this.kappAction = kappAction;
     }
 
-    public Byte getIsSingle() {
+    public Integer getIsSingle() {
         return isSingle;
     }
 
-    public void setIsSingle(Byte isSingle) {
+    public void setIsSingle(Integer isSingle) {
         this.isSingle = isSingle;
     }
 
@@ -115,11 +115,11 @@ public class WaybillBcListDetailAction {
         this.updateTime = updateTime;
     }
 
-    public Byte getDeleteFlag() {
+    public Integer getDeleteFlag() {
         return deleteFlag;
     }
 
-    public void setDeleteFlag(Byte deleteFlag) {
+    public void setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
     }
 }

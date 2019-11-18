@@ -11,7 +11,7 @@ public class CloudDeliveryMan {
 
     private String name;
 
-    private Byte sex;
+    private Integer sex;
 
     private String phone;
 
@@ -29,17 +29,17 @@ public class CloudDeliveryMan {
 
     private Long identityId;
 
-    private Byte workStatus;
+    private Integer workStatus;
 
-    private Byte applyStatus;
+    private Integer applyStatus;
 
-    private Byte qualificationStatus;
+    private Integer qualificationStatus;
 
-    private Byte regFrom;
+    private Integer regFrom;
 
     private String otherRegAccount;
 
-    private Byte loginFrom;
+    private Integer loginFrom;
 
     private String bindWx;
 
@@ -47,7 +47,7 @@ public class CloudDeliveryMan {
 
     private Date joinTime;
 
-    private Byte serviceStatus;
+    private Integer serviceStatus;
 
     private String createBy;
 
@@ -91,11 +91,11 @@ public class CloudDeliveryMan {
         this.name = name == null ? null : name.trim();
     }
 
-    public Byte getSex() {
+    public Integer getSex() {
         return sex;
     }
 
-    public void setSex(Byte sex) {
+    public void setSex(Integer sex) {
         this.sex = sex;
     }
 
@@ -163,35 +163,35 @@ public class CloudDeliveryMan {
         this.identityId = identityId;
     }
 
-    public Byte getWorkStatus() {
+    public Integer getWorkStatus() {
         return workStatus;
     }
 
-    public void setWorkStatus(Byte workStatus) {
+    public void setWorkStatus(Integer workStatus) {
         this.workStatus = workStatus;
     }
 
-    public Byte getApplyStatus() {
+    public Integer getApplyStatus() {
         return applyStatus;
     }
 
-    public void setApplyStatus(Byte applyStatus) {
+    public void setApplyStatus(Integer applyStatus) {
         this.applyStatus = applyStatus;
     }
 
-    public Byte getQualificationStatus() {
+    public Integer getQualificationStatus() {
         return qualificationStatus;
     }
 
-    public void setQualificationStatus(Byte qualificationStatus) {
+    public void setQualificationStatus(Integer qualificationStatus) {
         this.qualificationStatus = qualificationStatus;
     }
 
-    public Byte getRegFrom() {
+    public Integer getRegFrom() {
         return regFrom;
     }
 
-    public void setRegFrom(Byte regFrom) {
+    public void setRegFrom(Integer regFrom) {
         this.regFrom = regFrom;
     }
 
@@ -203,11 +203,11 @@ public class CloudDeliveryMan {
         this.otherRegAccount = otherRegAccount == null ? null : otherRegAccount.trim();
     }
 
-    public Byte getLoginFrom() {
+    public Integer getLoginFrom() {
         return loginFrom;
     }
 
-    public void setLoginFrom(Byte loginFrom) {
+    public void setLoginFrom(Integer loginFrom) {
         this.loginFrom = loginFrom;
     }
 
@@ -235,11 +235,11 @@ public class CloudDeliveryMan {
         this.joinTime = joinTime;
     }
 
-    public Byte getServiceStatus() {
+    public Integer getServiceStatus() {
         return serviceStatus;
     }
 
-    public void setServiceStatus(Byte serviceStatus) {
+    public void setServiceStatus(Integer serviceStatus) {
         this.serviceStatus = serviceStatus;
     }
 

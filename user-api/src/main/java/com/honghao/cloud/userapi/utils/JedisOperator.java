@@ -8,8 +8,10 @@ import redis.clients.jedis.exceptions.JedisException;
 import redis.clients.jedis.params.geo.GeoRadiusParam;
 
 import javax.annotation.Resource;
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * redis 基本操作
@@ -171,29 +173,6 @@ public class JedisOperator {
 		return map;
 	}
 
-	public Map<String, String> hgetAll(byte[] bytes) {
-		Map<String, String> hashMap = null;
-		Jedis jedis = null;
-		try {
-
-			Map<byte[], byte[]> map = null;
-			jedis = getResource();
-			Pipeline pipeline = jedis.pipelined();
-			Response<Map<byte[], byte[]>> response = pipeline.hgetAll(bytes);
-			// Response<Map<String, String>> response = pipeline.hgetAll(key);
-			pipeline.sync();
-			map = response.get();
-			hashMap = new HashMap<>(map.size()*2);
-			for (Entry<byte[], byte[]> entry : map.entrySet()) {
-				hashMap.put(new String(entry.getKey()), new String(entry.getValue()));
-			}
-		} catch (Exception e) {
-			log.error("从Jedis获取HGETALL值出现异常：", e);
-		} finally {
-			returnResource(jedis);
-		}
-		return hashMap;
-	}
 
 	/**
 	 * 删除哈希表 key中的一个或多个指定域。
@@ -206,18 +185,6 @@ public class JedisOperator {
 		try {
 			jedis = getResource();
 			jedis.hdel(key, field);
-		} catch (JedisException e) {
-			log.error("Redis HDEL has error：", e);
-		} finally {
-			returnResource(jedis);
-		}
-	}
-
-	public void HDEL(byte[] bytes, byte[]... fields) {
-		Jedis jedis = null;
-		try {
-			jedis = getResource();
-			jedis.hdel(bytes, fields);
 		} catch (JedisException e) {
 			log.error("Redis HDEL has error：", e);
 		} finally {
@@ -265,31 +232,6 @@ public class JedisOperator {
 		return obj;
 	}
 
-	public byte[] hget(byte[] key, byte[] field) {
-		byte[] result = null;
-		Jedis jedis = null;
-		try {
-			jedis = this.getResource();
-			result = jedis.hget(key, field);
-		} catch (Exception e) {
-			log.error("Redis set error: " + e.getMessage() + " - " + key + ", value:" + result);
-		} finally {
-			returnResource(jedis);
-		}
-		return result;
-	}
-
-	public void hset(byte[] key, byte[] field, byte[] value) {
-		Jedis jedis = null;
-		try {
-			jedis = getResource();
-			jedis.hset(key, field, value);
-		} catch (JedisException e) {
-			log.error("Redis HSET has error：", e);
-		} finally {
-			returnResource(jedis);
-		}
-	}
 
 	public String setNx(String lockName, long acquireTimeMs, long timeOutMs) {
 		Jedis jedis = null;
@@ -357,18 +299,6 @@ public class JedisOperator {
 		try {
 			jedis = getResource();
 			jedis.del(key);
-		} catch (Exception e) {
-			log.error("Redis del error: " + e.getMessage());
-		} finally {
-			returnResource(jedis);
-		}
-	}
-
-	public void del(byte[] bytes) {
-		Jedis jedis = null;
-		try {
-			jedis = getResource();
-			jedis.del(bytes);
 		} catch (Exception e) {
 			log.error("Redis del error: " + e.getMessage());
 		} finally {
