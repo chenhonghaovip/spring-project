@@ -98,7 +98,6 @@ public class MessageSender {
 	 * @param message 请求报文
 	 */
 	public void test01(String message){
-//		log.info("数据迁移测试{}",message);
 		rabbitTemplate.convertAndSend(RabbitConfig.TEST_1,message);
 	}
 }
