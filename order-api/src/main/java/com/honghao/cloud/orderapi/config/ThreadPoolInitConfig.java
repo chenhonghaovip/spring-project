@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ThreadPoolInitConfig {
     private static AtomicInteger atomicInteger=new AtomicInteger(0);
 
-    public static ThreadPoolExecutor build(String name){
+    private static ThreadPoolExecutor build(String name){
         String namePrefix = "ThreadPool-" +
                 name + atomicInteger.getAndIncrement();
         ThreadPoolExecutor threadPoolExecutor=new ThreadPoolExecutor(2, 10, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadFactory() {
