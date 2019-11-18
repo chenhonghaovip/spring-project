@@ -8,7 +8,7 @@ public class WaybillBcListExtend {
 
     private String cargoInfo;
 
-    private Byte buyingPatterns;
+    private Integer buyingPatterns;
 
     private BigDecimal predictPrice;
 
@@ -20,7 +20,7 @@ public class WaybillBcListExtend {
 
     private Date updateTime;
 
-    private Byte deleteFlag;
+    private Integer deleteFlag;
 
     public String getwId() {
         return wId;
@@ -38,11 +38,11 @@ public class WaybillBcListExtend {
         this.cargoInfo = cargoInfo == null ? null : cargoInfo.trim();
     }
 
-    public Byte getBuyingPatterns() {
+    public Integer getBuyingPatterns() {
         return buyingPatterns;
     }
 
-    public void setBuyingPatterns(Byte buyingPatterns) {
+    public void setBuyingPatterns(Integer buyingPatterns) {
         this.buyingPatterns = buyingPatterns;
     }
 
@@ -86,11 +86,11 @@ public class WaybillBcListExtend {
         this.updateTime = updateTime;
     }
 
-    public Byte getDeleteFlag() {
+    public Integer getDeleteFlag() {
         return deleteFlag;
     }
 
-    public void setDeleteFlag(Byte deleteFlag) {
+    public void setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
     }
 }

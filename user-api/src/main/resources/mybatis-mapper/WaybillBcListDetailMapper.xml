@@ -185,4 +185,15 @@
       delete_flag = #{deleteFlag,jdbcType=TINYINT}
     where id = #{id,jdbcType=CHAR}
   </update>
+  <insert id="insertBatch" parameterType="java.util.List">
+    insert into waybill_bc_list_detail
+    (id, w_id, unit_id, kapp_id, kapp_name, kapp_phone, kapp_action,
+    create_date, create_time)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.id},#{item.wId},#{item.unitId},#{item.kappId},#{item.kappName},#{item.kappPhone},#{item.kappAction},
+     #{item.createDate},#{item.createTime})
+  </foreach>
+
+  </insert>
 </mapper>

@@ -15,7 +15,7 @@ public class CloudDocument {
 
     private String createBy;
 
-    private Byte deleteFlag;
+    private Integer deleteFlag;
 
     public Integer getId() {
         return id;
@@ -65,11 +65,11 @@ public class CloudDocument {
         this.createBy = createBy == null ? null : createBy.trim();
     }
 
-    public Byte getDeleteFlag() {
+    public Integer getDeleteFlag() {
         return deleteFlag;
     }
 
-    public void setDeleteFlag(Byte deleteFlag) {
+    public void setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
     }
 }

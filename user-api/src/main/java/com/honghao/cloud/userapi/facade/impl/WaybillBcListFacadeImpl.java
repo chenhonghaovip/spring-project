@@ -114,12 +114,10 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
                         try {
                             name = future1.get();
                             xing = future.get();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException e) {
+                        } catch (InterruptedException | ExecutionException e) {
                             e.printStackTrace();
                         }
-                        System.out.println(name+" and "+xing);
+                    System.out.println(name+" and "+xing);
                 },executor);
         log.info("start time is :{}",System.currentTimeMillis());
         return null;
@@ -131,6 +129,13 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
         messageSender.outQueue("广播消息");
         return false;
 
+    }
+
+    @Override
+    public void test01(String data) {
+        for (int i = 0; i < 20; i++) {
+            messageSender.test01(data);
+        }
     }
 
     /**

@@ -41,7 +41,7 @@ public class WaybillMerchantsArbitrament {
 
     private String arbitrationObject;
 
-    private Byte arbitrationResult;
+    private Integer arbitrationResult;
 
     private Date arbitrationTime;
 
@@ -53,7 +53,7 @@ public class WaybillMerchantsArbitrament {
 
     private Date updateTime;
 
-    private Byte deleteFlag;
+    private Integer deleteFlag;
 
     public String getOrderId() {
         return orderId;
@@ -207,11 +207,11 @@ public class WaybillMerchantsArbitrament {
         this.arbitrationObject = arbitrationObject == null ? null : arbitrationObject.trim();
     }
 
-    public Byte getArbitrationResult() {
+    public Integer getArbitrationResult() {
         return arbitrationResult;
     }
 
-    public void setArbitrationResult(Byte arbitrationResult) {
+    public void setArbitrationResult(Integer arbitrationResult) {
         this.arbitrationResult = arbitrationResult;
     }
 
@@ -255,11 +255,11 @@ public class WaybillMerchantsArbitrament {
         this.updateTime = updateTime;
     }
 
-    public Byte getDeleteFlag() {
+    public Integer getDeleteFlag() {
         return deleteFlag;
     }
 
-    public void setDeleteFlag(Byte deleteFlag) {
+    public void setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
     }
 }

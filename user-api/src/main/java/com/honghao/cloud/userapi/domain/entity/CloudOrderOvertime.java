@@ -27,7 +27,7 @@ public class CloudOrderOvertime {
 
     private Date updateTime;
 
-    private Byte deleteFlag;
+    private Integer deleteFlag;
 
     public String getId() {
         return id;
@@ -125,11 +125,11 @@ public class CloudOrderOvertime {
         this.updateTime = updateTime;
     }
 
-    public Byte getDeleteFlag() {
+    public Integer getDeleteFlag() {
         return deleteFlag;
     }
 
-    public void setDeleteFlag(Byte deleteFlag) {
+    public void setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
     }
 }
