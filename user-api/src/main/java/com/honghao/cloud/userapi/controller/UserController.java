@@ -1,10 +1,12 @@
 package com.honghao.cloud.userapi.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.userapi.aspect.Auth;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.dto.request.CreateUserDTO;
 import com.honghao.cloud.userapi.dto.request.UpdateUserDTO;
+import com.honghao.cloud.userapi.dto.test.LOO;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import com.honghao.cloud.userapi.utils.JedisOperator;
 import io.swagger.annotations.Api;
@@ -152,4 +154,17 @@ public class UserController {
 
         return BaseResponse.success();
     }
+
+
+    @PostMapping("/test005")
+    BaseResponse<LOO> test05(@RequestBody String data){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name_1","111");
+        LOO test = JSON.parseObject(jsonObject.toJSONString(), LOO.class);
+//        LOO sameCityOrderVo = JSONObject.toJavaObject(jsonObject, LOO.class);
+
+
+        return BaseResponse.successData(test);
+    }
+
 }

@@ -73,6 +73,8 @@ public class RabbitConfig {
      */
     private static final String DELAY_PROCESS_QUEUE_NAME = "delay_process_queue_name";
 
+    public static final String TEST_1 = "test_1";
+
     /**
      * 默认的线程数
      */
@@ -270,5 +272,10 @@ public class RabbitConfig {
     public Binding test02Binding() {
         return BindingBuilder.bind(test02())
                 .to(waybillOrderExchange());
+    }
+
+    @Bean
+    public Queue test_1(){
+        return new Queue(TEST_1);
     }
 }
