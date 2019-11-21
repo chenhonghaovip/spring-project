@@ -1,7 +1,6 @@
 package com.honghao.cloud.userapi.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.userapi.aspect.Auth;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.dto.request.CreateUserDTO;
@@ -25,6 +24,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
@@ -159,10 +161,13 @@ public class UserController {
     @PostMapping("/test005")
     BaseResponse<LOO> test05(@RequestBody String data){
 //        log.info("数据迁移{}",data);
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("name_1","111");
-        LOO test = JSON.parseObject(jsonObject.toJSONString(), LOO.class);
-        waybillBcListFacade.test01(data);
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("name_1","111");
+//        jsonObject.put("date",new Date());
+//        LOO test = JSON.parseObject(jsonObject.toJSONString(), LOO.class);
+//        waybillBcListFacade.test01(data);
+        LOO test = new LOO("chen","21",new Date(),LocalDate.now(),LocalDateTime.now(),LocalTime.now());
+//        LOO test1 = new LOO("honghao","22", LocalDateTime.now());
         return BaseResponse.successData(test);
     }
 
