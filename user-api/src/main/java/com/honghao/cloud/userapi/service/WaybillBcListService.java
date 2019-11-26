@@ -1,6 +1,9 @@
 package com.honghao.cloud.userapi.service;
 
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
+import com.honghao.cloud.userapi.dto.easypoi.WaybillBcListEasyPoi;
+
+import java.util.List;
 
 /**
  * 订单服务接口
@@ -14,4 +17,6 @@ public interface WaybillBcListService {
      * @param waybillBcList waybillBcListService
      */
     void createUser(WaybillBcList waybillBcList);
+
+    List<WaybillBcListEasyPoi> selectOrders();
 }

@@ -1,12 +1,16 @@
 package com.honghao.cloud.userapi.domain.entity;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.groups.Default;
+
 public class CloudDict {
+    @NotBlank
     private String id;
-
+    @NotBlank
     private String parentid;
-
+    @NotBlank
     private String path;
-
+    @NotBlank(groups = Person.class)
     private String name;
 
     private String code;
@@ -20,6 +24,10 @@ public class CloudDict {
     private Integer opat;
 
     private Boolean delflag;
+
+    public interface Person extends Default {
+
+    }
 
     public String getId() {
         return id;

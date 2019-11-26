@@ -1,5 +1,7 @@
 package com.honghao.cloud.userapi.facade;
 
+import com.honghao.cloud.userapi.base.BaseResponse;
+
 /**
  * 订单信息操作
  *
@@ -32,4 +34,5 @@ public interface WaybillBcListFacade {
      */
     void test01(String data);
 
+    BaseResponse<Boolean> easypoi();
 }
