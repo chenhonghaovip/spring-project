@@ -3,6 +3,7 @@ package com.honghao.cloud.userapi.controller;
 import com.alibaba.fastjson.JSON;
 import com.honghao.cloud.userapi.aspect.Auth;
 import com.honghao.cloud.userapi.base.BaseResponse;
+import com.honghao.cloud.userapi.domain.entity.CloudDict;
 import com.honghao.cloud.userapi.dto.request.CreateUserDTO;
 import com.honghao.cloud.userapi.dto.request.UpdateUserDTO;
 import com.honghao.cloud.userapi.dto.test.LOO;
@@ -29,6 +30,12 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 /**
  * 用户信息controller
@@ -169,6 +176,50 @@ public class UserController {
         LOO test = new LOO("chen","21",new Date(),LocalDate.now(),LocalDateTime.now(),LocalTime.now());
 //        LOO test1 = new LOO("honghao","22", LocalDateTime.now());
         return BaseResponse.successData(test);
+    }
+
+    @PostMapping("/test006")
+    BaseResponse test06(@RequestBody @Validated(CloudDict.Person.class) CloudDict data){
+        log.info("main is start");
+        CountDownLatch countDownLatch = new CountDownLatch(2);
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(2,4,20, TimeUnit.SECONDS,new ArrayBlockingQueue<Runnable>(10));
+        Stream.of(1,2).forEach(each -> threadPoolExecutor.execute(() -> {
+                    log.info("test05 start");
+                    countDownLatch.countDown();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            test05("111");
+                }
+        ));
+
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        log.info("main is end");
+        return BaseResponse.success();
+    }
+
+    @GetMapping("/test007")
+    BaseResponse<Boolean> test007(@RequestParam("wId") String wId){
+        LOO loo = new LOO();
+        loo.setAge("21");
+        LOO lo1 = new LOO();
+        lo1.setAge("21");
+        boolean flag = Objects.equals(loo,lo1);
+        boolean flag1 = Objects.deepEquals(loo,lo1);
+        System.out.println(flag);
+        return BaseResponse.successData(flag1);
+    }
+
+    @GetMapping("/easypoi")
+    BaseResponse<Boolean> easypoi(@RequestParam("wId") String wId){
+       return waybillBcListFacade.easypoi();
     }
 
 }

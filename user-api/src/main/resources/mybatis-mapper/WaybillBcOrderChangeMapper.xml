@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.honghao.cloud.userapi.domain.mapper.WaybillBcOrderChangeMapper">
+  <resultMap id="BaseResultMap" type="com.honghao.cloud.userapi.domain.entity.WaybillBcOrderChange">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="batch_id" jdbcType="CHAR" property="batchId" />
+    <result column="unit_id" jdbcType="CHAR" property="unitId" />
+    <result column="kapp_id" jdbcType="CHAR" property="kappId" />
+    <result column="kapp_name" jdbcType="VARCHAR" property="kappName" />
+    <result column="kapp_phone" jdbcType="VARCHAR" property="kappPhone" />
+    <result column="is_del" jdbcType="TINYINT" property="isDel" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, batch_id, unit_id, kapp_id, kapp_name, kapp_phone, is_del, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from waybill_bc_order_change
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from waybill_bc_order_change
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillBcOrderChange">
+    insert into waybill_bc_order_change (id, batch_id, unit_id, kapp_id, 
+      kapp_name, kapp_phone, is_del, 
+      create_time, update_time)
+    values (#{id,jdbcType=CHAR}, #{batchId,jdbcType=CHAR}, #{unitId,jdbcType=CHAR}, #{kappId,jdbcType=CHAR}, 
+      #{kappName,jdbcType=VARCHAR}, #{kappPhone,jdbcType=VARCHAR}, #{isDel,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillBcOrderChange">
+    insert into waybill_bc_order_change
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="batchId != null">
+        batch_id,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="kappId != null">
+        kapp_id,
+      </if>
+      <if test="kappName != null">
+        kapp_name,
+      </if>
+      <if test="kappPhone != null">
+        kapp_phone,
+      </if>
+      <if test="isDel != null">
+        is_del,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="batchId != null">
+        #{batchId,jdbcType=CHAR},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=CHAR},
+      </if>
+      <if test="kappId != null">
+        #{kappId,jdbcType=CHAR},
+      </if>
+      <if test="kappName != null">
+        #{kappName,jdbcType=VARCHAR},
+      </if>
+      <if test="kappPhone != null">
+        #{kappPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null">
+        #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillBcOrderChange">
+    update waybill_bc_order_change
+    <set>
+      <if test="batchId != null">
+        batch_id = #{batchId,jdbcType=CHAR},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=CHAR},
+      </if>
+      <if test="kappId != null">
+        kapp_id = #{kappId,jdbcType=CHAR},
+      </if>
+      <if test="kappName != null">
+        kapp_name = #{kappName,jdbcType=VARCHAR},
+      </if>
+      <if test="kappPhone != null">
+        kapp_phone = #{kappPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null">
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillBcOrderChange">
+    update waybill_bc_order_change
+    set batch_id = #{batchId,jdbcType=CHAR},
+      unit_id = #{unitId,jdbcType=CHAR},
+      kapp_id = #{kappId,jdbcType=CHAR},
+      kapp_name = #{kappName,jdbcType=VARCHAR},
+      kapp_phone = #{kappPhone,jdbcType=VARCHAR},
+      is_del = #{isDel,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>

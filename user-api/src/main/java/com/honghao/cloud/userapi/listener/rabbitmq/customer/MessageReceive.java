@@ -44,7 +44,7 @@ public class MessageReceive {
             WaybillBcList waybillBcList = JSON.parseObject(data,WaybillBcList.class);
             Date date = waybillBcList.getOrderTime();
             String wId = String.valueOf(atomicLong.getAndIncrement());
-            waybillBcList.setwId(wId);
+            waybillBcList.setWId(wId);
             waybillBcList.setBatchId(String.valueOf(atomicLong.getAndIncrement()));
             waybillBcList.setCreateDate(date);
             waybillBcList.setCreateTime(date);

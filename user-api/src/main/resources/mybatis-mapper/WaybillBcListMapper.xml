@@ -600,4 +600,7 @@
       is_overtime = #{isOvertime,jdbcType=TINYINT}
     where w_id = #{wId,jdbcType=CHAR}
   </update>
+  <select id="selectAllOrder" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"></include> from waybill_bc_list
+  </select>
 </mapper>

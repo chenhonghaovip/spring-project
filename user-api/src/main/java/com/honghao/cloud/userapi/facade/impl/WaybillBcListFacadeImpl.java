@@ -1,9 +1,12 @@
 package com.honghao.cloud.userapi.facade.impl;
 
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
 import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.config.ThreadPoolInitConfig;
+import com.honghao.cloud.userapi.dto.easypoi.WaybillBcListEasyPoi;
 import com.honghao.cloud.userapi.dto.request.EventDTO;
 import com.honghao.cloud.userapi.dto.request.Operator;
 import com.honghao.cloud.userapi.dto.request.UpdateUserDTO;
@@ -17,11 +20,13 @@ import com.honghao.cloud.userapi.utils.DozerUtils;
 import com.honghao.cloud.userapi.utils.JedisOperator;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.dozer.DozerBeanMapper;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -136,6 +141,15 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
         for (int i = 0; i < 20; i++) {
             messageSender.test01(data);
         }
+    }
+
+    @Override
+    public BaseResponse<Boolean> easypoi() {
+        List<WaybillBcListEasyPoi> waybillBcLists = waybillBcListService.selectOrders();
+        String fileName="个人信息.xlsx";
+        Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("个人信息","waybill"), WaybillBcListEasyPoi.class, waybillBcLists);
+//        ExcelExportUtil.exportBigExcel()
+        return BaseResponse.successData(true);
     }
 
     /**

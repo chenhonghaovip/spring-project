@@ -2,6 +2,8 @@ package com.honghao.cloud.userapi.domain.mapper;
 
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 
+import java.util.List;
+
 public interface WaybillBcListMapper {
     int deleteByPrimaryKey(String wId);
 
@@ -14,4 +16,6 @@ public interface WaybillBcListMapper {
     int updateByPrimaryKeySelective(WaybillBcList record);
 
     int updateByPrimaryKey(WaybillBcList record);
+
+    List<WaybillBcList> selectAllOrder();
 }
