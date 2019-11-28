@@ -1,7 +1,5 @@
 package com.honghao.cloud.userapi.facade.impl;
 
-import cn.afterturn.easypoi.excel.ExcelExportUtil;
-import cn.afterturn.easypoi.excel.entity.ExportParams;
 import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
@@ -16,16 +14,16 @@ import com.honghao.cloud.userapi.listener.event.EventDemo;
 import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;
 import com.honghao.cloud.userapi.service.WaybillBcListService;
 import com.honghao.cloud.userapi.task.AsyncTask;
-import com.honghao.cloud.userapi.utils.DozerUtils;
 import com.honghao.cloud.userapi.utils.JedisOperator;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.dozer.DozerBeanMapper;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -91,7 +89,7 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
 
     @Override
     public Boolean createUser1(String data) {
-        DozerBeanMapper dozerBeanMapper = DozerUtils.createDozer();
+//        DozerBeanMapper dozerBeanMapper = DozerUtils.createDozer();
         messageSender.testQueue("name is chenhonghao");
         ThreadPoolExecutor executor= ThreadPoolInitConfig.build("create");
         CompletableFuture<String> future = CompletableFuture.supplyAsync(()->{
@@ -130,7 +128,6 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
 
     @Override
     public Boolean createUser2(String data) {
-//        messageSender.pushInfoUser("nnnnnnnnnnnnn");
         messageSender.outQueue("广播消息");
         return false;
 
@@ -144,12 +141,21 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
     }
 
     @Override
-    public BaseResponse<Boolean> easypoi() {
+    public BaseResponse easypoi() {
         List<WaybillBcListEasyPoi> waybillBcLists = waybillBcListService.selectOrders();
-        String fileName="个人信息.xlsx";
-        Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("个人信息","waybill"), WaybillBcListEasyPoi.class, waybillBcLists);
-//        ExcelExportUtil.exportBigExcel()
-        return BaseResponse.successData(true);
+
+        waybillBcLists.sort(Comparator.comparing(WaybillBcListEasyPoi::getBatchId).reversed());
+
+        long i = jedisOperator.incr("mybatis"+ LocalDate.now());
+        if (i<=3){
+            System.out.println(i);
+        }else {
+            i = jedisOperator.decr("mybatis"+ LocalDate.now());
+        }
+        BigDecimal bigDecimal = BigDecimal.valueOf(2.11);
+        BigDecimal b2 = null;
+        System.out.println(bigDecimal.add(b2));
+        return BaseResponse.successData(waybillBcLists);
     }
 
     /**
