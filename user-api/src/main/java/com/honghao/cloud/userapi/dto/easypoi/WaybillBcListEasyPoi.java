@@ -146,4 +146,9 @@ public class WaybillBcListEasyPoi {
 
     @Excel(name = "是否超时")
     private Integer isOvertime;
+
+
+    public static boolean isBatchId(WaybillBcListEasyPoi waybillBcListEasyPoi){
+        return "123".equals(waybillBcListEasyPoi.getBatchId());
+    }
 }

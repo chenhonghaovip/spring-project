@@ -218,7 +218,7 @@ public class UserController {
     }
 
     @GetMapping("/easypoi")
-    BaseResponse<Boolean> easypoi(@RequestParam("wId") String wId){
+    public BaseResponse easypoi(@RequestParam("wId") @NotBlank String wId){
        return waybillBcListFacade.easypoi();
     }
 
