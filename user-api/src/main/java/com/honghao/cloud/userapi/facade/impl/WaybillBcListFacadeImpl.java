@@ -21,8 +21,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -146,15 +144,20 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
 
         waybillBcLists.sort(Comparator.comparing(WaybillBcListEasyPoi::getBatchId).reversed());
 
-        long i = jedisOperator.incr("mybatis"+ LocalDate.now());
-        if (i<=3){
-            System.out.println(i);
-        }else {
-            i = jedisOperator.decr("mybatis"+ LocalDate.now());
-        }
-        BigDecimal bigDecimal = BigDecimal.valueOf(2.11);
-        BigDecimal b2 = null;
-        System.out.println(bigDecimal.add(b2));
+//
+//        long i = 0;
+//        try {
+//            i = jedisOperator.incr("mybatis"+ LocalDate.now());
+//            if (i<=3){
+//                System.out.println(i);
+//            }else {
+//                i = jedisOperator.decr("mybatis"+ LocalDate.now());
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
+
         return BaseResponse.successData(waybillBcLists);
     }
 

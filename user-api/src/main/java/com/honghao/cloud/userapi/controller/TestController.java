@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotBlank;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,15 +32,22 @@ public class TestController {
         list = list.stream().filter(each -> each < 4).collect(Collectors.toList());
         System.out.println(Arrays.toString(list.toArray()));
 
+        //过滤filter的使用
         List<WaybillBcListEasyPoi> waybillBcLists = waybillBcListService.selectOrders();
-        List<WaybillBcListEasyPoi> result = filterApples(waybillBcLists,WaybillBcListEasyPoi::isBatchId);
+        waybillBcLists = waybillBcLists.stream().filter(each ->
+            "2017111800000718".equals(each.getBatchId()) && Integer.valueOf(0).equals(each.getOrderType())
+        ).collect(Collectors.toList());
 
-        File[] hiddenFiles = new File(".").listFiles(File::isHidden);
-        return BaseResponse.successData(hiddenFiles);
+        waybillBcLists = filterApples(waybillBcLists,waybillBcListEasyPoi ->
+            waybillBcListEasyPoi.getBatchId().equals("wa")
+
+        );
+
+        return BaseResponse.successData(waybillBcLists);
     }
 
-   private static List<WaybillBcListEasyPoi> filterApples(List<WaybillBcListEasyPoi> inventory,
-                                            Predicate<WaybillBcListEasyPoi> p) {
+    static List<WaybillBcListEasyPoi> filterApples(List<WaybillBcListEasyPoi> inventory,
+                                                   Predicate<WaybillBcListEasyPoi> p) {
         List<WaybillBcListEasyPoi> result = new ArrayList<>();
         for (WaybillBcListEasyPoi apple: inventory){
             if (p.test(apple)) {
