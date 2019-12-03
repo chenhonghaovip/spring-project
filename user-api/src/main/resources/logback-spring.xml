@@ -23,6 +23,7 @@
         </encoder>
     </appender>
 
+    <!--    logger：日志所处的包   level：日志打印级别-->
     <logger name="com.honghao.cloud.userapi" level="debug"/>
 
     <!--root是默认的logger 这里设定输出级别是debug-->
