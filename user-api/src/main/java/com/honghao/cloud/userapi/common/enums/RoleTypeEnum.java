@@ -3,6 +3,8 @@ package com.honghao.cloud.userapi.common.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,12 +36,10 @@ public enum RoleTypeEnum {
      * @param code 编号
      * @return 枚举值
      */
-    public static RoleTypeEnum formCode(Integer code){
+    public static RoleTypeEnum formCode(@Min(1) @Max(3) Integer code){
         if (!CODES.contains(code)){
-            throw new RuntimeException("");
+            throw new RuntimeException("类型转换异常");
         }
-        return Arrays.stream(RoleTypeEnum.values()).filter(each->each.getCode().equals(code)).findFirst().orElse(null);
+        return Arrays.stream(RoleTypeEnum.values()).filter(each -> code.equals(each.getCode())).findFirst().orElse(null);
     }
-
-
 }

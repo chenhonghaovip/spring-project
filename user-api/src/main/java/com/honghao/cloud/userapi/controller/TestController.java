@@ -1,6 +1,7 @@
 package com.honghao.cloud.userapi.controller;
 
 import com.honghao.cloud.userapi.base.BaseResponse;
+import com.honghao.cloud.userapi.common.enums.RoleTypeEnum;
 import com.honghao.cloud.userapi.dto.easypoi.WaybillBcListEasyPoi;
 import com.honghao.cloud.userapi.service.WaybillBcListService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -34,26 +34,40 @@ public class TestController {
 
         //过滤filter的使用
         List<WaybillBcListEasyPoi> waybillBcLists = waybillBcListService.selectOrders();
-        waybillBcLists = waybillBcLists.stream().filter(each ->
-            "2017111800000718".equals(each.getBatchId()) && Integer.valueOf(0).equals(each.getOrderType())
-        ).collect(Collectors.toList());
+        List<String> list1 = waybillBcLists.stream().filter(each ->
+            Integer.valueOf(0).equals(each.getOrderType())
+        ).map(WaybillBcListEasyPoi::getBatchId).collect(Collectors.toList());
 
-        waybillBcLists = filterApples(waybillBcLists,waybillBcListEasyPoi ->
-            waybillBcListEasyPoi.getBatchId().equals("wa")
+        List<Integer> numbers = Arrays.asList(1, 2, 1, 3, 3, 2, 4);
+        numbers = numbers.stream()
+                .filter(i -> i % 2 == 0)
+                .distinct()
+                .skip(3)
+                .collect(Collectors.toList());
 
-        );
+        String[] s = {"hello","world"};
+        List<String> list2 = Arrays.stream(s).
+                map(each -> each.split(""))
+                .flatMap(Arrays::stream)
+                .distinct().collect(Collectors.toList());
 
-        return BaseResponse.successData(waybillBcLists);
-    }
+        List<Integer> list3 = Arrays.asList(1, 2, 3, 4, 5);
+        list3 = list3.stream().map(i -> i*i).collect(Collectors.toList());
 
-    static List<WaybillBcListEasyPoi> filterApples(List<WaybillBcListEasyPoi> inventory,
-                                                   Predicate<WaybillBcListEasyPoi> p) {
-        List<WaybillBcListEasyPoi> result = new ArrayList<>();
-        for (WaybillBcListEasyPoi apple: inventory){
-            if (p.test(apple)) {
-                result.add(apple);
-            }
+        List<Integer> test01 = Arrays.asList(1,2,3);
+        List<Integer> test02 = Arrays.asList(3,4);
+        List<int[]> result = test01.stream().flatMap(i->test02.stream().map(j->new int[]{i,j})).collect(Collectors.toList());
+
+        List<int[]> result01 = test01.stream().flatMap(i->test02.stream().filter(j->(j+i)%3 == 0).map(j->new int[]{i,j})).collect(Collectors.toList());
+
+        Optional<WaybillBcListEasyPoi> dish = waybillBcLists.stream().filter(each ->"".equals(each.getBatchId())).findAny();
+        if (dish.isPresent()){
+            String wId = dish.get().getWId();
+        }else {
+            System.out.println("结果不存在");
         }
-        return result;
+        String name = RoleTypeEnum.formCode(1).getDesc();
+        return BaseResponse.successData(name);
     }
+
 }
