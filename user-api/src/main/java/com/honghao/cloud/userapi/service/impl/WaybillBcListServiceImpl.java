@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 订单服务实现类
@@ -40,6 +41,7 @@ public class WaybillBcListServiceImpl implements WaybillBcListService {
             result.add(waybillBcListEasyPoi);
         }
 
+        lists =lists.stream().filter(each -> "111".equals(each.getBatchId())).collect(Collectors.toList());
         return result;
     }
 }
