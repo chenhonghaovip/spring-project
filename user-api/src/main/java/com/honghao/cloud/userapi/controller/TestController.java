@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.common.enums.RoleTypeEnum;
 import com.honghao.cloud.userapi.dto.easypoi.WaybillBcListEasyPoi;
+import com.honghao.cloud.userapi.dto.request.Trader;
+import com.honghao.cloud.userapi.dto.request.Transaction;
 import com.honghao.cloud.userapi.service.WaybillBcListService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.validation.constraints.NotBlank;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -75,6 +78,58 @@ public class TestController {
         jsonObject.put("sum",sum);
         int max = list3.stream().reduce(0, Integer::max);
         jsonObject.put("max",max);
+        return BaseResponse.successData(jsonObject);
+    }
+
+    @GetMapping("/test002")
+    public BaseResponse test002(@RequestParam @NotBlank String data){
+        JSONObject jsonObject = new JSONObject();
+        Trader raoul = new Trader("Raoul", "Cambridge");
+        Trader mario = new Trader("Mario","Milan");
+        Trader alan = new Trader("Alan","Cambridge");
+        Trader brian = new Trader("Brian","Cambridge");
+        List<Transaction> transactions = Arrays.asList(
+                new Transaction(brian, 2011, 300),
+                new Transaction(raoul, 2012, 1000),
+                new Transaction(raoul, 2011, 400),
+                new Transaction(mario, 2012, 710),
+                new Transaction(mario, 2012, 700),
+                new Transaction(alan, 2012, 950)
+        );
+
+        List<Transaction> list = transactions.stream().filter(each -> each.getYear()==2011)
+                .sorted(Comparator.comparing(Transaction::getValue))
+                .collect(Collectors.toList());
+        jsonObject.put("list",list);
+
+        List<String> list1 = transactions.stream().map(each ->each.getTrader().getCity()).distinct().collect(Collectors.toList());
+        jsonObject.put("list1",list1);
+
+        List<Trader> list2 = transactions.stream()
+                .map(Transaction::getTrader)
+                .filter(each -> "Cambridge".equals(each.getCity()))
+                .distinct()
+                .sorted(Comparator.comparing(Trader::getName)).collect(Collectors.toList());
+        jsonObject.put("list2",list2);
+
+        List<String> list3 = transactions.stream().map(each -> each.getTrader().getName()).sorted().collect(Collectors.toList());
+        jsonObject.put("list3",list3);
+
+        Optional<Trader> optionalTrader = transactions.stream().map(Transaction::getTrader)
+                .filter(each -> "Milan".equals(each.getCity())).findAny();
+        optionalTrader.ifPresent(System.out::println);
+
+        int sum = transactions.stream()
+                .filter(each -> "Cambridge".equals(each.getTrader().getCity()))
+                .map(Transaction::getValue).reduce(0,Integer::sum);
+        jsonObject.put("sum",sum);
+
+        int max = transactions.stream()
+                .map(Transaction::getValue).reduce(0,Integer::max);
+        jsonObject.put("max",max);
+
+        Transaction transaction = transactions.stream().min(Comparator.comparing(Transaction::getValue)).orElse(null);
+        jsonObject.put("transaction",transaction);
         return BaseResponse.successData(jsonObject);
     }
 
