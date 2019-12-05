@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -167,14 +168,14 @@ public class UserController {
 
     @PostMapping("/test005")
     BaseResponse<LOO> test05(@RequestBody String data){
-//        log.info("数据迁移{}",data);
-//        JSONObject jsonObject = new JSONObject();
-//        jsonObject.put("name_1","111");
-//        jsonObject.put("date",new Date());
-//        LOO test = JSON.parseObject(jsonObject.toJSONString(), LOO.class);
-//        waybillBcListFacade.test01(data);
         LOO test = new LOO("chen","21",new Date(),LocalDate.now(),LocalDateTime.now(),LocalTime.now());
-//        LOO test1 = new LOO("honghao","22", LocalDateTime.now());
+        System.out.println(LocalDateTime.now());
+
+        //LocalDateTime类型转换
+        String str = "1986-04-08 12:30";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
+        System.out.println(dateTime);
         return BaseResponse.successData(test);
     }
 
