@@ -35,4 +35,6 @@ public interface WaybillBcListFacade {
     void test01(String data);
 
     BaseResponse easypoi();
+
+    BaseResponse test004();
 }

@@ -23,9 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 
 /**
  * 订单操作实现类
@@ -159,6 +157,26 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
 
 
         return BaseResponse.successData(waybillBcLists);
+    }
+
+    @Override
+    public BaseResponse test004() {
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(2,4,30, TimeUnit.SECONDS,new ArrayBlockingQueue<>(100));
+        Future<Boolean> future = threadPoolExecutor.submit(this::updatePic);
+        try {
+            future.get(20,TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            e.printStackTrace();
+        }
+
+        return BaseResponse.success();
+    }
+
+    private boolean updatePic(){
+        return true;
+    }
+    private void downPic(){
+
     }
 
     /**
