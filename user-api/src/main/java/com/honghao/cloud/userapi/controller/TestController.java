@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.common.enums.RoleTypeEnum;
 import com.honghao.cloud.userapi.dto.easypoi.WaybillBcListEasyPoi;
-import com.honghao.cloud.userapi.dto.request.Trader;
-import com.honghao.cloud.userapi.dto.request.Transaction;
+import com.honghao.cloud.userapi.dto.request.*;
+import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import com.honghao.cloud.userapi.service.WaybillBcListService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,11 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotBlank;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author chenhonghao
@@ -27,6 +25,23 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/testController")
 public class TestController {
+    @Resource
+    private WaybillBcListFacade waybillBcListFacade;
+    private static List<Transaction> transactions;
+    static {
+        Trader raoul = new Trader("Raoul", "Cambridge");
+        Trader mario = new Trader("Mario","Milan");
+        Trader alan = new Trader("Alan","Cambridge");
+        Trader brian = new Trader("Brian","Cambridge");
+        transactions = Arrays.asList(
+                new Transaction(brian, 2011, 300),
+                new Transaction(raoul, 2012, 1000),
+                new Transaction(raoul, 2011, 400),
+                new Transaction(mario, 2012, 710),
+                new Transaction(mario, 2012, 700),
+                new Transaction(alan, 2012, 950)
+        );
+    }
     @Resource
     private WaybillBcListService waybillBcListService;
 
@@ -84,18 +99,7 @@ public class TestController {
     @GetMapping("/test002")
     public BaseResponse test002(@RequestParam @NotBlank String data){
         JSONObject jsonObject = new JSONObject();
-        Trader raoul = new Trader("Raoul", "Cambridge");
-        Trader mario = new Trader("Mario","Milan");
-        Trader alan = new Trader("Alan","Cambridge");
-        Trader brian = new Trader("Brian","Cambridge");
-        List<Transaction> transactions = Arrays.asList(
-                new Transaction(brian, 2011, 300),
-                new Transaction(raoul, 2012, 1000),
-                new Transaction(raoul, 2011, 400),
-                new Transaction(mario, 2012, 710),
-                new Transaction(mario, 2012, 700),
-                new Transaction(alan, 2012, 950)
-        );
+
 
         List<Transaction> list = transactions.stream().filter(each -> each.getYear()==2011)
                 .sorted(Comparator.comparing(Transaction::getValue))
@@ -124,13 +128,65 @@ public class TestController {
                 .map(Transaction::getValue).reduce(0,Integer::sum);
         jsonObject.put("sum",sum);
 
+        int sum1 = transactions.stream().mapToInt(Transaction::getValue).sum();
+        jsonObject.put("sum1",sum1);
+
         int max = transactions.stream()
                 .map(Transaction::getValue).reduce(0,Integer::max);
         jsonObject.put("max",max);
 
         Transaction transaction = transactions.stream().min(Comparator.comparing(Transaction::getValue)).orElse(null);
         jsonObject.put("transaction",transaction);
+
+        List<String> list4 = Stream.of("Java 8 ", "Lambdas ", "In ", "Action").map(String::toUpperCase).collect(Collectors.toList());
+        jsonObject.put("list4",list4);
+
+        String[] strings = new String[]{"Java 8 ", "Lambdas ", "In ", "Action"};
+        String name = Arrays.stream(strings).map(each -> each.split("")).flatMap(Arrays::stream).distinct()
+                .reduce("",(a,b)->a+b);
+
+        jsonObject.put("name",name);
+
+        return BaseResponse.successData(jsonObject);
+
+    }
+
+    @GetMapping("/test003")
+    public BaseResponse test003(@RequestParam @NotBlank String data){
+        JSONObject jsonObject = new JSONObject();
+        String[] strings = new String[]{"Java 8 ", "Lambdas ", "In ", "Action"};
+        String name = Arrays.stream(strings).map(each -> each.split("")).flatMap(Arrays::stream).distinct()
+                .collect(Collectors.joining());
+        //对一个交易列表按货币分组，获得该货币的所有交易额总和（返回一个Map<Currency,Integer>
+        Map<Integer,List<Transaction>> map = transactions.stream().collect(Collectors.groupingBy(Transaction::getYear));
+        jsonObject.put("map",map);
+
+        int sum = transactions.stream().mapToInt(Transaction::getValue).sum();
+        jsonObject.put("sum",sum);
+
+        double average = transactions.stream().collect(Collectors.averagingDouble(Transaction::getValue));
+        jsonObject.put("average",average);
+
+        String cityName = transactions.stream().filter(each ->"".equals(each.getTrader().getName())).map(each-> each.getTrader().getCity()).
+                findAny().orElse("unknow");
+
+        Optional<Person> optionalPerson = Optional.empty();
+        Optional<Car> car = optionalPerson.flatMap(Person::getCar);
         return BaseResponse.successData(jsonObject);
     }
 
+    @GetMapping("/test004")
+    public BaseResponse test004(@RequestParam String data){
+        JSONObject jsonObject = new JSONObject();
+        Map<String,Object> map = new HashMap<>();
+        map.put("k",new EventDTO());
+        Optional<Object> value = Optional.ofNullable(map.get("key"));
+        EventDTO eventDTO = (EventDTO) value.orElse(new EventDTO());
+
+        String cityName = transactions.stream().filter(each ->"".equals(each.getTrader().getName())).map(each-> each.getTrader().getCity()).
+                findAny().orElse("unknow");
+        jsonObject.put("cityName",cityName);
+        waybillBcListFacade.test004();
+        return BaseResponse.successData(jsonObject);
+    }
 }
