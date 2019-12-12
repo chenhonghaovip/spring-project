@@ -167,7 +167,7 @@ public class UserController {
 
 
     @PostMapping("/test005")
-    BaseResponse<LOO> test05(@RequestBody String data){
+    BaseResponse test05(@RequestBody String data){
         LOO test = new LOO("chen","21",new Date(),LocalDate.now(),LocalDateTime.now(),LocalTime.now());
         System.out.println(LocalDateTime.now());
 
@@ -176,7 +176,7 @@ public class UserController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
         System.out.println(dateTime);
-        return BaseResponse.successData(test);
+        return BaseResponse.successData(dateTime);
     }
 
     @PostMapping("/test006")
