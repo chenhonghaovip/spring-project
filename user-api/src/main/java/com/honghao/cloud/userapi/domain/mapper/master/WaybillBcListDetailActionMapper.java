@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.domain.mapper;
+package com.honghao.cloud.userapi.domain.mapper.master;
 
 import com.honghao.cloud.userapi.domain.entity.WaybillBcListDetailAction;
 

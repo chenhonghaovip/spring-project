@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.honghao.cloud.userapi.domain.mapper.slave.CloudOrderMapper">
+  <resultMap id="BaseResultMap" type="com.honghao.cloud.userapi.domain.entity.CloudDeliveryMan">
+    <id column="delivery_man_id" jdbcType="VARCHAR" property="deliveryManId" />
+    <result column="delivery_id" jdbcType="VARCHAR" property="deliveryId" />
+    <result column="head_id" jdbcType="BIGINT" property="headId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sex" jdbcType="TINYINT" property="sex" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="province" jdbcType="INTEGER" property="province" />
+    <result column="city" jdbcType="INTEGER" property="city" />
+    <result column="country" jdbcType="INTEGER" property="country" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="id_card" jdbcType="VARCHAR" property="idCard" />
+    <result column="identity_id" jdbcType="BIGINT" property="identityId" />
+    <result column="work_status" jdbcType="TINYINT" property="workStatus" />
+    <result column="apply_status" jdbcType="TINYINT" property="applyStatus" />
+    <result column="qualification_status" jdbcType="TINYINT" property="qualificationStatus" />
+    <result column="reg_from" jdbcType="TINYINT" property="regFrom" />
+    <result column="other_reg_account" jdbcType="CHAR" property="otherRegAccount" />
+    <result column="login_from" jdbcType="TINYINT" property="loginFrom" />
+    <result column="bind_wx" jdbcType="VARCHAR" property="bindWx" />
+    <result column="invite_code" jdbcType="VARCHAR" property="inviteCode" />
+    <result column="join_time" jdbcType="TIMESTAMP" property="joinTime" />
+    <result column="service_status" jdbcType="TINYINT" property="serviceStatus" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+    <result column="delete_flag" jdbcType="BIT" property="deleteFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    delivery_man_id, delivery_id, head_id, name, sex, phone, password, province, city, 
+    country, address, id_card, identity_id, work_status, apply_status, qualification_status, 
+    reg_from, other_reg_account, login_from, bind_wx, invite_code, join_time, service_status, 
+    create_by, create_time, update_by, update_time, delete_flag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cloud_delivery_man
+    where delivery_man_id = #{deliveryManId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from cloud_delivery_man
+    where delivery_man_id = #{deliveryManId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.honghao.cloud.userapi.domain.entity.CloudDeliveryMan">
+    insert into cloud_delivery_man (delivery_man_id, delivery_id, head_id, 
+      name, sex, phone, password, 
+      province, city, country, 
+      address, id_card, identity_id, 
+      work_status, apply_status, qualification_status, 
+      reg_from, other_reg_account, login_from, 
+      bind_wx, invite_code, join_time, 
+      service_status, create_by, create_time, 
+      update_by, update_time, delete_flag
+      )
+    values (#{deliveryManId,jdbcType=VARCHAR}, #{deliveryId,jdbcType=VARCHAR}, #{headId,jdbcType=BIGINT}, 
+      #{name,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, #{phone,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{province,jdbcType=INTEGER}, #{city,jdbcType=INTEGER}, #{country,jdbcType=INTEGER}, 
+      #{address,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR}, #{identityId,jdbcType=BIGINT}, 
+      #{workStatus,jdbcType=TINYINT}, #{applyStatus,jdbcType=TINYINT}, #{qualificationStatus,jdbcType=TINYINT}, 
+      #{regFrom,jdbcType=TINYINT}, #{otherRegAccount,jdbcType=CHAR}, #{loginFrom,jdbcType=TINYINT}, 
+      #{bindWx,jdbcType=VARCHAR}, #{inviteCode,jdbcType=VARCHAR}, #{joinTime,jdbcType=TIMESTAMP}, 
+      #{serviceStatus,jdbcType=TINYINT}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, 
+      #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=BIGINT}, #{deleteFlag,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.honghao.cloud.userapi.domain.entity.CloudDeliveryMan">
+    insert into cloud_delivery_man
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deliveryManId != null">
+        delivery_man_id,
+      </if>
+      <if test="deliveryId != null">
+        delivery_id,
+      </if>
+      <if test="headId != null">
+        head_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="province != null">
+        province,
+      </if>
+      <if test="city != null">
+        city,
+      </if>
+      <if test="country != null">
+        country,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="idCard != null">
+        id_card,
+      </if>
+      <if test="identityId != null">
+        identity_id,
+      </if>
+      <if test="workStatus != null">
+        work_status,
+      </if>
+      <if test="applyStatus != null">
+        apply_status,
+      </if>
+      <if test="qualificationStatus != null">
+        qualification_status,
+      </if>
+      <if test="regFrom != null">
+        reg_from,
+      </if>
+      <if test="otherRegAccount != null">
+        other_reg_account,
+      </if>
+      <if test="loginFrom != null">
+        login_from,
+      </if>
+      <if test="bindWx != null">
+        bind_wx,
+      </if>
+      <if test="inviteCode != null">
+        invite_code,
+      </if>
+      <if test="joinTime != null">
+        join_time,
+      </if>
+      <if test="serviceStatus != null">
+        service_status,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deliveryManId != null">
+        #{deliveryManId,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryId != null">
+        #{deliveryId,jdbcType=VARCHAR},
+      </if>
+      <if test="headId != null">
+        #{headId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        #{province,jdbcType=INTEGER},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=INTEGER},
+      </if>
+      <if test="country != null">
+        #{country,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null">
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="identityId != null">
+        #{identityId,jdbcType=BIGINT},
+      </if>
+      <if test="workStatus != null">
+        #{workStatus,jdbcType=TINYINT},
+      </if>
+      <if test="applyStatus != null">
+        #{applyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="qualificationStatus != null">
+        #{qualificationStatus,jdbcType=TINYINT},
+      </if>
+      <if test="regFrom != null">
+        #{regFrom,jdbcType=TINYINT},
+      </if>
+      <if test="otherRegAccount != null">
+        #{otherRegAccount,jdbcType=CHAR},
+      </if>
+      <if test="loginFrom != null">
+        #{loginFrom,jdbcType=TINYINT},
+      </if>
+      <if test="bindWx != null">
+        #{bindWx,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteCode != null">
+        #{inviteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="joinTime != null">
+        #{joinTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="serviceStatus != null">
+        #{serviceStatus,jdbcType=TINYINT},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="deleteFlag != null">
+        #{deleteFlag,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.honghao.cloud.userapi.domain.entity.CloudDeliveryMan">
+    update cloud_delivery_man
+    <set>
+      <if test="deliveryId != null">
+        delivery_id = #{deliveryId,jdbcType=VARCHAR},
+      </if>
+      <if test="headId != null">
+        head_id = #{headId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        province = #{province,jdbcType=INTEGER},
+      </if>
+      <if test="city != null">
+        city = #{city,jdbcType=INTEGER},
+      </if>
+      <if test="country != null">
+        country = #{country,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null">
+        id_card = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="identityId != null">
+        identity_id = #{identityId,jdbcType=BIGINT},
+      </if>
+      <if test="workStatus != null">
+        work_status = #{workStatus,jdbcType=TINYINT},
+      </if>
+      <if test="applyStatus != null">
+        apply_status = #{applyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="qualificationStatus != null">
+        qualification_status = #{qualificationStatus,jdbcType=TINYINT},
+      </if>
+      <if test="regFrom != null">
+        reg_from = #{regFrom,jdbcType=TINYINT},
+      </if>
+      <if test="otherRegAccount != null">
+        other_reg_account = #{otherRegAccount,jdbcType=CHAR},
+      </if>
+      <if test="loginFrom != null">
+        login_from = #{loginFrom,jdbcType=TINYINT},
+      </if>
+      <if test="bindWx != null">
+        bind_wx = #{bindWx,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteCode != null">
+        invite_code = #{inviteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="joinTime != null">
+        join_time = #{joinTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="serviceStatus != null">
+        service_status = #{serviceStatus,jdbcType=TINYINT},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag = #{deleteFlag,jdbcType=BIT},
+      </if>
+    </set>
+    where delivery_man_id = #{deliveryManId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.userapi.domain.entity.CloudDeliveryMan">
+    update cloud_delivery_man
+    set delivery_id = #{deliveryId,jdbcType=VARCHAR},
+      head_id = #{headId,jdbcType=BIGINT},
+      name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=TINYINT},
+      phone = #{phone,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      province = #{province,jdbcType=INTEGER},
+      city = #{city,jdbcType=INTEGER},
+      country = #{country,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      id_card = #{idCard,jdbcType=VARCHAR},
+      identity_id = #{identityId,jdbcType=BIGINT},
+      work_status = #{workStatus,jdbcType=TINYINT},
+      apply_status = #{applyStatus,jdbcType=TINYINT},
+      qualification_status = #{qualificationStatus,jdbcType=TINYINT},
+      reg_from = #{regFrom,jdbcType=TINYINT},
+      other_reg_account = #{otherRegAccount,jdbcType=CHAR},
+      login_from = #{loginFrom,jdbcType=TINYINT},
+      bind_wx = #{bindWx,jdbcType=VARCHAR},
+      invite_code = #{inviteCode,jdbcType=VARCHAR},
+      join_time = #{joinTime,jdbcType=TIMESTAMP},
+      service_status = #{serviceStatus,jdbcType=TINYINT},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=BIGINT},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=BIGINT},
+      delete_flag = #{deleteFlag,jdbcType=BIT}
+    where delivery_man_id = #{deliveryManId,jdbcType=VARCHAR}
+  </update>
+</mapper>
