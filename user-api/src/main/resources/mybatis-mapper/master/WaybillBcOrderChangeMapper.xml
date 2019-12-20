@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.honghao.cloud.userapi.domain.mapper.WaybillBcOrderChangeMapper">
+<mapper namespace="com.honghao.cloud.userapi.domain.mapper.master.WaybillBcOrderChangeMapper">
   <resultMap id="BaseResultMap" type="com.honghao.cloud.userapi.domain.entity.WaybillBcOrderChange">
     <id column="id" jdbcType="CHAR" property="id" />
     <result column="batch_id" jdbcType="CHAR" property="batchId" />

@@ -1,8 +1,8 @@
-package com.honghao.cloud.userapi.domain.mapper;
+package com.honghao.cloud.userapi.domain.mapper.slave;
 
 import com.honghao.cloud.userapi.domain.entity.CloudDeliveryMan;
 
-public interface CloudDeliveryManMapper {
+public interface CloudOrderMapper {
     int deleteByPrimaryKey(String deliveryManId);
 
     int insert(CloudDeliveryMan record);

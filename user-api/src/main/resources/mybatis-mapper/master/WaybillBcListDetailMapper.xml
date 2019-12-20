@@ -1,47 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.honghao.cloud.userapi.domain.mapper.WaybillBcListDetailActionMapper">
-  <resultMap id="BaseResultMap" type="com.honghao.cloud.userapi.domain.entity.WaybillBcListDetailAction">
-    <id column="w_id" jdbcType="CHAR" property="wId" />
+<mapper namespace="com.honghao.cloud.userapi.domain.mapper.master.WaybillBcListDetailMapper">
+  <resultMap id="BaseResultMap" type="com.honghao.cloud.userapi.domain.entity.WaybillBcListDetail">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="w_id" jdbcType="CHAR" property="wId" />
     <result column="unit_id" jdbcType="CHAR" property="unitId" />
     <result column="kapp_id" jdbcType="CHAR" property="kappId" />
     <result column="kapp_name" jdbcType="VARCHAR" property="kappName" />
     <result column="kapp_phone" jdbcType="VARCHAR" property="kappPhone" />
     <result column="kapp_action" jdbcType="TINYINT" property="kappAction" />
+    <result column="longitude" jdbcType="DECIMAL" property="longitude" />
+    <result column="latitude" jdbcType="DECIMAL" property="latitude" />
     <result column="is_single" jdbcType="TINYINT" property="isSingle" />
-    <result column="s_single_time" jdbcType="TIMESTAMP" property="sSingleTime" />
-    <result column="e_single_time" jdbcType="TIMESTAMP" property="eSingleTime" />
+    <result column="create_date" jdbcType="DATE" property="createDate" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="delete_flag" jdbcType="TINYINT" property="deleteFlag" />
   </resultMap>
   <sql id="Base_Column_List">
-    w_id, unit_id, kapp_id, kapp_name, kapp_phone, kapp_action, is_single, s_single_time, 
-    e_single_time, create_time, update_time, delete_flag
+    id, w_id, unit_id, kapp_id, kapp_name, kapp_phone, kapp_action, longitude, latitude, 
+    is_single, create_date, create_time, delete_flag
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from waybill_bc_list_detail_action
-    where w_id = #{wId,jdbcType=CHAR}
+    from waybill_bc_list_detail
+    where id = #{id,jdbcType=CHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from waybill_bc_list_detail_action
-    where w_id = #{wId,jdbcType=CHAR}
+    delete from waybill_bc_list_detail
+    where id = #{id,jdbcType=CHAR}
   </delete>
-  <insert id="insert" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillBcListDetailAction">
-    insert into waybill_bc_list_detail_action (w_id, unit_id, kapp_id, kapp_name, 
-      kapp_phone, kapp_action, is_single, 
-      s_single_time, e_single_time, create_time, 
-      update_time, delete_flag)
-    values (#{wId,jdbcType=CHAR}, #{unitId,jdbcType=CHAR}, #{kappId,jdbcType=CHAR}, #{kappName,jdbcType=VARCHAR}, 
-      #{kappPhone,jdbcType=VARCHAR}, #{kappAction,jdbcType=TINYINT}, #{isSingle,jdbcType=TINYINT}, 
-      #{sSingleTime,jdbcType=TIMESTAMP}, #{eSingleTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=TINYINT})
+  <insert id="insert" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillBcListDetail">
+    insert into waybill_bc_list_detail (id, w_id, unit_id, kapp_id, 
+      kapp_name, kapp_phone, kapp_action, 
+      longitude, latitude, is_single, 
+      create_date, create_time, delete_flag
+      )
+    values (#{id,jdbcType=CHAR}, #{wId,jdbcType=CHAR}, #{unitId,jdbcType=CHAR}, #{kappId,jdbcType=CHAR}, 
+      #{kappName,jdbcType=VARCHAR}, #{kappPhone,jdbcType=VARCHAR}, #{kappAction,jdbcType=TINYINT}, 
+      #{longitude,jdbcType=DECIMAL}, #{latitude,jdbcType=DECIMAL}, #{isSingle,jdbcType=TINYINT}, 
+      #{createDate,jdbcType=DATE}, #{createTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=TINYINT}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillBcListDetailAction">
-    insert into waybill_bc_list_detail_action
+  <insert id="insertSelective" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillBcListDetail">
+    insert into waybill_bc_list_detail
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
       <if test="wId != null">
         w_id,
       </if>
@@ -60,26 +66,29 @@
       <if test="kappAction != null">
         kapp_action,
       </if>
+      <if test="longitude != null">
+        longitude,
+      </if>
+      <if test="latitude != null">
+        latitude,
+      </if>
       <if test="isSingle != null">
         is_single,
       </if>
-      <if test="sSingleTime != null">
-        s_single_time,
-      </if>
-      <if test="eSingleTime != null">
-        e_single_time,
+      <if test="createDate != null">
+        create_date,
       </if>
       <if test="createTime != null">
         create_time,
-      </if>
-      <if test="updateTime != null">
-        update_time,
       </if>
       <if test="deleteFlag != null">
         delete_flag,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=CHAR},
+      </if>
       <if test="wId != null">
         #{wId,jdbcType=CHAR},
       </if>
@@ -98,29 +107,32 @@
       <if test="kappAction != null">
         #{kappAction,jdbcType=TINYINT},
       </if>
+      <if test="longitude != null">
+        #{longitude,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude != null">
+        #{latitude,jdbcType=DECIMAL},
+      </if>
       <if test="isSingle != null">
         #{isSingle,jdbcType=TINYINT},
       </if>
-      <if test="sSingleTime != null">
-        #{sSingleTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="eSingleTime != null">
-        #{eSingleTime,jdbcType=TIMESTAMP},
+      <if test="createDate != null">
+        #{createDate,jdbcType=DATE},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="deleteFlag != null">
         #{deleteFlag,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillBcListDetailAction">
-    update waybill_bc_list_detail_action
+  <update id="updateByPrimaryKeySelective" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillBcListDetail">
+    update waybill_bc_list_detail
     <set>
+      <if test="wId != null">
+        w_id = #{wId,jdbcType=CHAR},
+      </if>
       <if test="unitId != null">
         unit_id = #{unitId,jdbcType=CHAR},
       </if>
@@ -136,40 +148,52 @@
       <if test="kappAction != null">
         kapp_action = #{kappAction,jdbcType=TINYINT},
       </if>
+      <if test="longitude != null">
+        longitude = #{longitude,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude != null">
+        latitude = #{latitude,jdbcType=DECIMAL},
+      </if>
       <if test="isSingle != null">
         is_single = #{isSingle,jdbcType=TINYINT},
       </if>
-      <if test="sSingleTime != null">
-        s_single_time = #{sSingleTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="eSingleTime != null">
-        e_single_time = #{eSingleTime,jdbcType=TIMESTAMP},
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=DATE},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="deleteFlag != null">
         delete_flag = #{deleteFlag,jdbcType=TINYINT},
       </if>
     </set>
-    where w_id = #{wId,jdbcType=CHAR}
+    where id = #{id,jdbcType=CHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillBcListDetailAction">
-    update waybill_bc_list_detail_action
-    set unit_id = #{unitId,jdbcType=CHAR},
+  <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillBcListDetail">
+    update waybill_bc_list_detail
+    set w_id = #{wId,jdbcType=CHAR},
+      unit_id = #{unitId,jdbcType=CHAR},
       kapp_id = #{kappId,jdbcType=CHAR},
       kapp_name = #{kappName,jdbcType=VARCHAR},
       kapp_phone = #{kappPhone,jdbcType=VARCHAR},
       kapp_action = #{kappAction,jdbcType=TINYINT},
+      longitude = #{longitude,jdbcType=DECIMAL},
+      latitude = #{latitude,jdbcType=DECIMAL},
       is_single = #{isSingle,jdbcType=TINYINT},
-      s_single_time = #{sSingleTime,jdbcType=TIMESTAMP},
-      e_single_time = #{eSingleTime,jdbcType=TIMESTAMP},
+      create_date = #{createDate,jdbcType=DATE},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
       delete_flag = #{deleteFlag,jdbcType=TINYINT}
-    where w_id = #{wId,jdbcType=CHAR}
+    where id = #{id,jdbcType=CHAR}
   </update>
+  <insert id="insertBatch" parameterType="java.util.List">
+    insert into waybill_bc_list_detail
+    (id, w_id, unit_id, kapp_id, kapp_name, kapp_phone, kapp_action,
+    create_date, create_time)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.id},#{item.wId},#{item.unitId},#{item.kappId},#{item.kappName},#{item.kappPhone},#{item.kappAction},
+     #{item.createDate},#{item.createTime})
+  </foreach>
+
+  </insert>
 </mapper>
