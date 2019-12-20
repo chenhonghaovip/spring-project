@@ -3,10 +3,8 @@ package com.honghao.cloud.userapi.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.common.enums.RoleTypeEnum;
-import com.honghao.cloud.userapi.domain.entity.CloudDeliveryMan;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.domain.mapper.master.WaybillBcListMapper;
-import com.honghao.cloud.userapi.domain.mapper.slave.CloudOrderMapper;
 import com.honghao.cloud.userapi.dto.easypoi.WaybillBcListEasyPoi;
 import com.honghao.cloud.userapi.dto.request.*;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
@@ -33,8 +31,6 @@ public class TestController {
     private WaybillBcListFacade waybillBcListFacade;
     @Resource
     private WaybillBcListMapper waybillBcListMapper;
-    @Resource
-    private CloudOrderMapper cloudOrderMapper;
 
     private static List<Transaction> transactions;
     static {
@@ -214,15 +210,11 @@ public class TestController {
             }
             insertList.addAll(value);
         }
-
-//        int i = waybillBcListMapper.insertBatch(insertList);
         return BaseResponse.successData(map);
     }
 
     @GetMapping("/dataSourceTest")
-    public BaseResponse<List<WaybillBcList>> orderList(){
-        List<WaybillBcList> lists = waybillBcListMapper.selectAllOrder("2019-12-6 10:27:47",0);
-        CloudDeliveryMan cloudDeliveryMan = cloudOrderMapper.selectByPrimaryKey("123");
-        return BaseResponse.successData(lists);
+    public BaseResponse orderList(){
+        return waybillBcListFacade.dateSource();
     }
 }

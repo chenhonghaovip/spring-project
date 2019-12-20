@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 订单服务实现类
@@ -25,6 +24,7 @@ public class WaybillBcListServiceImpl implements WaybillBcListService {
     @Resource
     private WaybillBcListMapper waybillBcListMapper;
 
+
     @Override
     public void createUser(WaybillBcList waybillBcList) {
         waybillBcListMapper.insert(waybillBcList);
@@ -32,7 +32,6 @@ public class WaybillBcListServiceImpl implements WaybillBcListService {
 
     @Override
     public List<WaybillBcListEasyPoi> selectOrders() {
-//        List<WaybillBcList> lists = waybillBcListMapper.selectAllOrder();
         List<WaybillBcList> lists = new ArrayList<>();
 
         WaybillBcListEasyPoi waybillBcListEasyPoi;
@@ -42,8 +41,11 @@ public class WaybillBcListServiceImpl implements WaybillBcListService {
             BeanUtils.copyProperties(list,waybillBcListEasyPoi);
             result.add(waybillBcListEasyPoi);
         }
-
-        lists =lists.stream().filter(each -> "111".equals(each.getBatchId())).collect(Collectors.toList());
         return result;
+    }
+
+    @Override
+    public int updateInfos(WaybillBcList waybillBcList) {
+        return 0;
     }
 }

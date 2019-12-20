@@ -19,4 +19,6 @@ public interface WaybillBcListService {
     void createUser(WaybillBcList waybillBcList);
 
     List<WaybillBcListEasyPoi> selectOrders();
+
+    int updateInfos(WaybillBcList waybillBcList);
 }
