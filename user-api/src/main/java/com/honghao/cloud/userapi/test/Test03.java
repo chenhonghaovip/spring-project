@@ -6,12 +6,14 @@ import com.graphbuilder.struc.Bag;
 import com.honghao.cloud.userapi.dto.request.TestDTO;
 import com.honghao.cloud.userapi.dto.request.Trader1;
 import lombok.extern.slf4j.Slf4j;
+import sun.misc.Unsafe;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author chenhonghao
@@ -19,6 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public class Test03 {
+    private static final Unsafe unsafe = Unsafe.getUnsafe();
+
     public static void main(String[] args) {
         TestDTO testDTO = new TestDTO("chen",1, BigDecimal.valueOf(2.32),2.54);
         Set<TestDTO> set = new HashSet<>();
@@ -47,6 +51,9 @@ public class Test03 {
 
         ConcurrentHashMap<Integer,Integer> concurrentHashMap = new ConcurrentHashMap<>();
         concurrentHashMap.put(100,100);
+        ReentrantLock reentrantLock = new ReentrantLock();
+        reentrantLock.lock();
+        reentrantLock.unlock();
 
 
         int x = Integer.MAX_VALUE;

@@ -601,6 +601,47 @@
     where w_id = #{wId,jdbcType=CHAR}
   </update>
   <select id="selectAllOrder" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"></include> from waybill_bc_list
+    select <include refid="Base_Column_List"></include> from waybill_bc_list where update_time >= DATE_FORMAT(#{date},'%Y-%m-%d %h:%i:%s') and order_type = #{orderType}
   </select>
+
+  <insert id="insertBatch" parameterType="java.util.List">
+    insert into waybill_bc_list (w_id, batch_id, serial_number,
+      user_id, ship_id, send_name,
+      send_phone, send_province, send_city,
+      send_county, send_adcode, send_address,
+      send_longitude, send_latitude, receive_name,
+      receive_phone, receive_province, receive_county,
+      receive_city, receive_adcode, receive_address,
+      receive_longitude, receive_latitude, is_timely,
+      et_start_time, et_arrive_time, cargo_weight,
+      cargo_amount, cargo_type, order_status,
+      order_payment, order_pay_status, delivery_fee,
+      total_prices, expect_prices, order_remark,
+      order_source, order_type, single_way,
+      delivery_mode, order_time, create_date,
+      create_time, update_by, update_time,
+      delete_flag, is_overdistance, is_overtime
+      )
+    values
+        <foreach collection="list" item="item" separator="," index="index">
+          <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{item.wId,jdbcType=CHAR}, #{item.batchId,jdbcType=CHAR}, #{item.serialNumber,jdbcType=VARCHAR},
+            #{item.userId,jdbcType=CHAR}, #{item.shipId,jdbcType=VARCHAR}, #{item.sendName,jdbcType=VARCHAR},
+            #{item.sendPhone,jdbcType=VARCHAR}, #{item.sendProvince,jdbcType=VARCHAR}, #{item.sendCity,jdbcType=VARCHAR},
+            #{item.sendCounty,jdbcType=VARCHAR}, #{item.sendAdcode,jdbcType=CHAR}, #{item.sendAddress,jdbcType=VARCHAR},
+            #{item.sendLongitude,jdbcType=DECIMAL}, #{item.sendLatitude,jdbcType=DECIMAL}, #{item.receiveName,jdbcType=VARCHAR},
+            #{item.receivePhone,jdbcType=VARCHAR}, #{item.receiveProvince,jdbcType=VARCHAR}, #{item.receiveCounty,jdbcType=VARCHAR},
+            #{item.receiveCity,jdbcType=VARCHAR}, #{item.receiveAdcode,jdbcType=CHAR}, #{item.receiveAddress,jdbcType=VARCHAR},
+            #{item.receiveLongitude,jdbcType=DECIMAL}, #{item.receiveLatitude,jdbcType=DECIMAL}, #{item.isTimely,jdbcType=TINYINT},
+            #{item.etStartTime,jdbcType=TIMESTAMP}, #{item.etArriveTime,jdbcType=TIMESTAMP}, #{item.cargoWeight,jdbcType=DECIMAL},
+            #{item.cargoAmount,jdbcType=DECIMAL}, #{item.cargoType,jdbcType=VARCHAR}, #{item.orderStatus,jdbcType=TINYINT},
+            #{item.orderPayment,jdbcType=TINYINT}, #{item.orderPayStatus,jdbcType=TINYINT}, #{item.deliveryFee,jdbcType=DECIMAL},
+            #{item.totalPrices,jdbcType=DECIMAL}, #{item.expectPrices,jdbcType=DECIMAL}, #{item.orderRemark,jdbcType=VARCHAR},
+            #{item.orderSource,jdbcType=TINYINT}, #{item.orderType,jdbcType=TINYINT}, #{item.singleWay,jdbcType=TINYINT},
+            #{item.deliveryMode,jdbcType=TINYINT}, #{item.orderTime,jdbcType=TIMESTAMP}, #{item.createDate,jdbcType=DATE},
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=CHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
+            #{item.deleteFlag,jdbcType=TINYINT}, #{item.isOverdistance,jdbcType=TINYINT}, #{item.isOvertime,jdbcType=TINYINT}
+          </trim>
+        </foreach>
+  </insert>
 </mapper>

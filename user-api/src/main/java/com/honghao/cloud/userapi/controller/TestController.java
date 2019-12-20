@@ -3,6 +3,8 @@ package com.honghao.cloud.userapi.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.common.enums.RoleTypeEnum;
+import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
+import com.honghao.cloud.userapi.domain.mapper.WaybillBcListMapper;
 import com.honghao.cloud.userapi.dto.easypoi.WaybillBcListEasyPoi;
 import com.honghao.cloud.userapi.dto.request.*;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
@@ -27,6 +29,8 @@ import java.util.stream.Stream;
 public class TestController {
     @Resource
     private WaybillBcListFacade waybillBcListFacade;
+    @Resource
+    private WaybillBcListMapper waybillBcListMapper;
     private static List<Transaction> transactions;
     static {
         Trader raoul = new Trader("Raoul", "Cambridge");
@@ -188,5 +192,25 @@ public class TestController {
         jsonObject.put("cityName",cityName);
         waybillBcListFacade.test004();
         return BaseResponse.successData(jsonObject);
+    }
+
+    @GetMapping("/test005")
+    public BaseResponse test005(@RequestParam(required = false) String data){
+        List<WaybillBcList> waybillBcLists = waybillBcListMapper.selectAllOrder("2019-12-6 10:27:47",0);
+        Map<String,List<WaybillBcList>> map = waybillBcLists.stream().collect(Collectors.groupingBy(WaybillBcList::getUserId));
+
+        List<WaybillBcList> insertList = new ArrayList<>();
+        String batchId = "";
+        for (List<WaybillBcList> value : map.values()) {
+            batchId = "";
+            for (WaybillBcList waybillBcList : value) {
+                waybillBcList.setWId("");
+                waybillBcList.setBatchId(batchId);
+            }
+            insertList.addAll(value);
+        }
+
+//        int i = waybillBcListMapper.insertBatch(insertList);
+        return BaseResponse.successData(map);
     }
 }
