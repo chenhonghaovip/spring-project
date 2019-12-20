@@ -32,7 +32,9 @@ public class WaybillBcListServiceImpl implements WaybillBcListService {
 
     @Override
     public List<WaybillBcListEasyPoi> selectOrders() {
-        List<WaybillBcList> lists = waybillBcListMapper.selectAllOrder();
+//        List<WaybillBcList> lists = waybillBcListMapper.selectAllOrder();
+        List<WaybillBcList> lists = new ArrayList<>();
+
         WaybillBcListEasyPoi waybillBcListEasyPoi;
         List<WaybillBcListEasyPoi> result = new ArrayList<>();
         for (WaybillBcList list : lists) {
