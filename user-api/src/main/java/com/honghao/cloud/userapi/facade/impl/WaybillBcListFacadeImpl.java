@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.config.ThreadPoolInitConfig;
+import com.honghao.cloud.userapi.domain.entity.CloudDeliveryMan;
+import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.dto.easypoi.WaybillBcListEasyPoi;
 import com.honghao.cloud.userapi.dto.request.EventDTO;
 import com.honghao.cloud.userapi.dto.request.Operator;
@@ -12,6 +14,7 @@ import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import com.honghao.cloud.userapi.interceptor.UserInfoHolder;
 import com.honghao.cloud.userapi.listener.event.EventDemo;
 import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;
+import com.honghao.cloud.userapi.service.CloudOrderService;
 import com.honghao.cloud.userapi.service.WaybillBcListService;
 import com.honghao.cloud.userapi.task.AsyncTask;
 import com.honghao.cloud.userapi.utils.JedisOperator;
@@ -39,6 +42,8 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
     @Resource
     private WaybillBcListService waybillBcListService;
     @Resource
+    private CloudOrderService cloudOrderService;
+    @Resource
     private MessageSender messageSender;
     @Resource
     private AsyncTask asyncTask;
@@ -48,6 +53,8 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
     private ApplicationEventPublisher applicationEventPublisher;
     @Resource
     private OrderClient orderClient;
+
+
 
     @Override
     @HystrixCommand(fallbackMethod = "createUserFallback")
@@ -172,12 +179,21 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
         return BaseResponse.success();
     }
 
+    @Override
+    public BaseResponse dateSource() {
+        WaybillBcList waybillBcList = WaybillBcList.builder().wId("").deleteFlag(1).build();
+        waybillBcListService.updateInfos(waybillBcList);
+
+        CloudDeliveryMan cloudDeliveryMan =CloudDeliveryMan.builder().deliveryManId("").deleteFlag(1).build();
+        cloudOrderService.updateInfos(cloudDeliveryMan);
+
+        return BaseResponse.success();
+    }
+
     private boolean updatePic(){
         return true;
     }
-    private void downPic(){
 
-    }
 
     /**
      * 服务降级

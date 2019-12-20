@@ -37,4 +37,6 @@ public interface WaybillBcListFacade {
     BaseResponse easypoi();
 
     BaseResponse test004();
+
+    BaseResponse dateSource();
 }
