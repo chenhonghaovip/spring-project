@@ -217,4 +217,9 @@ public class TestController {
     public BaseResponse orderList(){
         return waybillBcListFacade.dateSource();
     }
+
+    @GetMapping("/reflexTest")
+    public BaseResponse reflexTest(){
+        return waybillBcListFacade.reflexTest();
+    }
 }

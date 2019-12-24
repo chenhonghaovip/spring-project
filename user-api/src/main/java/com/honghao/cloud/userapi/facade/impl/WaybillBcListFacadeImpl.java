@@ -137,31 +137,10 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
     }
 
     @Override
-    public void test01(String data) {
-        for (int i = 0; i < 20; i++) {
-            messageSender.test01(data);
-        }
-    }
-
-    @Override
     public BaseResponse easypoi() {
         List<WaybillBcListEasyPoi> waybillBcLists = waybillBcListService.selectOrders();
 
         waybillBcLists.sort(Comparator.comparing(WaybillBcListEasyPoi::getBatchId).reversed());
-
-//
-//        long i = 0;
-//        try {
-//            i = jedisOperator.incr("mybatis"+ LocalDate.now());
-//            if (i<=3){
-//                System.out.println(i);
-//            }else {
-//                i = jedisOperator.decr("mybatis"+ LocalDate.now());
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
 
         return BaseResponse.successData(waybillBcLists);
     }
@@ -188,6 +167,13 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
         cloudOrderService.updateInfos(cloudDeliveryMan);
 
         return BaseResponse.success();
+    }
+
+    @Override
+    public BaseResponse reflexTest() {
+        Operator operator = new Operator();
+        Class clazz = operator.getClass();
+        return null;
     }
 
     private boolean updatePic(){

@@ -27,16 +27,20 @@ public interface WaybillBcListFacade {
      * @return Boolean
      */
     Boolean createUser2(String data);
-    /**
-     * 创建用户
-     * @param data data
-     * @return Boolean
-     */
-    void test01(String data);
 
     BaseResponse easypoi();
 
     BaseResponse test004();
 
+    /**
+     * 多数据源测试
+     * @return BaseResponse
+     */
     BaseResponse dateSource();
+
+    /**
+     * 反射测试
+     * @return BaseResponse
+     */
+    BaseResponse reflexTest();
 }
