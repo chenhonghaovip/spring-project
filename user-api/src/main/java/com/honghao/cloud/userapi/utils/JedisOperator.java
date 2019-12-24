@@ -8,10 +8,7 @@ import redis.clients.jedis.exceptions.JedisException;
 import redis.clients.jedis.params.geo.GeoRadiusParam;
 
 import javax.annotation.Resource;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * redis 基本操作
@@ -299,6 +296,23 @@ public class JedisOperator {
 		try {
 			jedis = getResource();
 			jedis.del(key);
+		} catch (Exception e) {
+			log.error("Redis del error: " + e.getMessage());
+		} finally {
+			returnResource(jedis);
+		}
+	}
+
+	/**
+	 * 模糊匹配，批量删除
+	 * @param key 模糊匹配键值
+	 */
+	public void delBatch(String key) {
+		Jedis jedis = null;
+		try {
+			jedis = getResource();
+			Set<String> set = jedis.keys(key+"*");
+			jedis.del(set.toArray(new String[0]));
 		} catch (Exception e) {
 			log.error("Redis del error: " + e.getMessage());
 		} finally {
