@@ -22,6 +22,6 @@ public class CloudOrderServiceImpl implements CloudOrderService {
 
     @Override
     public int updateInfos(CloudDeliveryMan cloudDeliveryMan) {
-        return cloudOrderMapper.updateByPrimaryKey(cloudDeliveryMan);
+        return cloudOrderMapper.updateByPrimaryKeySelective(cloudDeliveryMan);
     }
 }

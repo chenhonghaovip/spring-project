@@ -46,6 +46,6 @@ public class WaybillBcListServiceImpl implements WaybillBcListService {
 
     @Override
     public int updateInfos(WaybillBcList waybillBcList) {
-        return 0;
+        return waybillBcListMapper.updateByPrimaryKeySelective(waybillBcList);
     }
 }

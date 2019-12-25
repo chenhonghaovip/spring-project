@@ -22,8 +22,12 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.*;
@@ -92,7 +96,6 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
 
     @Override
     public Boolean createUser1(String data) {
-//        DozerBeanMapper dozerBeanMapper = DozerUtils.createDozer();
         messageSender.testQueue("name is chenhonghao");
         ThreadPoolExecutor executor= ThreadPoolInitConfig.build("create");
         CompletableFuture<String> future = CompletableFuture.supplyAsync(()->{
@@ -159,20 +162,34 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public BaseResponse dateSource() {
-        WaybillBcList waybillBcList = WaybillBcList.builder().wId("").deleteFlag(1).build();
+        WaybillBcList waybillBcList = WaybillBcList.builder().wId("2017111800000018").deleteFlag(1).build();
         waybillBcListService.updateInfos(waybillBcList);
 
-        CloudDeliveryMan cloudDeliveryMan =CloudDeliveryMan.builder().deliveryManId("").deleteFlag(1).build();
+        CloudDeliveryMan cloudDeliveryMan =CloudDeliveryMan.builder().deliveryManId("3704784038811670").deleteFlag(1).build();
         cloudOrderService.updateInfos(cloudDeliveryMan);
 
         return BaseResponse.success();
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public BaseResponse reflexTest() {
         Operator operator = new Operator();
+        operator.setAgentNo("11111");
         Class clazz = operator.getClass();
+        Constructor constructor ;
+        try {
+            constructor = clazz.getConstructor(String.class);
+            Operator operator1 = (Operator) constructor.newInstance("jack");
+            Method method = clazz.getDeclaredMethod("getAgentNo");
+            method.invoke(operator);
+            System.out.println(method.invoke(operator));
+        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 

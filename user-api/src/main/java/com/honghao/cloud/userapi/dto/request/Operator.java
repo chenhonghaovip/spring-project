@@ -48,4 +48,8 @@ public class Operator {
     public interface First extends Default {}
 
     public interface Second extends Default{}
+
+    public Operator(String operatorNo) {
+        this.operatorNo = operatorNo;
+    }
 }

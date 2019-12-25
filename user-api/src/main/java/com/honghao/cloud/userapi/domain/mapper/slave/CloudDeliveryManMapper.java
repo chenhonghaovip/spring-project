@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.domain.mapper.master;
+package com.honghao.cloud.userapi.domain.mapper.slave;
 
 import com.honghao.cloud.userapi.domain.entity.CloudDeliveryMan;
 
