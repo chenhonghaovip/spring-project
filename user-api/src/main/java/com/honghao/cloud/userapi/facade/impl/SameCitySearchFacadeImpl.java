@@ -1,9 +1,11 @@
 package com.honghao.cloud.userapi.facade.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.honghao.cloud.userapi.dto.response.SameCityNumVO;
 import com.honghao.cloud.userapi.dto.service.SameCityNumDTO;
 import com.honghao.cloud.userapi.facade.SameCitySearchFacade;
 import com.honghao.cloud.userapi.service.WaybillBcListService;
+import com.honghao.cloud.userapi.utils.DozerUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,12 @@ public class SameCitySearchFacadeImpl implements SameCitySearchFacade {
     public List<SameCityNumVO> getNum(String knightId) {
         List<SameCityNumDTO> list = waybillBcListService.getNum(knightId);
 
+        //测试自定义DozerUtils.customizeMap()
+        SameCityNumVO sameCityNumVO = SameCityNumVO.builder().orderStatus(3).build();
+        DozerUtils.customizeMap(list.get(0),sameCityNumVO);
+        System.out.println(JSON.toJSONString(sameCityNumVO));
+
         return list.stream().map(each -> SameCityNumVO.builder().orderStatus(each.getOrderStatus()).num(each.getNum()).build()).collect(Collectors.toList());
+
     }
 }
