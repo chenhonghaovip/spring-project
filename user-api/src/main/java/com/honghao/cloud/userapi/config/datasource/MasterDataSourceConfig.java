@@ -60,10 +60,11 @@ public class MasterDataSourceConfig {
 
     @Bean(name = "masterSqlSessionFactory")
     @Primary
-    public SqlSessionFactory masterSqlSessionFactory(@Qualifier("masterDataSource") DataSource masterDataSource)
+    public SqlSessionFactory masterSqlSessionFactory(@Qualifier("masterDataSource") DataSource masterDataSource,@Qualifier("mybatis.config")org.apache.ibatis.session.Configuration config)
             throws Exception {
         final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(masterDataSource);
+        sessionFactory.setConfiguration(config);
         sessionFactory.setMapperLocations(
                 new PathMatchingResourcePatternResolver().getResources(MasterDataSourceConfig.MAPPER_LOCATION));
         return sessionFactory.getObject();

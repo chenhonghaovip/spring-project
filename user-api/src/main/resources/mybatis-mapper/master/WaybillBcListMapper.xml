@@ -644,4 +644,16 @@
           </trim>
         </foreach>
   </insert>
+
+  <select id="getNum" resultType="com.honghao.cloud.userapi.dto.service.SameCityNumDTO">
+    SELECT
+        COUNT(*) as num ,
+     t.order_status
+    FROM
+        waybill_bc_list t
+    INNER JOIN waybill_bc_list_detail_action m ON t.w_id = m.w_id
+    WHERE
+        m.kapp_id = #{kappId} and t.order_type in (0,2,3,6,7)
+    GROUP BY t.order_status
+  </select>
 </mapper>

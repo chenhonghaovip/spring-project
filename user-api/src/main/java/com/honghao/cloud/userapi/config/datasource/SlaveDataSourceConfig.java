@@ -56,10 +56,11 @@ public class SlaveDataSourceConfig {
     }
 
     @Bean(name = "slaveSqlSessionFactory")
-    public SqlSessionFactory slaveSqlSessionFactory(@Qualifier("slaveDataSource") DataSource slaveDataSource)
+    public SqlSessionFactory slaveSqlSessionFactory(@Qualifier("slaveDataSource") DataSource slaveDataSource, @Qualifier("mybatis.config")org.apache.ibatis.session.Configuration config)
             throws Exception {
         final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(slaveDataSource);
+        sessionFactory.setConfiguration(config);
         sessionFactory.setMapperLocations(
                 new PathMatchingResourcePatternResolver().getResources(SlaveDataSourceConfig.MAPPER_LOCATION));
         return sessionFactory.getObject();

@@ -3,6 +3,7 @@ package com.honghao.cloud.userapi.service.impl;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.domain.mapper.master.WaybillBcListMapper;
 import com.honghao.cloud.userapi.dto.easypoi.WaybillBcListEasyPoi;
+import com.honghao.cloud.userapi.dto.service.SameCityNumDTO;
 import com.honghao.cloud.userapi.service.WaybillBcListService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -47,5 +48,10 @@ public class WaybillBcListServiceImpl implements WaybillBcListService {
     @Override
     public int updateInfos(WaybillBcList waybillBcList) {
         return waybillBcListMapper.updateByPrimaryKeySelective(waybillBcList);
+    }
+
+    @Override
+    public List<SameCityNumDTO> getNum(String knightId) {
+        return waybillBcListMapper.getNum(knightId);
     }
 }
