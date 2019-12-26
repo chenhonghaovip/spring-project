@@ -653,7 +653,7 @@
         waybill_bc_list t
     INNER JOIN waybill_bc_list_detail_action m ON t.w_id = m.w_id
     WHERE
-        m.kapp_id = #{kappId} and t.order_type in (0,2,3,6,7)
+        m.kapp_id = #{kappId} and t.order_type in (0,2,3,6,7) and t.order_status in (1,2)
     GROUP BY t.order_status
   </select>
 </mapper>

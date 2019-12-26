@@ -1,15 +1,15 @@
 package com.honghao.cloud.userapi.utils;
 
+import com.honghao.cloud.userapi.dto.common.DozerDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.dozer.DozerBeanMapper;
 import org.dozer.loader.api.BeanMappingBuilder;
 import org.dozer.loader.api.TypeMappingOptions;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 对象属性复制工具类
@@ -83,20 +83,34 @@ public class DozerUtils {
     }
 
 
-    public static <T,U> U customizeMap(T sourceBean, U targetBean) {
-        Field[] sourceFields = sourceBean.getClass().getDeclaredFields();
-        Field[] targetFields = targetBean.getClass().getDeclaredFields();
-        List<Field> fields = Arrays.asList(targetFields);
+    /**
+     * 属性复制，不覆盖原有值
+     * @param sourceBean 资源对象
+     * @param targetBean 目标对象
+     * @param <T> 资源类型
+     * @param <U> 目标类型
+     */
+    public static <T,U> void customizeMap(T sourceBean, U targetBean) {
+        List<DozerDTO> target = Arrays.stream(targetBean.getClass().getDeclaredFields()).map(each -> DozerDTO.builder().field(each).name(each.getName()).build())
+                .collect(Collectors.toList());
 
-        for (Field sourceField : sourceFields) {
-            if (fields.contains(sourceField)){
+        Map<String,List<Field>> fieldMap = Arrays.stream(sourceBean.getClass().getDeclaredFields()).collect(Collectors.groupingBy(Field::getName));
 
+        for (DozerDTO dozerDTO : target) {
+            try {
+                dozerDTO.getField().setAccessible(true);
+                if (dozerDTO.getField().get(targetBean)!=null){
+                    continue;
+                }
+                if (CollectionUtils.isNotEmpty(fieldMap.get(dozerDTO.getName()))){
+                    Field field = fieldMap.get(dozerDTO.getName()).get(0);
+                    field.setAccessible(true);
+                    dozerDTO.getField().set(targetBean,field.get(sourceBean));
+                }
+            } catch (IllegalAccessException e) {
+                log.error(e.getMessage());
             }
         }
-        return targetBean;
-
     }
-
-
 
 }
