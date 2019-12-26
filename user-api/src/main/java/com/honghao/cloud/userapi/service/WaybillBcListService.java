@@ -2,6 +2,7 @@ package com.honghao.cloud.userapi.service;
 
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.dto.easypoi.WaybillBcListEasyPoi;
+import com.honghao.cloud.userapi.dto.service.SameCityNumDTO;
 
 import java.util.List;
 
@@ -21,4 +22,11 @@ public interface WaybillBcListService {
     List<WaybillBcListEasyPoi> selectOrders();
 
     int updateInfos(WaybillBcList waybillBcList);
+
+    /**
+     * 查询同城订单数量
+     * @param knightId 骑士id
+     * @return BaseResponse
+     */
+    List<SameCityNumDTO> getNum(String knightId);
 }
