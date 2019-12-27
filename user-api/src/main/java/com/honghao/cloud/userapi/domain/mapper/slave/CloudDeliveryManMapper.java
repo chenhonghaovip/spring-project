@@ -2,6 +2,9 @@ package com.honghao.cloud.userapi.domain.mapper.slave;
 
 import com.honghao.cloud.userapi.domain.entity.CloudDeliveryMan;
 
+/**
+ * @author CHH
+ */
 public interface CloudDeliveryManMapper {
     int deleteByPrimaryKey(String deliveryManId);
 

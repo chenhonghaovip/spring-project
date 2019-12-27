@@ -18,7 +18,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LOO {
+public class Loo {
     @JSONField(name = "name_1")
     private String name;
 

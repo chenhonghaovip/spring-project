@@ -183,7 +183,7 @@ public class TestController {
     @GetMapping("/test004")
     public BaseResponse test004(@RequestParam String data){
         JSONObject jsonObject = new JSONObject();
-        Map<String,Object> map = new HashMap<>();
+        Map<String,Object> map = new HashMap<>(8);
         map.put("k",new EventDTO());
         Optional<Object> value = Optional.ofNullable(map.get("key"));
         EventDTO eventDTO = (EventDTO) value.orElse(new EventDTO());

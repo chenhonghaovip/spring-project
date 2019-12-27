@@ -2,6 +2,9 @@ package com.honghao.cloud.userapi.domain.mapper.master;
 
 import com.honghao.cloud.userapi.domain.entity.WaybillBcListExtend;
 
+/**
+ * @author CHH
+ */
 public interface WaybillBcListExtendMapper {
     int deleteByPrimaryKey(String wId);
 

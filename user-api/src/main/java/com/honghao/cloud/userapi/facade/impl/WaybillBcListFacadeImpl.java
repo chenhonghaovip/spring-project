@@ -150,7 +150,12 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
 
     @Override
     public BaseResponse test004() {
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(2,4,30, TimeUnit.SECONDS,new ArrayBlockingQueue<>(100));
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(2, 4, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100), new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                return new Thread(r);
+            }
+        });
         Future<Boolean> future = threadPoolExecutor.submit(this::updatePic);
         try {
             future.get(20,TimeUnit.SECONDS);
