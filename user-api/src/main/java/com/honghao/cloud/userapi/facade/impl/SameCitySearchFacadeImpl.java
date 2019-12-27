@@ -1,6 +1,8 @@
 package com.honghao.cloud.userapi.facade.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.honghao.cloud.userapi.dto.response.SameCityNumVO;
 import com.honghao.cloud.userapi.dto.service.SameCityNumDTO;
 import com.honghao.cloud.userapi.facade.SameCitySearchFacade;
@@ -28,6 +30,8 @@ public class SameCitySearchFacadeImpl implements SameCitySearchFacade {
 
     @Override
     public List<SameCityNumVO> getNum(String knightId) {
+        Page<SameCityNumVO> page = PageHelper.startPage(5,20).doSelectPage(()->waybillBcListService.getNum(knightId));
+
         List<SameCityNumDTO> list = waybillBcListService.getNum(knightId);
 
         //测试自定义DozerUtils.customizeMap()
