@@ -54,4 +54,11 @@ public class WaybillBcListServiceImpl implements WaybillBcListService {
     public List<SameCityNumDTO> getNum(String knightId) {
         return waybillBcListMapper.getNum(knightId);
     }
+
+    @Override
+    public List<WaybillBcList> orderList() {
+        return null;
+    }
+
+
 }

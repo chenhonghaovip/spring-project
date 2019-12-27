@@ -29,4 +29,6 @@ public interface WaybillBcListService {
      * @return BaseResponse
      */
     List<SameCityNumDTO> getNum(String knightId);
+
+    List<WaybillBcList> orderList();
 }
