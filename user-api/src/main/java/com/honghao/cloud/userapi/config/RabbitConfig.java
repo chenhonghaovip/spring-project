@@ -139,10 +139,10 @@ public class RabbitConfig {
 
     /**
      * 短信发送队列延时
-     * @return smsQueueDelayPerMessageTTL
+     * @return smsQueueDelayPerMessageTtl
      */
     @Bean
-    public Queue smsQueueDelayPerMessageTTL() {
+    public Queue smsQueueDelayPerMessageTtl() {
         Map<String, Object> arguments = new HashMap<>(16);
         arguments.put("x-dead-letter-exchange", QUEUE_MSG_SMS_SEND_EXCHANGE);
         arguments.put("x-dead-letter-routing-key", QUEUE_MSG_SMS_SEND_NAME);

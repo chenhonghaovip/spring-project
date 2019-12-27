@@ -18,24 +18,23 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 @Slf4j
 public class Test04 {
-    private static final Unsafe unsafe ;
-    private static final Field getUnsafe;
+    private static final Unsafe UNSAFE;
+    private static final Field FIELD;
     private static int num ;
-    private Trader trader;
 
-    private static final long valueOffset;
+    private static final long VALUE_OFFSET;
     static {
         try {
-            getUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
-            getUnsafe.setAccessible(true);
-            unsafe = (Unsafe) getUnsafe.get(null);
-            valueOffset = unsafe.objectFieldOffset
+            FIELD = Unsafe.class.getDeclaredField("theUnsafe");
+            FIELD.setAccessible(true);
+            UNSAFE = (Unsafe) FIELD.get(null);
+            VALUE_OFFSET = UNSAFE.objectFieldOffset
                     (Trader.class.getDeclaredField("name"));
         } catch (Exception ex) { throw new Error(ex); }
     }
     public static void main(String[] args) {
         Trader trader = new Trader("name","city");
-        boolean flag = unsafe.compareAndSwapObject(trader,valueOffset,"name","name1");
+        boolean flag = UNSAFE.compareAndSwapObject(trader, VALUE_OFFSET,"name","name1");
         log.info(JSON.toJSONString(trader));
 
         ReentrantLock reentrantLock = new ReentrantLock();
@@ -79,7 +78,6 @@ public class Test04 {
         return k;
     }
     private void get(){
-        Trader t = trader;
 
         System.out.println(111);
     }

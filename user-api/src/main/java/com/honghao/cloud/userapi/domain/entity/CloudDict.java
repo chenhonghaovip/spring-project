@@ -8,10 +8,13 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.groups.Default;
 
+/**
+ * @author CHH
+ */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class CloudDict {
     @NotBlank
     private String id;

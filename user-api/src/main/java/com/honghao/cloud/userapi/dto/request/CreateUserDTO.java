@@ -31,7 +31,9 @@ public class CreateUserDTO implements Serializable {
     private String name;
 
     @NotEmpty
-    //用于对list集合内部对象进行校验
+    /**
+     * 用于对list集合内部对象进行校验
+     */
     @Valid
     private List<Operator> list;
 }

@@ -27,7 +27,6 @@ import java.util.concurrent.atomic.AtomicLong;
 public class MessageReceive {
     private AtomicLong atomicLong = new AtomicLong(2017111800000001L);
 
-    private static final ThreadLocal<String> THREAD_LOCAL = new ThreadLocal<>();
     @Resource
     private WaybillBcListMapper waybillBcListMapper;
     @Resource

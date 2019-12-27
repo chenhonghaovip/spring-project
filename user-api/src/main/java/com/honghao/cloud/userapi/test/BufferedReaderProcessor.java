@@ -9,5 +9,11 @@ import java.io.IOException;
  */
 @FunctionalInterface
 public interface BufferedReaderProcessor {
+    /**
+     * java8测试
+     * @param b b
+     * @return String
+     * @throws IOException io
+     */
     String process(BufferedReader b) throws IOException;
 }

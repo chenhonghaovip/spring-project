@@ -14,7 +14,6 @@ import java.lang.reflect.Method;
  * @date 2019-10-30 14:39
  */
 public class Test02 {
-    private static final int[] first = new int[]{1,2,3};
 
     public static void main(String[] args) {
 
@@ -38,7 +37,7 @@ public class Test02 {
         for(Field f : fields){
             f.setAccessible(true);
             try {
-                if (f.get(obj)!=null && !f.getName().equals("serialVersionUID")) {
+                if (f.get(obj)!=null && !"serialVersionUID".equals(f.getName())) {
                     PropertyDescriptor pd = new PropertyDescriptor(f.getName(), obj2.getClass());
                     Method wm = pd.getWriteMethod();
                     wm.invoke(obj2, f.get(obj));

@@ -6,13 +6,12 @@ import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.domain.entity.CloudDict;
 import com.honghao.cloud.userapi.dto.request.CreateUserDTO;
 import com.honghao.cloud.userapi.dto.request.UpdateUserDTO;
-import com.honghao.cloud.userapi.dto.test.LOO;
+import com.honghao.cloud.userapi.dto.test.Loo;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import com.honghao.cloud.userapi.utils.JedisOperator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -50,13 +49,11 @@ import java.util.stream.Stream;
 @Api("用户接口服务")
 @Validated
 public class UserController {
-    private static final ThreadLocal<SimpleDateFormat> threadLocal = ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+    private static final ThreadLocal<SimpleDateFormat> THREAD_LOCAL = ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
     @Resource
     private WaybillBcListFacade waybillBcListFacade;
     @Resource
     private JedisOperator jedisOperator;
-    @Resource
-    private RedisTemplate redisTemplate;
 
 
     /**
@@ -68,7 +65,7 @@ public class UserController {
 
     @PostMapping("/create")
     @ApiOperation(value = "创建用户",notes = "创建用户")
-    BaseResponse<Boolean> createUser(@RequestBody String data) {
+    public BaseResponse<Boolean> createUser(@RequestBody String data) {
         waybillBcListFacade.createUser(data);
         return BaseResponse.success();
     }
@@ -81,8 +78,7 @@ public class UserController {
     @Auth
     @PostMapping("/create1")
     @ApiOperation(value = "测试" ,notes = "测试")
-    BaseResponse<String> getUser(@RequestBody String data) {
-//        waybillBcListFacade.createUser1(data);
+    public BaseResponse<String> getUser(@RequestBody String data) {
         waybillBcListFacade.createUser2("");
         return null;
     }
@@ -92,36 +88,35 @@ public class UserController {
      * @param kappId 骑士id
      * @return BaseResponse
      */
-//    @Auth
     @GetMapping("/create2")
     @ApiOperation(value = "测试" ,notes = "测试")
-    BaseResponse<String> create2(@RequestParam("kappId") @Valid @NotBlank String kappId) {
+    public BaseResponse<String> create2(@RequestParam("kappId") @Valid @NotBlank String kappId) {
         waybillBcListFacade.createUser2("");
         return null;
     }
 
     @PostMapping("/test001")
-    BaseResponse test01(@RequestBody @Validated CreateUserDTO createUserDTO){
+    public BaseResponse test01(@RequestBody @Validated CreateUserDTO createUserDTO){
         System.out.println(JSON.toJSONString(createUserDTO));
         return null;
     }
 
 
     @PostMapping("/test002")
-    BaseResponse test02(@RequestBody @Valid UpdateUserDTO createUserDTO, BindingResult bindingResult){
+    public BaseResponse test02(@RequestBody @Valid UpdateUserDTO createUserDTO, BindingResult bindingResult){
         try {
             long nowTime = System.currentTimeMillis();
-            System.out.println(threadLocal.get().parse(String.valueOf(nowTime)));
+            System.out.println(THREAD_LOCAL.get().parse(String.valueOf(nowTime)));
             Date temp = new Date();
-            String time = threadLocal.get().format(temp);
+            String time = THREAD_LOCAL.get().format(temp);
             System.out.println(time);
             String string = "2018-8-24 12:50:20:545";
-            Date date = threadLocal.get().parse(string);
+            Date date = THREAD_LOCAL.get().parse(string);
             System.out.println(date);
         } catch (ParseException e) {
             e.printStackTrace();
         } finally {
-            threadLocal.remove();
+            THREAD_LOCAL.remove();
         }
         return null;
     }
@@ -132,7 +127,7 @@ public class UserController {
      * @return BaseResponse
      */
     @PostMapping("/test003")
-    BaseResponse test03(@RequestBody String data){
+    public BaseResponse test03(@RequestBody String data){
 
         //存放geo信息，存放到redis中为zset结构
         jedisOperator.geoadd("test02",Double.valueOf("121.3717178602589"),Double.valueOf("31.17087293836589"),"33333");
@@ -167,8 +162,8 @@ public class UserController {
 
 
     @PostMapping("/test005")
-    BaseResponse test05(@RequestBody String data){
-        LOO test = new LOO("chen","21",new Date(),LocalDate.now(),LocalDateTime.now(),LocalTime.now());
+    public BaseResponse test05(@RequestBody String data){
+        Loo test = new Loo("chen","21",new Date(),LocalDate.now(),LocalDateTime.now(),LocalTime.now());
         System.out.println(LocalDateTime.now());
 
         //LocalDateTime类型转换
@@ -180,7 +175,7 @@ public class UserController {
     }
 
     @PostMapping("/test006")
-    BaseResponse test06(@RequestBody @Validated(CloudDict.Person.class) CloudDict data){
+    public BaseResponse test06(@RequestBody @Validated(CloudDict.Person.class) CloudDict data){
         log.info("main is start");
         CountDownLatch countDownLatch = new CountDownLatch(2);
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(2,4,20, TimeUnit.SECONDS,new ArrayBlockingQueue<Runnable>(10));
@@ -207,10 +202,10 @@ public class UserController {
     }
 
     @GetMapping("/test007")
-    BaseResponse<Boolean> test007(@RequestParam("wId") String wId){
-        LOO loo = new LOO();
+    public BaseResponse<Boolean> test007(@RequestParam("wId") String wId){
+        Loo loo = new Loo();
         loo.setAge("21");
-        LOO lo1 = new LOO();
+        Loo lo1 = new Loo();
         lo1.setAge("21");
         boolean flag = Objects.equals(loo,lo1);
         boolean flag1 = Objects.deepEquals(loo,lo1);

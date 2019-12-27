@@ -4,6 +4,9 @@ import com.honghao.cloud.userapi.domain.entity.WaybillBcListDetail;
 
 import java.util.List;
 
+/**
+ * @author CHH
+ */
 public interface WaybillBcListDetailMapper {
     int deleteByPrimaryKey(String id);
 

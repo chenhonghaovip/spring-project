@@ -2,6 +2,9 @@ package com.honghao.cloud.userapi.domain.mapper.master;
 
 import com.honghao.cloud.userapi.domain.entity.WaybillMerchantsArbitrament;
 
+/**
+ * @author CHH
+ */
 public interface WaybillMerchantsArbitramentMapper {
     int deleteByPrimaryKey(String orderId);
 

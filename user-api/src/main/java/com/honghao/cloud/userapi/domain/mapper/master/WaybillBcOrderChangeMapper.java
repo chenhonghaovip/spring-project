@@ -2,6 +2,9 @@ package com.honghao.cloud.userapi.domain.mapper.master;
 
 import com.honghao.cloud.userapi.domain.entity.WaybillBcOrderChange;
 
+/**
+ * @author CHH
+ */
 public interface WaybillBcOrderChangeMapper {
     int deleteByPrimaryKey(String id);
 

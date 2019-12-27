@@ -10,20 +10,20 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class RunTimeTest {
-    static abstract class People{
+    static abstract class AbstractPeople {
 
     }
-    static class Man extends People{
+    static class Man extends AbstractPeople {
         public void sayBye(){
             log.info("man say goodbye");
         }
     }
-    static class Woman extends People{
+    static class Woman extends AbstractPeople {
         public void sayBye(){
             log.info("woman say goodbye");
         }
     }
-    public void sayHello(People people){
+    public void sayHello(AbstractPeople people){
         log.info("people say hello");
     }
     public void sayHello(Man man){
@@ -33,7 +33,7 @@ public class RunTimeTest {
         log.info("woman say hello");
     }
     public static void main(String[] args) {
-        People man = new Man();
+        AbstractPeople man = new Man();
         Man man1 = new Man();
         RunTimeTest runTimeTest = new RunTimeTest();
         runTimeTest.sayHello(man);

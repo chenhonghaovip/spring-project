@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * @author CHH
+ */
 public interface WaybillBcListMapper {
     int deleteByPrimaryKey(String wId);
 

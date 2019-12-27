@@ -6,7 +6,6 @@ import com.graphbuilder.struc.Bag;
 import com.honghao.cloud.userapi.dto.request.TestDTO;
 import com.honghao.cloud.userapi.dto.request.Trader1;
 import lombok.extern.slf4j.Slf4j;
-import sun.misc.Unsafe;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -21,19 +20,18 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @Slf4j
 public class Test03 {
-    private static final Unsafe unsafe = Unsafe.getUnsafe();
 
     public static void main(String[] args) {
         TestDTO testDTO = new TestDTO("chen",1, BigDecimal.valueOf(2.32),2.54);
         Set<TestDTO> set = new HashSet<>();
         set.add(testDTO);
 
-        TestDTO testDTO1 = new TestDTO("chen",1, BigDecimal.valueOf(2.32),2.54);
-        set.add(testDTO1);
+        TestDTO chen = new TestDTO("chen",1, BigDecimal.valueOf(2.32),2.54);
+        set.add(chen);
         set.forEach(each -> System.out.println(JSON.toJSONString(each)) );
 
-        System.out.println(testDTO.getClass()==testDTO1.getClass());
-        System.out.println(testDTO.equals(testDTO1));
+        System.out.println(testDTO.getClass()==chen.getClass());
+        System.out.println(testDTO.equals(chen));
 
         Trader1 trader1 = new Trader1();
         Trader1 trader11 = new Trader1();
@@ -49,7 +47,7 @@ public class Test03 {
         }
         map.get(100);
 
-        ConcurrentHashMap<Integer,Integer> concurrentHashMap = new ConcurrentHashMap<>();
+        ConcurrentHashMap<Integer,Integer> concurrentHashMap = new ConcurrentHashMap<>(16);
         concurrentHashMap.put(100,100);
         ReentrantLock reentrantLock = new ReentrantLock();
         reentrantLock.lock();

@@ -1,6 +1,5 @@
 package com.honghao.cloud.userapi.listener.rabbitmq.customer;
 
-import com.honghao.cloud.userapi.config.RabbitExchangeConfig;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
@@ -16,12 +15,9 @@ import java.io.IOException;
  */
 @Slf4j
 @Component
-//@RabbitListener(queues = RabbitConfig.USER_PUSH_QUEUE, containerFactory = "factory")
 public class TenMinDelay {
 	@Resource
 	private WaybillBcListFacade waybillBcListFacade;
-	@Resource
-	private RabbitExchangeConfig rabbitExchangeConfig;
 	/**
 	 * 消费队列信息
 	 * @param str json字符串

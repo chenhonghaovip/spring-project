@@ -16,12 +16,12 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @Slf4j
 public class Test05 {
     private static int num = 0;
-    private static final ReentrantLock reentrantLock = new ReentrantLock();
+    private static final ReentrantLock REENTRANT_LOCK = new ReentrantLock();
 
     public static void main(String[] args) {
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10,10,20, TimeUnit.SECONDS,new ArrayBlockingQueue<>(100));
         for (int i = 0; i < 10; i++) {
-            threadPoolExecutor.execute(()-> get(reentrantLock));
+            threadPoolExecutor.execute(()-> get(REENTRANT_LOCK));
         }
         threadPoolExecutor.shutdown();
 
