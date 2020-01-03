@@ -630,8 +630,35 @@ public class JedisOperator {
 		return Collections.emptyList();
 	}
 
+	public void sadd(String key,String... values){
+		Jedis jedis = null;
+		try {
+			jedis = getResource();
+			jedis.sadd(key,values);
+			log.debug("Redis set success - " + key + ", value:" + Arrays.toString(values));
+		} catch (Exception e) {
+			log.error("Redis sadd error:"+e.getMessage());
+		} finally {
+			returnResource(jedis);
+		}
+	}
 
-
-
+	/**
+	 *
+	 * @param key key
+	 * @param values values
+	 */
+	public void srem(String key,String... values){
+		Jedis jedis = null;
+		try {
+			jedis = getResource();
+			jedis.srem(key,values);
+			log.debug("Redis del success - " + key + ", value:" + Arrays.toString(values));
+		} catch (Exception e) {
+			log.error("Redis sadd error:"+e.getMessage());
+		} finally {
+			returnResource(jedis);
+		}
+	}
 
 }

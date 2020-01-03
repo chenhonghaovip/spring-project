@@ -40,6 +40,5 @@ public class SameCitySearchFacadeImpl implements SameCitySearchFacade {
         System.out.println(JSON.toJSONString(sameCityNumVO));
 
         return list.stream().map(each -> SameCityNumVO.builder().orderStatus(each.getOrderStatus()).num(each.getNum()).build()).collect(Collectors.toList());
-
     }
 }

@@ -3,6 +3,8 @@ package com.honghao.cloud.userapi.facade.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
+import com.honghao.cloud.userapi.config.ParamConfig;
+import com.honghao.cloud.userapi.config.ParamTestConfig;
 import com.honghao.cloud.userapi.config.ThreadPoolInitConfig;
 import com.honghao.cloud.userapi.domain.entity.CloudDeliveryMan;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
@@ -57,6 +59,10 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
     private ApplicationEventPublisher applicationEventPublisher;
     @Resource
     private OrderClient orderClient;
+    @Resource
+    private ParamConfig paramConfig;
+    @Resource
+    private ParamTestConfig paramTestConfig;
 
 
 
@@ -174,6 +180,9 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
 
         CloudDeliveryMan cloudDeliveryMan =CloudDeliveryMan.builder().deliveryManId("3704784038811670").deleteFlag(1).build();
         cloudOrderService.updateInfos(cloudDeliveryMan);
+
+        log.info("EnableApolloConfig"+paramConfig.getName());
+        log.info("NoEnableApolloConfig"+paramTestConfig.getTestName());
 
         return BaseResponse.success();
     }
