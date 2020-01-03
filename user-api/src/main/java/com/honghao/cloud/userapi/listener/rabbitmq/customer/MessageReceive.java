@@ -51,7 +51,7 @@ public class MessageReceive {
             waybillBcListMapper.insertSelective(waybillBcList);
 
             WaybillBcListDetailAction waybillBcListDetailAction = JSON.parseObject(data,WaybillBcListDetailAction.class);
-            waybillBcListDetailAction.setwId(wId);
+            waybillBcListDetailAction.setWId(wId);
             waybillBcListDetailAction.setCreateTime(date);
             waybillBcListDetailAction.setUpdateTime(date);
             waybillBcListDetailActionMapper.insertSelective(waybillBcListDetailAction);
@@ -62,7 +62,7 @@ public class MessageReceive {
             WaybillBcListDetail waybillBcListDetail;
             for (int i = 1; i <= 9; i++) {
                 waybillBcListDetail = JSON.parseObject(data,WaybillBcListDetail.class);
-                waybillBcListDetail.setwId(wId);
+                waybillBcListDetail.setWId(wId);
                 waybillBcListDetail.setKappAction(i);
                 waybillBcListDetail.setLatitude(waybillBcList.getReceiveLatitude());
                 waybillBcListDetail.setLongitude(waybillBcList.getReceiveLongitude());

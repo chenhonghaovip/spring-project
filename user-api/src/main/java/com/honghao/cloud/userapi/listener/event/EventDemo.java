@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationEvent;
  */
 @Getter
 public class EventDemo extends ApplicationEvent {
+    private static final long serialVersionUID = 1665119490930446304L;
     private EventDTO eventDTO;
 
     public EventDemo(Object source, EventDTO eventDTO) {
