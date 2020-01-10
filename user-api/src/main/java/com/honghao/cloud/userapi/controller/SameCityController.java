@@ -24,6 +24,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/sameCity")
 public class SameCityController {
+    public static void main(String[] args) {
+        String no = "18234089492";
+        no = no.replaceAll("(\\d{3})\\d{4}(\\d{4})","$1****$2");
+        log.info("1======="+no);
+    }
 
     @Resource
     private SameCitySearchFacade sameCitySearchFacade;
