@@ -1,6 +1,5 @@
 package com.honghao.cloud.userapi.facade.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.config.ParamConfig;
@@ -13,7 +12,6 @@ import com.honghao.cloud.userapi.dto.request.EventDTO;
 import com.honghao.cloud.userapi.dto.request.Operator;
 import com.honghao.cloud.userapi.dto.request.UpdateUserDTO;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
-import com.honghao.cloud.userapi.interceptor.UserInfoHolder;
 import com.honghao.cloud.userapi.listener.event.EventDemo;
 import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;
 import com.honghao.cloud.userapi.service.CloudOrderService;
@@ -69,33 +67,33 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
     @Override
     @HystrixCommand(fallbackMethod = "createUserFallback")
     public Boolean createUser(String data) {
-        JSONObject jsonObject1=JSONObject.parseObject(data);
-        String batchId=jsonObject1.getString("batchId");
-
-        log.info("{}", UserInfoHolder.getOperator());
-        String agentNo = UserInfoHolder.getOperator().getAgentNo();
-        log.info(agentNo);
-
-        JSONObject jsonObject=new JSONObject();
-        jsonObject.put("value","chenwenliang");
-
-        jedisOperator.set(DICTIONARY+batchId,batchId);
-        asyncTask.sendInfo();
-        messageSender.sendMessage(jsonObject);
+//        JSONObject jsonObject1=JSONObject.parseObject(data);
+//        String batchId=jsonObject1.getString("batchId");
+//
+//        log.info("{}", UserInfoHolder.getOperator());
+//        String agentNo = UserInfoHolder.getOperator().getAgentNo();
+//        log.info(agentNo);
+//
+//        JSONObject jsonObject=new JSONObject();
+//        jsonObject.put("value","chenwenliang");
+//
+//        jedisOperator.set(DICTIONARY+batchId,batchId);
+//        asyncTask.sendInfo();
+//        messageSender.sendMessage(jsonObject);
         EventDTO eventDTO= EventDTO.builder().code(1)
                 .desc("chenhonghao").build();
 
         EventDemo eventListener=new EventDemo(this,eventDTO);
         applicationEventPublisher.publishEvent(eventListener);
 
-        log.info("开始订单服务的接口调用");
-        BaseResponse<String> baseResponse = orderClient.createUser("dddddd");
-        if (baseResponse.isResult()){
-            log.info("接口调用成功");
-            System.out.println(baseResponse.getData());
-        }else {
-            log.info("接口调用失败");
-        }
+//        log.info("开始订单服务的接口调用");
+//        BaseResponse<String> baseResponse = orderClient.createUser("dddddd");
+//        if (baseResponse.isResult()){
+//            log.info("接口调用成功");
+//            System.out.println(baseResponse.getData());
+//        }else {
+//            log.info("接口调用失败");
+//        }
 
         return null;
     }
