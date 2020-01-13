@@ -10,7 +10,6 @@ import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboar
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
 /**
  * @author chenhonghao
  * @date 2019-7-17
@@ -23,6 +22,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableEurekaClient
 @EnableSwagger2
 @SpringBootApplication
+
+/**
+ * 导入了一个MapperScannerConfigurer 的bean定义
+ */
 @MapperScan("com.honghao.cloud.userapi.domain.mapper")
 public class UserApiApplication {
 
