@@ -12,6 +12,9 @@ public class AppleA {
 
     private String name;
 
+    public AppleA() {
+        System.out.println("AppleA的构造器");
+    }
 
     public Integer getAge() {
         return age;

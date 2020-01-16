@@ -9,7 +9,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class TestMain {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext an = new AnnotationConfigApplicationContext(TestConfig.class);
-        AppleA appleA = (AppleA) an.getBean("appleA");
-        System.out.println(appleA);
+//        AppleA appleA = (AppleA) an.getBean("appleA");
+//        System.out.println(appleA);
     }
 }
