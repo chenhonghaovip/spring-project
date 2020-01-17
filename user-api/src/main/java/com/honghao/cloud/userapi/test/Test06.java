@@ -2,9 +2,7 @@ package com.honghao.cloud.userapi.test;
 
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * @author chenhonghao
@@ -27,9 +25,39 @@ public class Test06 {
         treeNode.getRight().setLeft(new TreeNode(5));
         treeNode.getRight().setRight(new TreeNode(6));
         treeNode.getRight().getLeft().setLeft(new TreeNode(7));
-        inorderTraversal(treeNode);
+        List<Integer>  middleList= inorderTraversal(treeNode);
+        System.out.println(middleList);
 
+        List<Integer> firstList = firstTraversal(treeNode);
+        System.out.println(firstList);
+
+        List<Integer> lastList = lastTraversal(treeNode);
+        System.out.println(lastList);
     }
+    /**
+     * 先序遍历
+     */
+    private static List<Integer> firstTraversal(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode treeNode = root;
+        stack.push(treeNode);
+
+        while (!stack.isEmpty()) {
+            treeNode = stack.pop();
+            list.add(treeNode.getVal());
+            if (treeNode.getRight()!=null){
+                stack.push(treeNode.getRight());
+            }
+            if (treeNode.getLeft()!=null){
+                stack.push(treeNode.getLeft());
+            }
+        }
+        return list;
+    }
+    /**
+     * 中序遍历
+     */
     private static List<Integer> inorderTraversal(TreeNode root) {
         List<Integer> list = new ArrayList<>();
         Stack<TreeNode> stack = new Stack<>();
@@ -42,11 +70,41 @@ public class Test06 {
             }
             treeNode = stack.pop();
             list.add(treeNode.getVal());
-            System.out.println(treeNode.getVal());
-
             treeNode = treeNode.getRight();
-
         }
         return list;
     }
+    /**
+     * 后序遍历
+     */
+    private static List<Integer> lastTraversal(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode treeNode = root;
+
+        Set<TreeNode> set = new HashSet<>();
+
+        while (!stack.isEmpty() || treeNode!=null) {
+            while (treeNode!=null && !set.contains(treeNode)){
+                stack.push(treeNode);
+                treeNode = treeNode.getLeft();
+            }
+            treeNode = stack.peek();
+            if (treeNode.getRight() == null || set.contains(treeNode)){
+                treeNode = stack.pop();
+                set.add(treeNode);
+                list.add(treeNode.getVal());
+                if (stack.isEmpty()) {
+                    return list;
+                }
+                treeNode = stack.peek();
+                treeNode = treeNode.getRight();
+            }else {
+                set.add(treeNode);
+                treeNode = treeNode.getRight();
+            }
+        }
+        return list;
+    }
+
 }
