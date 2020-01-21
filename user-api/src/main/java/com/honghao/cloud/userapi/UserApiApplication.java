@@ -22,10 +22,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableEurekaClient
 @EnableSwagger2
 @SpringBootApplication
-
-/**
- * 导入了一个MapperScannerConfigurer 的bean定义
- */
 @MapperScan("com.honghao.cloud.userapi.domain.mapper")
 public class UserApiApplication {
 

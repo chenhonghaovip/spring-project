@@ -3,6 +3,7 @@ package com.honghao.cloud.userapi.test;
 import lombok.Data;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author chenhonghao
@@ -33,7 +34,19 @@ public class Test06 {
 
         List<Integer> lastList = lastTraversal(treeNode);
         System.out.println(lastList);
+
+        getInfo();
     }
+
+    private static void getInfo() {
+        ConcurrentHashMap concurrentHashMap = new ConcurrentHashMap(5);
+        concurrentHashMap.put("1","1");
+        int[] a = new int[5];
+        a[0] = 1;
+        System.out.println(a.length);
+        System.out.println(concurrentHashMap.size());
+    }
+
     /**
      * 先序遍历
      */

@@ -19,8 +19,5 @@ public class TestBeanFactoryPostProcess implements BeanFactoryPostProcessor {
         BeanDefinition beanDefinition = configurableListableBeanFactory.getBeanDefinition("appleA");
         beanDefinition.getConstructorArgumentValues().addGenericArgumentValue(Objects.requireNonNull(beanDefinition.getBeanClassName()));
         beanDefinition.setBeanClassName(AppleC.class.getName());
-
-
-
     }
 }
