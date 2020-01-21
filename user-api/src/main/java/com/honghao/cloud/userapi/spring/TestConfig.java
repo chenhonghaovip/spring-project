@@ -13,5 +13,8 @@ import org.springframework.context.annotation.Import;
 //@Import(value = {AppleC.class})
 @Import(value = {ImportSelectTest.class})
 @ComponentScan(basePackages = "com.honghao.cloud.userapi.spring")
+//导入了一个MapperScannerConfigurer 的bean定义
+//@MapperScan(value = "com.honghao.cloud.userapi.domain.mapper")
+@EnableEcho(packages = "com.honghao.cloud.userapi.spring")
 public class TestConfig {
 }
