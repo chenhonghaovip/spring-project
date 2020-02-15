@@ -1,5 +1,9 @@
 package com.honghao.cloud.orderapi.facade;
 
+import com.honghao.cloud.orderapi.domain.entity.WaybillBcList;
+
+import java.util.List;
+
 /**
  * 订单信息操作
  *
@@ -13,4 +17,11 @@ public interface OrderFacade {
      * @return Boolean
      */
     Boolean createUser(String data);
+
+    /**
+     * 批次查询
+     * @param list list
+     * @return List<WaybillBcList>
+     */
+    List<WaybillBcList> batchQuery(List<String> list);
 }
