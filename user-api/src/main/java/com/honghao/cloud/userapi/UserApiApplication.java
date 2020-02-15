@@ -9,7 +9,6 @@ import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 /**
  * @author chenhonghao
  * @date 2019-7-17
@@ -20,7 +19,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableFeignClients
 @EnableTransactionManagement
 @EnableEurekaClient
-@EnableSwagger2
 @SpringBootApplication
 @MapperScan("com.honghao.cloud.userapi.domain.mapper")
 public class UserApiApplication {

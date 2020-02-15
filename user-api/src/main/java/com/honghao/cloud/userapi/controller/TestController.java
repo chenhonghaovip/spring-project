@@ -7,6 +7,7 @@ import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.domain.mapper.master.WaybillBcListMapper;
 import com.honghao.cloud.userapi.dto.easypoi.WaybillBcListEasyPoi;
 import com.honghao.cloud.userapi.dto.request.*;
+import com.honghao.cloud.userapi.facade.BatchFacade;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import com.honghao.cloud.userapi.service.WaybillBcListService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.validation.constraints.NotBlank;
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,10 +32,13 @@ import java.util.stream.Stream;
 @RestController
 @RequestMapping("/testController")
 public class TestController {
+    ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1000,1200,20, TimeUnit.SECONDS, new ArrayBlockingQueue<>(10));
     @Resource
     private WaybillBcListFacade waybillBcListFacade;
     @Resource
     private WaybillBcListMapper waybillBcListMapper;
+    @Resource
+    private BatchFacade batchFacade;
 
     private static List<Transaction> transactions;
     static {
@@ -221,5 +229,23 @@ public class TestController {
     @GetMapping("/reflexTest")
     public BaseResponse reflexTest(){
         return waybillBcListFacade.reflexTest();
+    }
+
+    @GetMapping("/selectInfo")
+    public void select(){
+        CountDownLatch countDownLatch = new CountDownLatch(1000);
+        for (int i = 0; i < 1000; i++) {
+            int finalI = i;
+            threadPoolExecutor.execute(() -> {
+                try {
+                    countDownLatch.await();
+                    BaseResponse<WaybillBcList> response = batchFacade.queryCommon(String.valueOf(finalI));
+                    System.out.println("请求结果为"+response.getData());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            countDownLatch.countDown();
+        }
     }
 }
