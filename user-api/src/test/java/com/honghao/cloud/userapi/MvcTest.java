@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Pipeline;
 
 import javax.annotation.Resource;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -53,5 +55,24 @@ public class MvcTest {
             });
             countDownLatch.countDown();
         }
+    }
+
+    @Test
+    public void pipelineTest(){
+        Jedis jedis = new Jedis("49.235.212.2",6379);
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < 100000; i++) {
+            jedis.set(String.valueOf(i),String.valueOf(i));
+        }
+        System.out.println("普通jedis操作:"+(System.currentTimeMillis()-startTime));
+
+        Pipeline pipeline = jedis.pipelined();
+
+        long secondTime = System.currentTimeMillis();
+        for (int i = 10000; i < 200000; i++) {
+            pipeline.set(String.valueOf(i),String.valueOf(i));
+        }
+        pipeline.sync();
+        System.out.println("pipeline操作:"+(System.currentTimeMillis()-secondTime));
     }
 }
