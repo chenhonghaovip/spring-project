@@ -9,6 +9,7 @@ import redis.clients.jedis.params.geo.GeoRadiusParam;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * redis 基本操作
@@ -659,6 +660,55 @@ public class JedisOperator {
 		} finally {
 			returnResource(jedis);
 		}
+	}
+
+	/**
+	 * 批次向reids中插入string
+	 * @param hashMap key-value集合
+	 * @param expireTime 过期时间
+	 */
+	public void batchSet(HashMap<String,Object> hashMap,int expireTime){
+		Jedis jedis = null;
+
+        try {
+            jedis = jedisPool.getResource();
+            Pipeline pipeline = jedis.pipelined();
+            if (expireTime==-1){
+            	hashMap.forEach((key, value) -> pipeline.set(key, String.valueOf(value)));
+			}else {
+				hashMap.forEach((key, value) -> pipeline.setex(key, expireTime, String.valueOf(value)));
+			}
+            pipeline.sync();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+        	returnResource(jedis);
+		}
+    }
+
+	/**
+	 * 批次获取string类型的value
+	 * @param keys key集合
+	 */
+	public Map<String,String> batchSet(List<String> keys){
+		Jedis jedis = null;
+		Map<String,String> resultMap = new HashMap<>();
+		try {
+			jedis = jedisPool.getResource();
+			Pipeline pipeline = jedis.pipelined();
+			keys.forEach(pipeline::get);
+			List<String> result = pipeline.syncAndReturnAll().stream().map(String::valueOf).collect(Collectors.toList());
+
+			for (int i = 0; i < keys.size(); i++) {
+				resultMap.put(keys.get(i),result.get(i));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			returnResource(jedis);
+		}
+		return resultMap;
 	}
 
 }
