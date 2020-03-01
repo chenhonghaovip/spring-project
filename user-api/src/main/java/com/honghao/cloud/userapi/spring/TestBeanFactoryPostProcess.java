@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
  * @author chenhonghao
  * @date 2020-01-14 10:00
  */
+
 @Component
 public class TestBeanFactoryPostProcess implements BeanFactoryPostProcessor {
     @Override
