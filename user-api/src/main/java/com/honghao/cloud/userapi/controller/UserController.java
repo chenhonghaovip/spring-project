@@ -12,11 +12,14 @@ import com.honghao.cloud.userapi.utils.JedisOperator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.GeoRadiusResponse;
 import redis.clients.jedis.GeoUnit;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.params.geo.GeoRadiusParam;
 
 import javax.annotation.Resource;
@@ -55,6 +58,9 @@ public class UserController {
     @Resource
     private JedisOperator jedisOperator;
 
+    @Resource
+    @Qualifier("spring.redis.pool")
+    private JedisPool jedisPool;
 
     /**
      * 创建用户
@@ -217,5 +223,14 @@ public class UserController {
     public BaseResponse easypoi(@RequestParam("wId") @NotBlank String wId){
        return waybillBcListFacade.easypoi();
     }
+
+    @GetMapping("/test0011")
+    public List<String> test(){
+        Jedis jedis = jedisPool.getResource();
+//        jedis.lpush("phone","1","2","11","21","12","22","13","23","1","1");
+        jedis.lrem("phone",0,"1");
+        return null;
+    }
+
 
 }

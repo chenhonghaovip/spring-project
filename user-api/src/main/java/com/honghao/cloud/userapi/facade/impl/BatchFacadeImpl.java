@@ -6,6 +6,7 @@ import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.facade.BatchFacade;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Test;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -75,5 +76,20 @@ public class BatchFacadeImpl implements BatchFacade {
         request.setFuture(future);
         queues.add(request);
         return BaseResponse.successData(future.get());
+    }
+
+
+    @Test
+    public void getIn(){
+        List<String> list = new ArrayList<>();
+        list.add("11");
+        list.add("22");
+        list.remove("11");
+
+
+        Map<String,String> map = new HashMap<>();
+        map.put("1","1");
+        map.remove("1");
+        System.out.println(map);
     }
 }
