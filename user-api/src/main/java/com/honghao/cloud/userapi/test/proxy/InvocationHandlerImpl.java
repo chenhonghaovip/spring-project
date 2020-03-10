@@ -3,6 +3,7 @@ package com.honghao.cloud.userapi.test.proxy;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 /**
  * @author chenhonghao
@@ -11,8 +12,9 @@ import java.lang.reflect.Method;
 public class InvocationHandlerImpl implements InvocationHandler {
     private Object object;
 
-    public InvocationHandlerImpl(Object object) {
+    public Object newProxy(Object object){
         this.object = object;
+        return Proxy.newProxyInstance(object.getClass().getClassLoader(),object.getClass().getInterfaces(),this);
     }
 
     @Override
