@@ -26,13 +26,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
+ * java8
  * @author chenhonghao
  * @date 2019-11-28 15:23
  */
 @RestController
 @RequestMapping("/testController")
 public class TestController {
-    ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1000,1200,20, TimeUnit.SECONDS, new ArrayBlockingQueue<>(10));
+    private ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1000,1200,20, TimeUnit.SECONDS, new ArrayBlockingQueue<>(10));
     @Resource
     private WaybillBcListFacade waybillBcListFacade;
     @Resource
