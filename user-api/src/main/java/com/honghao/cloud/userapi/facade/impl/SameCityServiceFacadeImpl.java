@@ -13,4 +13,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class SameCityServiceFacadeImpl implements SameCityServiceFacade {
+    @Override
+    public void receive(String data) {
+
+    }
 }

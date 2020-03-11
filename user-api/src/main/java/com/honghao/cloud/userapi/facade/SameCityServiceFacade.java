@@ -7,4 +7,5 @@ package com.honghao.cloud.userapi.facade;
  * @date 2019-12-26 10:47
  */
 public interface SameCityServiceFacade {
+    void receive(String data);
 }

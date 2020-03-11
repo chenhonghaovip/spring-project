@@ -11,12 +11,10 @@ import java.lang.reflect.Proxy;
  */
 public class InvocationHandlerImpl implements InvocationHandler {
     private Object object;
-
-    public Object newProxy(Object object){
+    Object newProxy(Object object){
         this.object = object;
         return Proxy.newProxyInstance(object.getClass().getClassLoader(),object.getClass().getInterfaces(),this);
     }
-
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         System.out.println("在调用之前，我要干点啥呢？");

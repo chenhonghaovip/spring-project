@@ -1,14 +1,12 @@
 package com.honghao.cloud.userapi.controller;
 
 import com.honghao.cloud.userapi.base.BaseResponse;
+import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.dto.response.SameCityNumVO;
 import com.honghao.cloud.userapi.facade.SameCitySearchFacade;
 import com.honghao.cloud.userapi.facade.SameCityServiceFacade;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
@@ -30,8 +28,6 @@ public class SameCityController {
     @Resource
     private SameCityServiceFacade sameCityServiceFacade;
 
-
-
     /**
      * 查询同城订单数量
      * @param knightId 骑士id
@@ -40,5 +36,10 @@ public class SameCityController {
     @GetMapping("/getNum")
     public BaseResponse<List<SameCityNumVO>> getNum(@RequestParam("knightId") @NotNull String knightId){
         return BaseResponse.successData(sameCitySearchFacade.getNum(knightId));
+    }
+
+    public BaseResponse receive(@RequestBody WaybillBcList waybillBcList){
+        sameCityServiceFacade.receive("chenhonghoa");
+        return BaseResponse.success();
     }
 }
