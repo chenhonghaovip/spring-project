@@ -5,7 +5,6 @@ import com.honghao.cloud.userapi.aspect.Auth;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.domain.entity.CloudDict;
 import com.honghao.cloud.userapi.dto.request.CreateUserDTO;
-import com.honghao.cloud.userapi.dto.request.UpdateUserDTO;
 import com.honghao.cloud.userapi.dto.test.Loo;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import com.honghao.cloud.userapi.utils.JedisOperator;
@@ -13,7 +12,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.GeoRadiusResponse;
@@ -66,26 +64,25 @@ public class UserController {
      * 创建用户
      * @param data shuju
      * @return BaseResponse
-     * @Auth
      */
 
     @PostMapping("/create")
     @ApiOperation(value = "创建用户",notes = "创建用户")
     public BaseResponse<Boolean> createUser(@RequestBody String data) {
         waybillBcListFacade.createUser(data);
-        return BaseResponse.success();
+        return BaseResponse.successData(true);
     }
 
     /**
      * 创建用户
-     * @param data
-     * @return
+     * @param data data
+     * @return BaseResponse
      */
     @Auth
     @PostMapping("/create1")
     @ApiOperation(value = "测试" ,notes = "测试")
     public BaseResponse<String> getUser(@RequestBody String data) {
-        waybillBcListFacade.createUser2("");
+        waybillBcListFacade.createUser2(data);
         return null;
     }
 
@@ -97,7 +94,7 @@ public class UserController {
     @GetMapping("/create2")
     @ApiOperation(value = "测试" ,notes = "测试")
     public BaseResponse<String> create2(@RequestParam("kappId") @Valid @NotBlank String kappId) {
-        waybillBcListFacade.createUser2("");
+        waybillBcListFacade.createUser2(kappId);
         return null;
     }
 
@@ -108,8 +105,8 @@ public class UserController {
     }
 
 
-    @PostMapping("/test002")
-    public BaseResponse test02(@RequestBody @Valid UpdateUserDTO createUserDTO, BindingResult bindingResult){
+    @GetMapping("/test002")
+    public BaseResponse test02(){
         try {
             long nowTime = System.currentTimeMillis();
             System.out.println(THREAD_LOCAL.get().parse(String.valueOf(nowTime)));
@@ -134,7 +131,7 @@ public class UserController {
      */
     @PostMapping("/test003")
     public BaseResponse test03(@RequestBody String data){
-
+        System.out.println(data);
         //存放geo信息，存放到redis中为zset结构
         jedisOperator.geoadd("test02",Double.valueOf("121.3717178602589"),Double.valueOf("31.17087293836589"),"33333");
         jedisOperator.geoadd("test02",Double.valueOf("121.3716178602589"),Double.valueOf("31.17087293836589"),"44444");
@@ -227,7 +224,7 @@ public class UserController {
     @GetMapping("/test0011")
     public List<String> test(){
         Jedis jedis = jedisPool.getResource();
-//        jedis.lpush("phone","1","2","11","21","12","22","13","23","1","1");
+        jedis.lpush("phone","1","2","11","21","12","22","13","23","1","1");
         jedis.lrem("phone",0,"1");
         return null;
     }
