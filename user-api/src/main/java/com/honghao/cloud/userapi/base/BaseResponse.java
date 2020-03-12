@@ -30,30 +30,28 @@ public class BaseResponse<T> implements Serializable {
     }
 
     public static BaseResponse success() {
-        return new BaseResponse(true, 200, null, "请求成功");
+        return new BaseResponse<>(true, 200, null, "请求成功");
     }
 
-    public static BaseResponse success(String msg) {
-        return new BaseResponse(true, 200, null, msg);
+    public static <T> BaseResponse<T> success(String msg) {
+        return new BaseResponse<>(true, 200, null, msg);
     }
 
     public static BaseResponse error(String msg) {
-        return new BaseResponse(false, -1, null, msg);
+        return new BaseResponse<>(false, -1, null, msg);
     }
 
-    public static BaseResponse error(Boolean result, Integer code, String remark) {
-        return new BaseResponse(result, code, null, remark);
+    public static BaseResponse error(String code, String remark) {
+        return new BaseResponse<>(false, Integer.valueOf(code), null, remark);
     }
 
     public static BaseResponse error() {
-        return new BaseResponse(false, -1, null, "请求失败");
+        return new BaseResponse<>(false, -1, null, "请求失败");
     }
 
-    public static BaseResponse parameterChangeError() {
-        return new BaseResponse(false, -2, null, "无法转换指定对象");
+    public static BaseResponse error(BaseErrorInfoInterface data) {
+        return new BaseResponse<>(false, Integer.valueOf(data.getResultCode()), null, data.getResultMsg());
     }
-    public static BaseResponse paramValidateError() {
-        return new BaseResponse(false, -3, null, "参数校验不通过");
-    }
+
 
 }

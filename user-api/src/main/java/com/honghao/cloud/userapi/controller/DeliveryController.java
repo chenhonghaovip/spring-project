@@ -35,7 +35,7 @@ public class DeliveryController {
             deliveryContext.receiveShop(data);
             return BaseResponse.success();
         }
-        return BaseResponse.error();
-
+        int a = 100/0;
+        return BaseResponse.success();
     }
 }

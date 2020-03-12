@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.util.Date;
 /**
@@ -15,6 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class WaybillBcList {
+    @NotBlank
     private String wId;
 
     private String batchId;

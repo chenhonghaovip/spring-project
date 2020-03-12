@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -34,11 +34,12 @@ public class SameCityController {
      * @return BaseResponse
      */
     @GetMapping("/getNum")
-    public BaseResponse<List<SameCityNumVO>> getNum(@RequestParam("knightId") @NotNull String knightId){
+    public BaseResponse<List<SameCityNumVO>> getNum(@RequestParam("knightId") String knightId){
         return BaseResponse.successData(sameCitySearchFacade.getNum(knightId));
     }
 
-    public BaseResponse receive(@RequestBody WaybillBcList waybillBcList){
+    @PostMapping("/receive")
+    public BaseResponse receive(@RequestBody @Valid WaybillBcList waybillBcList){
         sameCityServiceFacade.receive("chenhonghoa");
         return BaseResponse.success();
     }
