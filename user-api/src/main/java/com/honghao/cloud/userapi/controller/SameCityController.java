@@ -15,6 +15,7 @@ import java.util.List;
 /**
  * 同城订单控制
  *
+ * restful通过在url资源路径中添加版本号来解决版本不兼容问题
  * @author chenhonghao
  * @date 2019-12-26 10:37
  */
