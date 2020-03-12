@@ -28,13 +28,13 @@ public class UserInterceptor implements HandlerInterceptor {
     /**
      * 超级管理员编号
      */
-    private final String REQUEST_HEADER_USER_TAG = "tag";
+    private final static String REQUEST_HEADER_USER_TAG = "tag";
 
 
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("类型为：{}",handler.getClass());
+//        log.info("类型为：{}",handler.getClass());
         if (handler instanceof HandlerMethod){
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
@@ -98,8 +98,8 @@ public class UserInterceptor implements HandlerInterceptor {
     /**
      * 用户信息缺少提示语
      *
-     * @return
-     * @param message
+     * @param message message
+     * @return String
      */
     private String missInfoResponse(String message) {
         return JSON.toJSONString(BaseResponse.error(message));

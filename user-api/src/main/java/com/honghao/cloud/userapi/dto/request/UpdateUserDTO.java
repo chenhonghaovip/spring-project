@@ -32,6 +32,9 @@ public class UpdateUserDTO implements Serializable {
 
     private String name;
 
+    /**
+     * Valid 可以对内部继续进行校验
+     */
     @NotEmpty
     @Valid
     private List<UserDTO> list;
