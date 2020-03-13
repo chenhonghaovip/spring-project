@@ -6,6 +6,6 @@ package com.honghao.cloud.userapi.spring;
  */
 public class Fox {
     public Fox() {
-        System.out.println("========"+ Fox.class.getName());
+        System.out.println("Fox的构造器");
     }
 }
