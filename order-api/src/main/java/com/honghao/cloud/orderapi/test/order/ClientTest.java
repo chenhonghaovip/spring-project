@@ -14,9 +14,10 @@ public class ClientTest {
     @Test
     public void test(){
         Lift lift = new Lift();
-        lift.setMCurState(new ClosingState(lift));
-        lift.close();
+        lift.setmCurState(new ClosingState());
         lift.open();
+        lift.close();
+
         lift.run();
         lift.stop();
     }
