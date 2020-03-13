@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.spring;
+package com.honghao.cloud.userapi.spring.importin;
 
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
@@ -10,6 +10,6 @@ import org.springframework.core.type.AnnotationMetadata;
 public class ImportSelectTest implements ImportSelector {
     @Override
     public String[] selectImports(AnnotationMetadata annotationMetadata) {
-        return new String[]{"com.honghao.cloud.userapi.spring.AppleD"};
+        return new String[]{"com.honghao.cloud.userapi.spring.bean.AppleD"};
     }
 }

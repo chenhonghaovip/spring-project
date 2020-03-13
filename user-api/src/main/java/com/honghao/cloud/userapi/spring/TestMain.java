@@ -1,9 +1,14 @@
 package com.honghao.cloud.userapi.spring;
 
+import com.honghao.cloud.userapi.spring.bean.AppleD;
+import com.honghao.cloud.userapi.spring.bean.Fox;
+import com.honghao.cloud.userapi.spring.factorybean.MyFactoryBean;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import java.util.Arrays;
 
 /**
  * @author chenhonghao
@@ -29,13 +34,15 @@ public class TestMain {
         MyFactoryBean myFactoryBean = new MyFactoryBean();
         T t = myFactoryBean.getObject();
         System.out.println(t);
+
+        String[] beanDefinitionNames = an.getBeanDefinitionNames();
+        Arrays.stream(beanDefinitionNames).forEach(each-> System.out.println(each));
 //        an.register(Fox.class);
 
         //注册对象到容器中
 //        Fox fox = new Fox();
 //        DefaultListableBeanFactory defaultListableBeanFactory = an.getDefaultListableBeanFactory();
 //        defaultListableBeanFactory.registerSingleton("fox",fox);
-//
 //        an.getBean("fox");
     }
 }

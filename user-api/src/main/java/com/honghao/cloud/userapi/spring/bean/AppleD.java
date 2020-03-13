@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.spring;
+package com.honghao.cloud.userapi.spring.bean;
 
 /**
  * @author chenhonghao
@@ -9,7 +9,6 @@ public class AppleD {
 
     private String name;
     public AppleD(){
-        System.out.println("AppleD的构造器");
     }
 
 

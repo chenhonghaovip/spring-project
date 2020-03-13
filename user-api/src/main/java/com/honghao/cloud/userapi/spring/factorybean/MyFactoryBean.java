@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.spring;
+package com.honghao.cloud.userapi.spring.factorybean;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.formula.functions.T;

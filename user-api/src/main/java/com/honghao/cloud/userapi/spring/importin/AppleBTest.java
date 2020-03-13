@@ -1,5 +1,6 @@
-package com.honghao.cloud.userapi.spring;
+package com.honghao.cloud.userapi.spring.importin;
 
+import com.honghao.cloud.userapi.spring.bean.AppleB;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
