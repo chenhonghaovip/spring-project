@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.spring;
+package com.honghao.cloud.userapi.spring.bean;
 
 /**
  * @author chenhonghao
@@ -10,7 +10,6 @@ public class AppleA {
     private String name;
 
     public AppleA() {
-        System.out.println("AppleA的构造器");
     }
 
     public Integer getAge() {

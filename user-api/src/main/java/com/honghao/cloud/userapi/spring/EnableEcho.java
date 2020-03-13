@@ -1,5 +1,6 @@
 package com.honghao.cloud.userapi.spring;
 
+import com.honghao.cloud.userapi.spring.importin.RegisterTest;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;

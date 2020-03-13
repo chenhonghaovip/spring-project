@@ -1,5 +1,6 @@
-package com.honghao.cloud.userapi.spring;
+package com.honghao.cloud.userapi.spring.beanfactorypostprocessor;
 
+import com.honghao.cloud.userapi.spring.bean.AppleC;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;

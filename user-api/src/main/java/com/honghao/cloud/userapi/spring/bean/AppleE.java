@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.spring;
+package com.honghao.cloud.userapi.spring.bean;
 
 /**
  * @author chenhonghao
@@ -6,6 +6,5 @@ package com.honghao.cloud.userapi.spring;
  */
 public class AppleE {
     public AppleE() {
-        System.out.println("AppleE的构造器");
     }
 }

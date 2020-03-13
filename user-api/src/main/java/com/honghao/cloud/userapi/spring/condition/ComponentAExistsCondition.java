@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.spring;
+package com.honghao.cloud.userapi.spring.condition;
 
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
@@ -14,6 +14,6 @@ public class ComponentAExistsCondition implements Condition {
 
     @Override
     public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata annotatedTypeMetadata) {
-        return conditionContext.getBeanFactory().containsBean("com.honghao.cloud.userapi.spring.AppleB");
+        return conditionContext.getBeanFactory().containsBean("com.honghao.cloud.userapi.spring.bean.AppleB");
     }
 }

@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.spring;
+package com.honghao.cloud.userapi.spring.bean;
 
 /**
  * @author chenhonghao
@@ -6,6 +6,5 @@ package com.honghao.cloud.userapi.spring;
  */
 public class Fox {
     public Fox() {
-        System.out.println("Fox的构造器");
     }
 }

@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.spring;
+package com.honghao.cloud.userapi.spring.bean;
 
 import org.apache.poi.ss.formula.functions.T;
 
@@ -19,7 +19,6 @@ public class AppleC {
     }
 
     public AppleC(){
-        System.out.println("AppleC的构造器");
     }
 
     public Class<T> getMapperInterface() {
