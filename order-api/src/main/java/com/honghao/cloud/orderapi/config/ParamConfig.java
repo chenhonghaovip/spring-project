@@ -1,9 +1,7 @@
-package com.honghao.cloud.userapi.config;
+package com.honghao.cloud.orderapi.config;
 
-import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
@@ -14,8 +12,6 @@ import javax.annotation.PostConstruct;
  * @date 2019-07-20 01:08
  */
 @Data
-@Component
-@EnableApolloConfig
 @ConfigurationProperties(prefix = "honghao")
 public class ParamConfig {
     /**
@@ -25,6 +21,6 @@ public class ParamConfig {
 
     @PostConstruct
     void beforeInfo(){
-//        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>"+name);
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>"+name);
     }
 }
