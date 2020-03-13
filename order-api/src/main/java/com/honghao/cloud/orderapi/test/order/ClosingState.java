@@ -5,21 +5,10 @@ package com.honghao.cloud.orderapi.test.order;
  * @date 2020-03-12 16:52
  */
 public class ClosingState extends LiftState{
-    /**
-     * 通过构造函数引入电梯的实例化对象
-     *
-     * @param lift
-     */
-    public ClosingState(Lift lift) {
-        super(lift);
-    }
-
     @Override
     public void open() {
-        // 1、变化为开门状态
-        this.mLift.setMCurState(mLift.getOpenningState());
-        // 2、开门
-        this.mLift.open();
+        super.lift.setmCurState(Lift.openningState);
+        super.lift.open();
     }
 
     @Override
@@ -29,13 +18,13 @@ public class ClosingState extends LiftState{
 
     @Override
     public void run() {
-        this.mLift.setMCurState(mLift.getRunningState());
-        this.mLift.run();
+        lift.setmCurState(Lift.runningState);
+        lift.run();
     }
 
     @Override
     public void stop() {
-        this.mLift.setMCurState(mLift.getStoppingState());
-        this.mLift.stop();
+        lift.setmCurState(Lift.stoppingState);
+        lift.stop();
     }
 }

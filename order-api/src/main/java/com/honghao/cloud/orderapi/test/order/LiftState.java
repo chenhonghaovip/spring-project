@@ -1,22 +1,16 @@
 package com.honghao.cloud.orderapi.test.order;
 
+import lombok.Data;
+
 /**
  * 定义电梯行为：打开、关闭、运行、停止
  *
  * @author chenhonghao
  * @date 2020-03-12 16:49
  */
+@Data
 public abstract class LiftState {
-    Lift mLift;
-    /**
-     * 通过构造函数引入电梯的实例化对象
-     *
-     * @param lift
-     */
-    public LiftState(Lift lift) {
-        this.mLift = lift;
-    }
-
+    Lift lift;
     /**
      * 行为：打开电梯门
      */
