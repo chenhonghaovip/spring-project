@@ -24,11 +24,11 @@ public class ParamTestConfig {
 
     @PostConstruct
     void beforeInfo(){
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>"+testName);
+//        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>"+testName);
     }
 
     @PreDestroy
     void preDestroy(){
-        System.out.println("<<<<<<<<<<<<<<<<<<<<"+testName);
+//        System.out.println("<<<<<<<<<<<<<<<<<<<<"+testName);
     }
 }
