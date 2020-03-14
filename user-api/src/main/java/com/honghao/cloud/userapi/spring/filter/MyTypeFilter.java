@@ -27,6 +27,9 @@ public class MyTypeFilter implements TypeFilter {
 
         String className = classMetadata.getClassName();
         System.out.println(className);
+        if (className.contains("Ban")){
+            return true;
+        }
         return false;
     }
 }

@@ -4,6 +4,7 @@ import com.honghao.cloud.userapi.spring.bean.AppleD;
 import com.honghao.cloud.userapi.spring.bean.Fox;
 import com.honghao.cloud.userapi.spring.factorybean.MyFactoryBean;
 import org.apache.poi.ss.formula.functions.T;
+import org.junit.Test;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -44,5 +45,9 @@ public class TestMain {
 //        DefaultListableBeanFactory defaultListableBeanFactory = an.getDefaultListableBeanFactory();
 //        defaultListableBeanFactory.registerSingleton("fox",fox);
 //        an.getBean("fox");
+    }
+    @Test
+    public void test(){
+        AnnotationConfigApplicationContext an = new AnnotationConfigApplicationContext(TestConfig.class);
     }
 }
