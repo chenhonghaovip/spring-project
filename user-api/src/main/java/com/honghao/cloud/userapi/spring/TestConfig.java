@@ -18,7 +18,7 @@ import org.springframework.context.annotation.*;
 //导入类
 @Import(value = {ImportSelectTest.class, AppleA.class, AppleBTest.class, AppleC.class})
 //指定要扫描的包，并注册到ioc容器中,并且按照规则排除指定的组件
-@ComponentScan(basePackages = "com.honghao.cloud.userapi.spring",includeFilters = {
+@ComponentScan(basePackages = "com.honghao.cloud.userapi.spring",useDefaultFilters = false,includeFilters = {
 //        @ComponentScan.Filter(type = FilterType.ANNOTATION,classes = {Service.class}),
         @ComponentScan.Filter(type = FilterType.CUSTOM,classes = {MyTypeFilter.class})
 })
