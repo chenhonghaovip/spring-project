@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.spring;
+package com.honghao.cloud.userapi.spring.config;
 
 import com.honghao.cloud.userapi.spring.bean.AppleA;
 import com.honghao.cloud.userapi.spring.bean.AppleB;

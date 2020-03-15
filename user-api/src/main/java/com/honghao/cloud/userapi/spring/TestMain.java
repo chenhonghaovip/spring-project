@@ -1,7 +1,10 @@
 package com.honghao.cloud.userapi.spring;
 
 import com.honghao.cloud.userapi.spring.bean.AppleD;
+import com.honghao.cloud.userapi.spring.bean.Car;
 import com.honghao.cloud.userapi.spring.bean.Fox;
+import com.honghao.cloud.userapi.spring.config.LifeCycleConfig;
+import com.honghao.cloud.userapi.spring.config.TestConfig;
 import com.honghao.cloud.userapi.spring.factorybean.MyFactoryBean;
 import org.apache.poi.ss.formula.functions.T;
 import org.junit.Test;
@@ -48,6 +51,16 @@ public class TestMain {
     }
     @Test
     public void test(){
-        AnnotationConfigApplicationContext an = new AnnotationConfigApplicationContext(TestConfig.class);
+        AnnotationConfigApplicationContext an = new AnnotationConfigApplicationContext(LifeCycleConfig.class);
+        Car car = (Car) an.getBean("car");
+        System.out.println(car);
+        each(an);
+        //容器关闭
+        an.close();
+    }
+
+    public static void each(AnnotationConfigApplicationContext an){
+        String[] beanDefinitionNames = an.getBeanDefinitionNames();
+        Arrays.stream(beanDefinitionNames).forEach(System.out::println);
     }
 }
