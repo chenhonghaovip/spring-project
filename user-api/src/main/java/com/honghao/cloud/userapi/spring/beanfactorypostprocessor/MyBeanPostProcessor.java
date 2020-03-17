@@ -2,13 +2,11 @@ package com.honghao.cloud.userapi.spring.beanfactorypostprocessor;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.stereotype.Component;
 
 /**
  * @author chenhonghao
  * @date 2020-03-14 23:32
  */
-@Component
 public class MyBeanPostProcessor implements BeanPostProcessor {
     /**
      * 在bean初始化之前调用
