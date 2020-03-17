@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.honghao.cloud.userapi.domain.mapper.master.WaybillRelationOrderMapper">
+  <resultMap id="BaseResultMap" type="com.honghao.cloud.userapi.domain.entity.WaybillRelationOrder">
+    <id column="w_id" jdbcType="CHAR" property="wId" />
+    <result column="batch_id" jdbcType="CHAR" property="batchId" />
+    <result column="order_id" jdbcType="CHAR" property="orderId" />
+    <result column="order_batch_id" jdbcType="CHAR" property="orderBatchId" />
+    <result column="serial_number" jdbcType="VARCHAR" property="serialNumber" />
+    <result column="shop_id" jdbcType="VARCHAR" property="shopId" />
+    <result column="serial_number_jnl" jdbcType="VARCHAR" property="serialNumberJnl" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.honghao.cloud.userapi.domain.entity.WaybillRelationOrder">
+    <result column="shop_info" jdbcType="LONGVARCHAR" property="shopInfo" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    w_id, batch_id, order_id, order_batch_id, serial_number, shop_id, serial_number_jnl, 
+    create_date
+  </sql>
+  <sql id="Blob_Column_List">
+    shop_info
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from waybill_relation_order
+    where w_id = #{wId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from waybill_relation_order
+    where w_id = #{wId,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillRelationOrder">
+    insert into waybill_relation_order (w_id, batch_id, order_id, 
+      order_batch_id, serial_number, shop_id, 
+      serial_number_jnl, create_date, shop_info
+      )
+    values (#{wId,jdbcType=CHAR}, #{batchId,jdbcType=CHAR}, #{orderId,jdbcType=CHAR}, 
+      #{orderBatchId,jdbcType=CHAR}, #{serialNumber,jdbcType=VARCHAR}, #{shopId,jdbcType=VARCHAR}, 
+      #{serialNumberJnl,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{shopInfo,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillRelationOrder">
+    insert into waybill_relation_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="wId != null">
+        w_id,
+      </if>
+      <if test="batchId != null">
+        batch_id,
+      </if>
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="orderBatchId != null">
+        order_batch_id,
+      </if>
+      <if test="serialNumber != null">
+        serial_number,
+      </if>
+      <if test="shopId != null">
+        shop_id,
+      </if>
+      <if test="serialNumberJnl != null">
+        serial_number_jnl,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="shopInfo != null">
+        shop_info,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="wId != null">
+        #{wId,jdbcType=CHAR},
+      </if>
+      <if test="batchId != null">
+        #{batchId,jdbcType=CHAR},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=CHAR},
+      </if>
+      <if test="orderBatchId != null">
+        #{orderBatchId,jdbcType=CHAR},
+      </if>
+      <if test="serialNumber != null">
+        #{serialNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null">
+        #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="serialNumberJnl != null">
+        #{serialNumberJnl,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shopInfo != null">
+        #{shopInfo,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillRelationOrder">
+    update waybill_relation_order
+    <set>
+      <if test="batchId != null">
+        batch_id = #{batchId,jdbcType=CHAR},
+      </if>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=CHAR},
+      </if>
+      <if test="orderBatchId != null">
+        order_batch_id = #{orderBatchId,jdbcType=CHAR},
+      </if>
+      <if test="serialNumber != null">
+        serial_number = #{serialNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null">
+        shop_id = #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="serialNumberJnl != null">
+        serial_number_jnl = #{serialNumberJnl,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shopInfo != null">
+        shop_info = #{shopInfo,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where w_id = #{wId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillRelationOrder">
+    update waybill_relation_order
+    set batch_id = #{batchId,jdbcType=CHAR},
+      order_id = #{orderId,jdbcType=CHAR},
+      order_batch_id = #{orderBatchId,jdbcType=CHAR},
+      serial_number = #{serialNumber,jdbcType=VARCHAR},
+      shop_id = #{shopId,jdbcType=VARCHAR},
+      serial_number_jnl = #{serialNumberJnl,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      shop_info = #{shopInfo,jdbcType=LONGVARCHAR}
+    where w_id = #{wId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillRelationOrder">
+    update waybill_relation_order
+    set batch_id = #{batchId,jdbcType=CHAR},
+      order_id = #{orderId,jdbcType=CHAR},
+      order_batch_id = #{orderBatchId,jdbcType=CHAR},
+      serial_number = #{serialNumber,jdbcType=VARCHAR},
+      shop_id = #{shopId,jdbcType=VARCHAR},
+      serial_number_jnl = #{serialNumberJnl,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where w_id = #{wId,jdbcType=CHAR}
+  </update>
+</mapper>
