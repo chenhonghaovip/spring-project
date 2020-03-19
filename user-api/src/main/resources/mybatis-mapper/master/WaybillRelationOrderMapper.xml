@@ -8,11 +8,9 @@
     <result column="order_batch_id" jdbcType="CHAR" property="orderBatchId" />
     <result column="serial_number" jdbcType="VARCHAR" property="serialNumber" />
     <result column="shop_id" jdbcType="VARCHAR" property="shopId" />
+      <result column="shop_info" jdbcType="LONGVARCHAR" property="shopInfo" />
     <result column="serial_number_jnl" jdbcType="VARCHAR" property="serialNumberJnl" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-  </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.honghao.cloud.userapi.domain.entity.WaybillRelationOrder">
-    <result column="shop_info" jdbcType="LONGVARCHAR" property="shopInfo" />
   </resultMap>
   <sql id="Base_Column_List">
     w_id, batch_id, order_id, order_batch_id, serial_number, shop_id, serial_number_jnl, 
@@ -21,7 +19,7 @@
   <sql id="Blob_Column_List">
     shop_info
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     ,
@@ -134,18 +132,7 @@
     </set>
     where w_id = #{wId,jdbcType=CHAR}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillRelationOrder">
-    update waybill_relation_order
-    set batch_id = #{batchId,jdbcType=CHAR},
-      order_id = #{orderId,jdbcType=CHAR},
-      order_batch_id = #{orderBatchId,jdbcType=CHAR},
-      serial_number = #{serialNumber,jdbcType=VARCHAR},
-      shop_id = #{shopId,jdbcType=VARCHAR},
-      serial_number_jnl = #{serialNumberJnl,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
-      shop_info = #{shopInfo,jdbcType=LONGVARCHAR}
-    where w_id = #{wId,jdbcType=CHAR}
-  </update>
+
   <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillRelationOrder">
     update waybill_relation_order
     set batch_id = #{batchId,jdbcType=CHAR},

@@ -13,7 +13,5 @@ public interface WaybillRelationOrderMapper {
 
     int updateByPrimaryKeySelective(WaybillRelationOrder record);
 
-    int updateByPrimaryKeyWithBLOBs(WaybillRelationOrder record);
-
     int updateByPrimaryKey(WaybillRelationOrder record);
 }
