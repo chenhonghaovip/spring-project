@@ -69,7 +69,7 @@ public class ControllerAdviceAspect {
 	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public BaseResponse methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
-		String message = e.getBindingResult().getAllErrors().stream().map(each-> "参数"+each.getDefaultMessage()).findFirst().orElse("参数异常");
+		String message = e.getBindingResult().getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).findFirst().orElse("参数异常");
 		return BaseResponse.error(message);
 	}
 	/**

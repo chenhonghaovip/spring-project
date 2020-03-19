@@ -460,30 +460,6 @@ public class JedisOperator {
 		return hincr(key, field, 1L);
 	}
 
-	/**
-	 * 添加geo
-	 * 
-	 * @param key
-	 * @param longitude
-	 * @param latitude
-	 * @param dName
-	 *            位置名称
-	 * @return
-	 */
-	public Long geoAdd(String key, String longitude, String latitude, String dName) {
-		Jedis jedis = null;
-		try {
-			jedis = getResource();
-			return
-//					(Long) jedis.eval("return redis.call('GEOADD',KEYS[1],KEYS[2],KEYS[3],KEYS[4])", 4, key, longitude, latitude, dName);
-					jedis.geoadd(key,Double.valueOf(longitude),Double.valueOf(latitude),dName);
-		} catch (Exception e) {
-			log.error("Redis geoADD error: " + e.getMessage());
-		} finally {
-			returnResource(jedis);
-		}
-		return 0L;
-	}
 
 	/**
 	 * 添加位置

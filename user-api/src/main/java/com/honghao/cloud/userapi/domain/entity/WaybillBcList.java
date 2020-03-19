@@ -16,7 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class WaybillBcList {
-    @NotBlank
+    @NotBlank(message = "wId不能为空")
     private String wId;
 
     private String batchId;
