@@ -41,6 +41,7 @@ public class MessageSender {
 		});
 		rabbitTemplate.convertAndSend(RabbitConfig.USER_PUSH_QUEUE,message);
 	}
+
 	/**
 	 * 延迟处理 time 分钟数 action 处理的类名，方法为 doAction data 处理参数
 	 * @param content 请求报文
@@ -98,6 +99,7 @@ public class MessageSender {
 	 * @param message 请求报文
 	 */
 	public void test01(String message){
+
 		rabbitTemplate.convertAndSend(RabbitConfig.TEST_1,message);
 	}
 }
