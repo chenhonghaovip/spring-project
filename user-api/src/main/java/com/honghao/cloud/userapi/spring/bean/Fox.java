@@ -7,4 +7,8 @@ package com.honghao.cloud.userapi.spring.bean;
 public class Fox {
     public Fox() {
     }
+
+    public void sout(){
+        System.out.println("fox 。。。 sout");
+    }
 }
