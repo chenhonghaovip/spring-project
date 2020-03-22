@@ -68,6 +68,8 @@ public class TestMain {
     @Test
     public void test11(){
         AnnotationConfigApplicationContext an = new AnnotationConfigApplicationContext(AOPConfig.class);
+        Fox fox = (Fox) an.getBean("fox");
+        fox.sout();
 
     }
 }
