@@ -7,6 +7,7 @@ import com.honghao.cloud.userapi.spring.config.AOPConfig;
 import com.honghao.cloud.userapi.spring.config.LifeCycleConfig;
 import com.honghao.cloud.userapi.spring.config.TestConfig;
 import com.honghao.cloud.userapi.spring.factorybean.MyFactoryBean;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.formula.functions.T;
 import org.junit.Test;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -14,12 +15,20 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author chenhonghao
  * @date 2020-01-13 20:47
  */
+@Slf4j
 public class TestMain {
+    private static AtomicInteger atomicInteger = new AtomicInteger(0);
+    private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(4, 10, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<>(10), r -> new Thread(r,"async"+atomicInteger.getAndIncrement()));
     public static void main(String[] args) {
         AnnotationConfigApplicationContext an = new AnnotationConfigApplicationContext(TestConfig.class);
         AppleD appleD = (AppleD) an.getBean(AppleD.class.getName());
@@ -70,6 +79,11 @@ public class TestMain {
         AnnotationConfigApplicationContext an = new AnnotationConfigApplicationContext(AOPConfig.class);
         Fox fox = (Fox) an.getBean("fox");
         fox.sout();
+    }
 
+    public void test001(){
+        System.out.println("1111");
+        EXECUTOR.submit(()-> log.info("222222"));
+        CompletableFuture.runAsync(()-> System.out.println("333333"),EXECUTOR);
     }
 }
