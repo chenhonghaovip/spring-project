@@ -1,5 +1,6 @@
 package com.honghao.cloud.userapi.spring;
 
+import com.honghao.cloud.userapi.factory.ExecutorFactory;
 import com.honghao.cloud.userapi.spring.bean.AppleD;
 import com.honghao.cloud.userapi.spring.bean.Car;
 import com.honghao.cloud.userapi.spring.bean.Fox;
@@ -16,10 +17,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author chenhonghao
@@ -27,8 +25,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Slf4j
 public class TestMain {
-    private static AtomicInteger atomicInteger = new AtomicInteger(0);
-    private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(4, 10, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<>(10), r -> new Thread(r,"async"+atomicInteger.getAndIncrement()));
+
+    private static final ThreadPoolExecutor EXECUTOR = ExecutorFactory.buildThreadPoolExecutor(2,4,"test_");
     public static void main(String[] args) {
         AnnotationConfigApplicationContext an = new AnnotationConfigApplicationContext(TestConfig.class);
         AppleD appleD = (AppleD) an.getBean(AppleD.class.getName());
