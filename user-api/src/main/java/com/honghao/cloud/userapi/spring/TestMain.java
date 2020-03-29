@@ -2,9 +2,11 @@ package com.honghao.cloud.userapi.spring;
 
 import com.honghao.cloud.userapi.factory.ExecutorFactory;
 import com.honghao.cloud.userapi.spring.bean.AppleD;
+import com.honghao.cloud.userapi.spring.bean.AsyncTest;
 import com.honghao.cloud.userapi.spring.bean.Car;
 import com.honghao.cloud.userapi.spring.bean.Fox;
 import com.honghao.cloud.userapi.spring.config.AOPConfig;
+import com.honghao.cloud.userapi.spring.config.AsyncConfig;
 import com.honghao.cloud.userapi.spring.config.LifeCycleConfig;
 import com.honghao.cloud.userapi.spring.config.TestConfig;
 import com.honghao.cloud.userapi.spring.factorybean.MyFactoryBean;
@@ -88,5 +90,15 @@ public class TestMain {
         int hz = 7;
         int i = Math.addExact(aging, hz) % hz;
         System.out.println(i);
+    }
+
+    @Test
+    public void test002(){
+        AnnotationConfigApplicationContext an = new AnnotationConfigApplicationContext(AsyncConfig.class);
+        AsyncTest asyncTest = (AsyncTest) an.getBean("asyncTest");
+        asyncTest.test();
+
+        Fox bean = (Fox) an.getBean("fox");
+
     }
 }
