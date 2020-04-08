@@ -1,9 +1,12 @@
 package com.honghao.cloud.userapi.spring;
 
+import com.honghao.cloud.userapi.factory.ExecutorFactory;
 import com.honghao.cloud.userapi.spring.bean.AppleD;
+import com.honghao.cloud.userapi.spring.bean.AsyncTest;
 import com.honghao.cloud.userapi.spring.bean.Car;
 import com.honghao.cloud.userapi.spring.bean.Fox;
 import com.honghao.cloud.userapi.spring.config.AOPConfig;
+import com.honghao.cloud.userapi.spring.config.AsyncConfig;
 import com.honghao.cloud.userapi.spring.config.LifeCycleConfig;
 import com.honghao.cloud.userapi.spring.config.TestConfig;
 import com.honghao.cloud.userapi.spring.factorybean.MyFactoryBean;
@@ -16,10 +19,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author chenhonghao
@@ -27,8 +27,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Slf4j
 public class TestMain {
-    private static AtomicInteger atomicInteger = new AtomicInteger(0);
-    private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(4, 10, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<>(10), r -> new Thread(r,"async"+atomicInteger.getAndIncrement()));
+
+    private static final ThreadPoolExecutor EXECUTOR = ExecutorFactory.buildThreadPoolExecutor(2,4,"test_");
     public static void main(String[] args) {
         AnnotationConfigApplicationContext an = new AnnotationConfigApplicationContext(TestConfig.class);
         AppleD appleD = (AppleD) an.getBean(AppleD.class.getName());
@@ -90,5 +90,15 @@ public class TestMain {
         int hz = 7;
         int i = Math.addExact(aging, hz) % hz;
         System.out.println(i);
+    }
+
+    @Test
+    public void test002(){
+        AnnotationConfigApplicationContext an = new AnnotationConfigApplicationContext(AsyncConfig.class);
+        AsyncTest asyncTest = (AsyncTest) an.getBean("asyncTest");
+        asyncTest.test();
+
+        Fox bean = (Fox) an.getBean("fox");
+
     }
 }
