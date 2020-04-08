@@ -81,9 +81,14 @@ public class TestMain {
         fox.sout();
     }
 
+    @Test
     public void test001(){
         System.out.println("1111");
         EXECUTOR.submit(()-> log.info("222222"));
         CompletableFuture.runAsync(()-> System.out.println("333333"),EXECUTOR);
+        int aging = 20;
+        int hz = 7;
+        int i = Math.addExact(aging, hz) % hz;
+        System.out.println(i);
     }
 }

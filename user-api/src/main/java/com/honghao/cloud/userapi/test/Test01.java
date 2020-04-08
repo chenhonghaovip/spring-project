@@ -1,13 +1,15 @@
 package com.honghao.cloud.userapi.test;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Test;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author chenhonghao
@@ -17,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class Test01 {
     private static ThreadLocal<SimpleDateFormat> threadLocal = ThreadLocal.withInitial(()->new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
     private static ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(10, 100, 1, TimeUnit.MINUTES, new LinkedBlockingQueue<>(1000));
-
+    private static AtomicInteger longAdder = new AtomicInteger(1);
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static void main(String[] args) {
@@ -40,6 +42,32 @@ public class Test01 {
 //                }
 //            });
 //        }
+    }
+    @Test
+    public void test(){
+        List<Future<Integer>> list = new ArrayList<>();
+        for (int i = 0; i < 40; i++) {
+            int num = longAdder.getAndIncrement();
+            Future<Integer> future = poolExecutor.submit(()->getNum(num));
+            list.add(future);
+        }
+
+        list.forEach(each->{
+            try {
+                int num = each.get(50,TimeUnit.MILLISECONDS);
+                System.out.println("执行完成"+num);
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                System.out.println("超时取消");
+                each.cancel(true);
+            }
+        });
+
+    }
+
+    private int getNum(int num) throws InterruptedException {
+        Thread.sleep(300);
+        System.out.println("执行："+num);
+        return num;
     }
 
 }
