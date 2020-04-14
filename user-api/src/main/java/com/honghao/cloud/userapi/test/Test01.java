@@ -1,5 +1,7 @@
 package com.honghao.cloud.userapi.test;
 
+import com.alibaba.fastjson.JSON;
+import com.honghao.cloud.userapi.dto.test.Loo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -68,6 +70,15 @@ public class Test01 {
         Thread.sleep(300);
         System.out.println("执行："+num);
         return num;
+    }
+
+    @Test
+    public void test11(){
+        Loo loo = new Loo();
+        if (loo.getLocalDateTime()==null){
+            System.out.println(JSON.toJSONString(loo));
+        }
+
     }
 
 }
