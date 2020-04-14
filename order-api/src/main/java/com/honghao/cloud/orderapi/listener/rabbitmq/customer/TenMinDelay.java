@@ -35,8 +35,6 @@ public class TenMinDelay {
 //			channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
 			log.info("消息队列发送操作异常");
 		}
-
-
 	}
 		
 }

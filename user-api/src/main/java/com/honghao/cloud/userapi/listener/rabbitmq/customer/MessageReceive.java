@@ -1,7 +1,6 @@
 package com.honghao.cloud.userapi.listener.rabbitmq.customer;
 
 import com.alibaba.fastjson.JSON;
-import com.honghao.cloud.userapi.config.RabbitConfig;
 import com.honghao.cloud.userapi.config.ThreadPoolInitConfig;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcListDetail;
@@ -10,7 +9,6 @@ import com.honghao.cloud.userapi.domain.mapper.master.WaybillBcListDetailActionM
 import com.honghao.cloud.userapi.domain.mapper.master.WaybillBcListDetailMapper;
 import com.honghao.cloud.userapi.domain.mapper.master.WaybillBcListMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -34,7 +32,7 @@ public class MessageReceive {
     @Resource
     private WaybillBcListDetailMapper waybillBcListDetailMapper;
 
-    @RabbitListener(queues = RabbitConfig.TEST_1)
+//    @RabbitListener(queues = RabbitConfig.TEST_1)
     private void consumptionQueue(String data){
         log.info("队列处理：{}",data);
         ThreadPoolExecutor threadPoolExecutor = ThreadPoolInitConfig.build("test");
