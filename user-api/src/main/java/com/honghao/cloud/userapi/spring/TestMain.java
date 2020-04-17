@@ -50,7 +50,7 @@ public class TestMain {
         System.out.println(t);
 
         String[] beanDefinitionNames = an.getBeanDefinitionNames();
-        Arrays.stream(beanDefinitionNames).forEach(each-> System.out.println(each));
+        Arrays.stream(beanDefinitionNames).forEach(System.out::println);
 //        an.register(Fox.class);
 
         //注册对象到容器中
