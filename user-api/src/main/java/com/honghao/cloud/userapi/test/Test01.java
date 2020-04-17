@@ -30,20 +30,6 @@ public class Test01 {
         map.put("1","1");
         map.put("9","9");
         // TODO: 2020/1/7 测试simpleDateFormat的线程安全性
-//        simpleDateFormat.format(new Date());
-
-//        while (true) {
-//            poolExecutor.execute(() -> {
-//                String dateString = threadLocal.get().format(new Date());
-//                try {
-//                    Date parseDate = threadLocal.get().parse(dateString);
-//                    String dateString2 = threadLocal.get().format(parseDate);
-//                    System.out.println(dateString.equals(dateString2));
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
-//            });
-//        }
     }
     @Test
     public void test(){
