@@ -85,7 +85,6 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
 
         EventDemo eventListener=new EventDemo(this,eventDTO);
         applicationEventPublisher.publishEvent(eventListener);
-
 //        log.info("开始订单服务的接口调用");
 //        BaseResponse<String> baseResponse = orderClient.createUser("dddddd");
 //        if (baseResponse.isResult()){
