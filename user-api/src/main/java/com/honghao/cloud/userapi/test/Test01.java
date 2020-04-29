@@ -1,5 +1,7 @@
 package com.honghao.cloud.userapi.test;
 
+import com.alibaba.fastjson.JSON;
+import com.honghao.cloud.userapi.dto.test.Loo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -28,20 +30,6 @@ public class Test01 {
         map.put("1","1");
         map.put("9","9");
         // TODO: 2020/1/7 测试simpleDateFormat的线程安全性
-//        simpleDateFormat.format(new Date());
-
-//        while (true) {
-//            poolExecutor.execute(() -> {
-//                String dateString = threadLocal.get().format(new Date());
-//                try {
-//                    Date parseDate = threadLocal.get().parse(dateString);
-//                    String dateString2 = threadLocal.get().format(parseDate);
-//                    System.out.println(dateString.equals(dateString2));
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
-//            });
-//        }
     }
     @Test
     public void test(){
@@ -68,6 +56,15 @@ public class Test01 {
         Thread.sleep(300);
         System.out.println("执行："+num);
         return num;
+    }
+
+    @Test
+    public void test11(){
+        Loo loo = new Loo();
+        if (loo.getLocalDateTime()==null){
+            System.out.println(JSON.toJSONString(loo));
+        }
+
     }
 
 }

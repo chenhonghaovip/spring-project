@@ -9,7 +9,9 @@ import com.honghao.cloud.userapi.dto.easypoi.WaybillBcListEasyPoi;
 import com.honghao.cloud.userapi.dto.request.*;
 import com.honghao.cloud.userapi.facade.BatchFacade;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
+import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;
 import com.honghao.cloud.userapi.service.WaybillBcListService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +32,7 @@ import java.util.stream.Stream;
  * @author chenhonghao
  * @date 2019-11-28 15:23
  */
+@Slf4j
 @RestController
 @RequestMapping("/testController")
 public class TestController {
@@ -40,6 +43,12 @@ public class TestController {
     private WaybillBcListMapper waybillBcListMapper;
     @Resource
     private BatchFacade batchFacade;
+    @Resource
+    private MessageSender messageSender;
+//    @Resource
+//    private Redisson redisson;
+    @Resource
+    private WaybillBcListService waybillBcListService;
 
     private static List<Transaction> transactions;
     static {
@@ -56,8 +65,23 @@ public class TestController {
                 new Transaction(alan, 2012, 950)
         );
     }
-    @Resource
-    private WaybillBcListService waybillBcListService;
+//    public void tesw(){
+//        RLock lock = redisson.getLock("");
+//        try {
+//            lock.tryLock(1,2,TimeUnit.SECONDS);
+//        }catch (Exception e){
+//            log.error(e.getMessage());
+//        }finally {
+//            lock.unlock();
+//        }
+//
+//
+//    }
+    @GetMapping("/test0001")
+    public BaseResponse test0001(@RequestParam @NotBlank String data){
+        messageSender.testQueue(data);
+        return BaseResponse.success();
+    }
 
     @GetMapping("/test001")
     public BaseResponse test001(@RequestParam @NotBlank String data){

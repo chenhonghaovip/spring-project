@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 
 
 /**
@@ -26,16 +27,25 @@ public class MessageSender {
 	 * @param message 请求报文
 	 */
 	public void pushInfoUser(String message){
+		/**
+		 * exchange到queue成功,则不回调return
+		 * exchange到queue失败,则回调return(需设置mandatory=true,否则不回回调,消息就丢了)
+		 */
 		rabbitTemplate.setReturnCallback((message1, i, s, s1, s2) -> {
 			log.info("ackMQSender 发送消息被退回" + s1 + s2);
 		});
 		/**
 		 * 如果设置了spring.rabbitmq.publisher-confirms=true(默认是false),生产者会收到rabitmq-server返回的ack
 		 * 这个回调方法里面没有原始消息,相当于只是一个通知作用
+		 *
+		 * 如果消息没有到exchange,则confirm回调,ack=false
+		 * 如果消息到达exchange,则confirm回调,ack=true
 		 */
 		this.rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
 			if (!ack) {
-				log.info("ackMQSender 消息发送失败" + cause + correlationData.toString());
+				log.info("ackMQSender 消息发送失败" + cause + Objects.requireNonNull(correlationData).toString());
+				// 消息重新发送到消息队列
+				pushInfoUser(message);
 			} else {
 				log.info("ackMQSender 消息发送成功 ");
 			}
@@ -105,5 +115,10 @@ public class MessageSender {
 	public void test01(String message){
 
 		rabbitTemplate.convertAndSend(RabbitConfig.TEST_1,message);
+	}
+
+
+	public void productConfirm(String message){
+
 	}
 }
