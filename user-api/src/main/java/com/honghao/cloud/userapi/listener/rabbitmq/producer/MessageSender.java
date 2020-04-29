@@ -2,6 +2,7 @@ package com.honghao.cloud.userapi.listener.rabbitmq.producer;
 
 import com.honghao.cloud.userapi.config.RabbitConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.MessageDeliveryMode;
 import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -68,6 +69,8 @@ public class MessageSender {
 		log.info("开始短信消息发送");
 		MessagePostProcessor messagePostProcessor = message -> {
 			message.getMessageProperties().setExpiration(String.valueOf(2*1000));
+			//开启消息持久化
+			message.getMessageProperties().setDeliveryMode(MessageDeliveryMode.PERSISTENT);
 			return message;
 		};
 		rabbitTemplate.convertAndSend(RabbitConfig.QUEUE_MSG_SMS_SEND_TTL, content, messagePostProcessor);
@@ -78,6 +81,7 @@ public class MessageSender {
 	 * @param message 请求报文
 	 */
 	public void testQueue(String message){
+		rabbitTemplate.setMandatory(true);
 		rabbitTemplate.setReturnCallback((message1, i, s, s1, s2) -> {
 			log.info("ackMQSender 发送消息被退回" + s1 + s2);
 		});
