@@ -30,13 +30,13 @@ public class OrderController {
 
     @PostMapping("/create")
     @ApiOperation(value = "创建订单",notes = "创建订单")
-    BaseResponse<String> createUser(@RequestParam String data) {
+    public BaseResponse<String> createUser(@RequestParam String data) {
         orderFacade.createUser(data);
         return BaseResponse.successData("name111");
     }
 
     @PostMapping("/create1")
-    BaseResponse<String> getUser(@RequestBody String data) {
+    public BaseResponse<String> getUser(@RequestBody String data) {
 //        CardDTO cardDTO=new CardDTO();
         messageSender.pushInfoUser("chenhonghao");
 //        CardDTO.AccountInfoBean accountInfoBean=new CardDTO.AccountInfoBean();

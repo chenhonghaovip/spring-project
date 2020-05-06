@@ -3,6 +3,7 @@ package com.honghao.cloud.userapi.client.hystrix;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
+import com.netflix.hystrix.exception.HystrixTimeoutException;
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,11 @@ public class OrderClientFallbackFactory implements FallbackFactory<OrderClient> 
         return new OrderClient() {
             @Override
             public BaseResponse<String> createUser(String data) {
-                return null;
+                log.error("ssssssss:{}",throwable.getMessage());
+                if (throwable instanceof HystrixTimeoutException){
+                    System.out.println("超时处理");
+                }
+                return BaseResponse.successData("error");
             }
 
             @Override

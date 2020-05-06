@@ -14,7 +14,7 @@ public interface WaybillBcListFacade {
      * @param data data
      * @return Boolean
      */
-    Boolean createUser(String data);
+    BaseResponse<String> createUser(String data);
     /**
      * 创建用户
      * @param data data
