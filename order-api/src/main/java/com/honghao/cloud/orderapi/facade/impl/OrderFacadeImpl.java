@@ -30,6 +30,11 @@ public class OrderFacadeImpl implements OrderFacade {
     public Boolean createUser(String data) {
         log.info("dingdanfuwukaidsaf>>>>>>>>>>>>>>>>");
         log.info(data);
+        try {
+            Thread.sleep(100000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         JSONObject jsonObject=new JSONObject();
         jsonObject.put("value","chenwenliang");
         orderService.createUser();
