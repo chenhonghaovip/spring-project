@@ -21,6 +21,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.params.geo.GeoRadiusParam;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.text.ParseException;
@@ -72,6 +73,13 @@ public class UserController {
         waybillBcListFacade.createUser(data);
         return BaseResponse.successData(true);
     }
+
+    @RequestMapping("/dddddd")
+    public BaseResponse<String> dddddd(HttpServletRequest httpServletRequest) {
+        httpServletRequest.getParameter("data");
+        return BaseResponse.successData(httpServletRequest.getParameter("data"));
+    }
+
 
     /**
      * 创建用户
