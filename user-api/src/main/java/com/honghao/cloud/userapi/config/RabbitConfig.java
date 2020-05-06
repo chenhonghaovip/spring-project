@@ -151,6 +151,7 @@ public class RabbitConfig {
 
     @Bean
     public DirectExchange smsDelayExchange(){
+        // 默认是开启持久化的
         return new DirectExchange(QUEUE_MSG_SMS_SEND_EXCHANGE);
     }
 
@@ -192,6 +193,7 @@ public class RabbitConfig {
      */
     @Bean
     public Queue delayConsumeQueue(){
+        //队列默认是开启持久化的
         return new Queue(DELAY_TEN_MIN);
     }
 
