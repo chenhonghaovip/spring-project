@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 
 /**
  * 主数据源MasterDataSourceConfig 配置
- *
+ * sqlSessionTemplateRef、sqlSessionFactoryRef在有多个数据源的情况下指定使用哪一个数据源；
  * @author chenhonghao
  * @date 2019-12-20 09:47
  */
