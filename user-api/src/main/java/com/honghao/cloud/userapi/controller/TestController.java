@@ -1,6 +1,8 @@
 package com.honghao.cloud.userapi.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.ttl.TransmittableThreadLocal;
+import com.alibaba.ttl.threadpool.TtlExecutors;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.common.enums.RoleTypeEnum;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
@@ -23,10 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.validation.constraints.NotBlank;
 import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -298,5 +297,28 @@ public class TestController {
             threadLocal.get().refresh();
         });
 
+    }
+
+    /**
+     * 1.包裹TtlExecutors
+     *
+     * 2.使用TransmittableThreadLocal
+     */
+    @Test
+    public void testInfo(){
+        TransmittableThreadLocal<Integer> ttl = new TransmittableThreadLocal<>();
+        ThreadPoolExecutor threadPool = ExecutorFactory.buildThreadPoolExecutor(1,1,"odoofd");
+        ExecutorService ttlExecutorService = TtlExecutors.getTtlExecutorService(threadPool);
+        ttl.set(1);
+        ttlExecutorService.submit(()->{
+            System.out.println("第一次"+Thread.currentThread().getName()+"value:"+ttl.get());
+            ttl.remove();
+        });
+
+        ttl.set(3);
+
+        ttlExecutorService.submit(()->{
+            System.out.println("第二次"+Thread.currentThread().getName()+"value:"+ttl.get());
+        });
     }
 }
