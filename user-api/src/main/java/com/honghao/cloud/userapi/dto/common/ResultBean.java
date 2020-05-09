@@ -1,9 +1,18 @@
 package com.honghao.cloud.userapi.dto.common;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * @author chenhonghao
  * @date 2019-11-15 13:11
  */
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ResultBean<T> {
     private Integer code;
     private String message;
@@ -31,5 +40,9 @@ public class ResultBean<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public ResultBean refresh(){
+        return new ResultBean();
     }
 }

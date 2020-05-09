@@ -5,13 +5,16 @@ import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.common.enums.RoleTypeEnum;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.domain.mapper.master.WaybillBcListMapper;
+import com.honghao.cloud.userapi.dto.common.ResultBean;
 import com.honghao.cloud.userapi.dto.easypoi.WaybillBcListEasyPoi;
 import com.honghao.cloud.userapi.dto.request.*;
 import com.honghao.cloud.userapi.facade.BatchFacade;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
+import com.honghao.cloud.userapi.factory.ExecutorFactory;
 import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;
 import com.honghao.cloud.userapi.service.WaybillBcListService;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Test;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -272,5 +275,28 @@ public class TestController {
             });
             countDownLatch.countDown();
         }
+    }
+
+    @Test
+    public void test1() {
+        for (int i = 0; i < 1000; i++) {
+            test(i);
+        }
+    }
+
+
+    public void test(int code) {
+        InheritableThreadLocal<ResultBean> threadLocal = new InheritableThreadLocal<>();
+        ThreadPoolExecutor threadPool = ExecutorFactory.buildThreadPoolExecutor(1,1,"odoofd");
+
+        threadPool.submit(()->{
+            ResultBean resultBean = new ResultBean();
+            resultBean.setCode(code);
+            threadLocal.set(resultBean);
+            ResultBean s = threadLocal.get();
+            System.out.println(Thread.currentThread().getName()+"子线程获取结果"+s);
+            threadLocal.get().refresh();
+        });
+
     }
 }

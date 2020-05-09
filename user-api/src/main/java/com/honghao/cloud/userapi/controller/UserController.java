@@ -71,6 +71,8 @@ public class UserController {
     @ApiOperation(value = "创建用户",notes = "创建用户")
     public BaseResponse<Boolean> createUser(@RequestBody String data) {
         waybillBcListFacade.createUser(data);
+        ThreadLocal<Object> objectThreadLocal = new ThreadLocal<>();
+        objectThreadLocal.set("111");
         return BaseResponse.successData(true);
     }
 
