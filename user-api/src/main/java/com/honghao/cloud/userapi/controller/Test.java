@@ -1,9 +1,16 @@
 package com.honghao.cloud.userapi.controller;
 
 import com.honghao.cloud.userapi.factory.ExecutorFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
+import javax.annotation.Resource;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -12,35 +19,26 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author chenhonghao
  * @date 2020-05-11 21:55
  */
+@RestController
+@RequestMapping("/test")
 public class Test {
+    private static Logger logger = LoggerFactory.getLogger(Test.class);
     private static ThreadPoolExecutor parent = ExecutorFactory.buildThreadPoolExecutor(10,100,"odoofd");
     private static ThreadPoolExecutor child = ExecutorFactory.buildThreadPoolExecutor(10,100,"odoofd");
-//    private static CyclicBarrier cyclicBarrier;
-   static CountDownLatch countDownLatch = new CountDownLatch(500);
+    @Resource
+    private DataSourceTransactionManager dataSourceTransactionManager;
+    private static Set<Integer> set = new HashSet<>();
+
     @org.junit.Test
     public void test(){
         CyclicBarrier cyclicBarrier = new CyclicBarrier(500);
 
         AtomicInteger atomicInteger = new AtomicInteger(1);
-        for (int i = 0; i < 1000000; i++) {
-//            new CyclicBarrierThread(cyclicBarrier,atomicInteger.getAndIncrement()).run();
-            test1(atomicInteger.getAndIncrement());
+        for (int i = 0; i < 100000; i++) {
+            new Thread(new CyclicBarrierThread(cyclicBarrier,atomicInteger.getAndIncrement())).start();
         }
-
     }
 
-    private void test1(int i){
-
-//        countDownLatch.countDown();
-//        try {
-//            countDownLatch.await();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-        System.out.println("同步"+i);
-        CompletableFuture.runAsync(()-> System.out.println("异步"+i),child);
-
-    }
 
     private static class CyclicBarrierThread implements Runnable {
         CyclicBarrier cyclicBarrier;
@@ -48,17 +46,23 @@ public class Test {
         //任务序号
         int taskNum;
 
-        private void test1(CyclicBarrier cyclicBarrier,int i){
-
-                countDownLatch.countDown();
+        private void test1(){
             try {
-                countDownLatch.await();
+                cyclicBarrier.await();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            } catch (BrokenBarrierException e) {
+                e.printStackTrace();
             }
-
-            System.out.println("同步"+i);
-            CompletableFuture.runAsync(()-> System.out.println("异步"+i),child);
+//            logger.info("同步"+taskNum);
+            set.add(taskNum);
+//            CompletableFuture.runAsync(,child);
+            child.execute(()-> {
+//                logger.info("异步"+taskNum);
+                if (!set.contains(taskNum)){
+                    System.out.println("1111111111111111111==="+taskNum);
+                }
+            });
 
         }
 
@@ -69,7 +73,7 @@ public class Test {
 
         @Override
         public void run() {
-            test1(cyclicBarrier,taskNum);
+            test1();
         }
     }
 }

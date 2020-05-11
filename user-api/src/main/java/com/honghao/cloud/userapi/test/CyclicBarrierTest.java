@@ -18,7 +18,7 @@ public class CyclicBarrierTest {
         //当所有子任务都执行完毕时,barrierAction的run方法会被调用
         cyclicBarrier = new CyclicBarrier(count, () ->
                 System.out.println("执行barrierAction操作!"));
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1,2,10, TimeUnit.SECONDS,new ArrayBlockingQueue<>(10));
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10,100,10, TimeUnit.SECONDS,new ArrayBlockingQueue<>(10));
         //开启多个线程执行子任务
         for(int i=0;i<count;i++){
             final int k = i;
