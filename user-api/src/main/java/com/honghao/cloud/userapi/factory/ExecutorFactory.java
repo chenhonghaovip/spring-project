@@ -18,6 +18,6 @@ public class ExecutorFactory {
 
     public static ThreadPoolExecutor buildThreadPoolExecutor(int core,int max,String preName){
         AtomicInteger atomicInteger = new AtomicInteger(0);
-        return new ThreadPoolExecutor(core, max, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100), r -> new Thread(r,preName+atomicInteger.incrementAndGet()));
+        return new ThreadPoolExecutor(core, max, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), r -> new Thread(r,preName+atomicInteger.incrementAndGet()));
     }
 }
