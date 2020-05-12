@@ -2,9 +2,7 @@ package com.honghao.cloud.userapi.factory;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -18,6 +16,21 @@ public class ExecutorFactory {
 
     public static ThreadPoolExecutor buildThreadPoolExecutor(int core,int max,String preName){
         AtomicInteger atomicInteger = new AtomicInteger(0);
-        return new ThreadPoolExecutor(core, max, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), r -> new Thread(r,preName+atomicInteger.incrementAndGet()));
+        return new ThreadPoolExecutor(core, max, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<>(10), r -> new Thread(r,preName+atomicInteger.incrementAndGet()),new MyRejectedExecutionHandler());
+    }
+
+    public static class MyRejectedExecutionHandler implements RejectedExecutionHandler {
+
+        @Override
+        public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+            System.out.println("my info is :"+"Task " + r.toString() +
+                    " rejected from " +
+                    executor.toString());
+//            executor.getQueue().take()
+            throw new RejectedExecutionException("Task " + r.toString() +
+                    " rejected from " +
+                    executor.toString());
+
+        }
     }
 }

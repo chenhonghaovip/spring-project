@@ -39,6 +39,26 @@ public class HttpUtil {
 		return null;
 	}
 
+	public static String doPost(String url,int seconds) {
+		seconds = seconds*1000;
+		CloseableHttpClient client = HttpClients.createDefault();
+		HttpPost post = new HttpPost(url);
+		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(seconds).setConnectionRequestTimeout(seconds)
+				.setSocketTimeout(seconds).build();
+		post.setConfig(requestConfig);
+		String result = "";
+		try {
+			HttpResponse res = client.execute(post);
+			if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				HttpEntity entity = res.getEntity();
+				result = EntityUtils.toString(entity);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return result;
+	}
+
 	public static JSONObject doPost(String url,String json,int seconds){
 		seconds = seconds*1000;
 		CloseableHttpClient client = HttpClients.createDefault();
