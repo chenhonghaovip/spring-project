@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -28,6 +29,7 @@ public class Test {
     @Resource
     private DataSourceTransactionManager dataSourceTransactionManager;
     private static Set<Integer> set = new HashSet<>();
+    private static ConcurrentHashMap<Integer,Integer> concurrentHashMap = new ConcurrentHashMap<>();
 
     @org.junit.Test
     public void test(){
@@ -54,12 +56,9 @@ public class Test {
             } catch (BrokenBarrierException e) {
                 e.printStackTrace();
             }
-//            logger.info("同步"+taskNum);
-            set.add(taskNum);
-//            CompletableFuture.runAsync(,child);
+            concurrentHashMap.put(taskNum,taskNum);
             child.execute(()-> {
-//                logger.info("异步"+taskNum);
-                if (!set.contains(taskNum)){
+                if (!concurrentHashMap.keySet().contains(taskNum)){
                     System.out.println("1111111111111111111==="+taskNum);
                 }
             });

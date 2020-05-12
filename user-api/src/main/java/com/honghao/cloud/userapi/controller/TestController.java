@@ -7,7 +7,6 @@ import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.common.enums.RoleTypeEnum;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.domain.mapper.master.WaybillBcListMapper;
-import com.honghao.cloud.userapi.dto.common.ResultBean;
 import com.honghao.cloud.userapi.dto.easypoi.WaybillBcListEasyPoi;
 import com.honghao.cloud.userapi.dto.request.*;
 import com.honghao.cloud.userapi.facade.BatchFacade;
@@ -15,6 +14,7 @@ import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import com.honghao.cloud.userapi.factory.ExecutorFactory;
 import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;
 import com.honghao.cloud.userapi.service.WaybillBcListService;
+import com.honghao.cloud.userapi.utils.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -279,24 +279,32 @@ public class TestController {
     @Test
     public void test1() {
         for (int i = 0; i < 1000; i++) {
-            test(i);
+//            test(i);
         }
     }
 
 
-    public void test(int code) {
-        InheritableThreadLocal<ResultBean> threadLocal = new InheritableThreadLocal<>();
-        ThreadPoolExecutor threadPool = ExecutorFactory.buildThreadPoolExecutor(1,1,"odoofd");
+    @Test
+    public void test() {
+        ThreadPoolExecutor threadPool = ExecutorFactory.buildThreadPoolExecutor(1,10,"odoofd");
+        CyclicBarrier cyclicBarrier = new CyclicBarrier(1000);
 
-        threadPool.submit(()->{
-            ResultBean resultBean = new ResultBean();
-            resultBean.setCode(code);
-            threadLocal.set(resultBean);
-            ResultBean s = threadLocal.get();
-            System.out.println(Thread.currentThread().getName()+"子线程获取结果"+s);
-            threadLocal.get().refresh();
-        });
+        for (int i = 0; i < 2000; i++) {
+            System.out.println(i);
+            threadPool.submit(()-> deliveryTest(cyclicBarrier));
+        }
+    }
 
+    private void deliveryTest(CyclicBarrier cyclicBarrier){
+        try {
+            cyclicBarrier.await();
+            String phone = "18234089492";
+            String url = "http://api.k780.com:88/?app=phone.get&phone="+phone+"&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=xml";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+                System.out.println(Thread.currentThread().getName()+"子线程获取结果");
     }
 
     /**
@@ -320,5 +328,26 @@ public class TestController {
         ttlExecutorService.submit(()->{
             System.out.println("第二次"+Thread.currentThread().getName()+"value:"+ttl.get());
         });
+    }
+
+    /**
+     * @author YK
+     * @date:2017-03-29 上午9:54
+     */
+    public static class HttpReptileUtils {
+
+        /**
+         * @param args
+         */
+        public static void main(String[] args) {
+            String url = "http://mobsec-dianhua.baidu.com/dianhua_api/open/location?tel=17810252046";
+            String json = loadJSON(url);
+            System.out.println(json);
+        }
+
+        public static String loadJSON (String url) {
+            String s = HttpUtil.doPost(url, 10);
+            return s;
+        }
     }
 }
