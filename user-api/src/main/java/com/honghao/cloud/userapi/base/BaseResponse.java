@@ -32,12 +32,7 @@ public class BaseResponse<T> implements Serializable {
     public static BaseResponse success() {
         return new BaseResponse<>(true, 200, null, "请求成功");
     }
-
-    public static <T> BaseResponse<T> success(String msg) {
-        return new BaseResponse<>(true, 200, null, msg);
-    }
-
-    public static BaseResponse error(String msg) {
+    public static <T> BaseResponse<T> error(String msg) {
         return new BaseResponse<>(false, -1, null, msg);
     }
 
