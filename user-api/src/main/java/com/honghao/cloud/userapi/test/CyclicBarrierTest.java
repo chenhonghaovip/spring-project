@@ -4,6 +4,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author chenhonghao
@@ -12,41 +14,27 @@ import java.util.concurrent.TimeUnit;
 public class CyclicBarrierTest {
 
     static CyclicBarrier cyclicBarrier;
+    static AtomicBoolean atomicBoolean = new AtomicBoolean(true);
+    private static AtomicInteger atomicInteger = new AtomicInteger(0);
 
     public static void main(String[] args) {
-        int count = 10;
         //当所有子任务都执行完毕时,barrierAction的run方法会被调用
-        cyclicBarrier = new CyclicBarrier(count, () ->
-                System.out.println("执行barrierAction操作!"));
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10,100,10, TimeUnit.SECONDS,new ArrayBlockingQueue<>(10));
+        cyclicBarrier = new CyclicBarrier(1, () ->{
+            System.out.println("执行barrierAction操作!");
+            atomicBoolean.set(true);
+        }
+                );
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(2,2,10, TimeUnit.SECONDS,new ArrayBlockingQueue<>(10));
         //开启多个线程执行子任务
-        for(int i=0;i<count;i++){
-            final int k = i;
-            threadPoolExecutor.submit(()->doSelect(cyclicBarrier, k));
-        }
+       while (true){
+           if (atomicBoolean.getAndSet(false) && atomicInteger.getAndIncrement()<100){
+               threadPoolExecutor.submit(()->doSelect(cyclicBarrier, atomicInteger.get()));
+           }
+       }
 
     }
 
-    private static class CyclicBarrierThread implements Runnable {
-
-        CyclicBarrier cyclicBarrier;
-
-        //任务序号
-        int taskNum;
-
-        CyclicBarrierThread(CyclicBarrier cyclicBarrier,final int taskNum) {
-            this.cyclicBarrier = cyclicBarrier;
-            this.taskNum = taskNum;
-        }
-
-        @Override
-        public void run() {
-
-        }
-    }
-
-    public static void doSelect(CyclicBarrier cyclicBarrier,int taskNum){
-
+    private static void doSelect(CyclicBarrier cyclicBarrier,int taskNum){
         //执行子任务
         System.out.println("子任务："+taskNum+" 执行完毕!");
         try {
@@ -56,8 +44,5 @@ public class CyclicBarrierTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //释放资源
-        System.out.println("线程："+taskNum+" 释放资源!");
-
     }
 }

@@ -21,7 +21,7 @@ public class Test {
             CountDownLatch countDownLatch1 = new CountDownLatch(1);
 
             threadPoolExecutor.execute(() -> {
-                System.out.println(random.nextInt()+'a');
+                System.out.println("11111");
                 countDownLatch.countDown();
             });
 
@@ -32,7 +32,7 @@ public class Test {
             }
 
             threadPoolExecutor.execute(() -> {
-                System.out.println(random.nextInt(9));
+                System.out.println("aaaa");
                 countDownLatch1.countDown();
             });
             try {
