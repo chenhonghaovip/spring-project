@@ -1,5 +1,6 @@
 package com.honghao.cloud.userapi.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.threadpool.TtlExecutors;
@@ -255,7 +256,7 @@ public class TestController {
     @PostMapping("/test/test")
     public BaseResponse test(@RequestBody WaybillBcList waybillBcList){
 
-        feignCommon.test(waybillBcList);
+        orderClient.createUser(JSON.toJSONString(waybillBcList));
         return BaseResponse.success();
     }
 
