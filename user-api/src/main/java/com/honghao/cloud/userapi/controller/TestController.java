@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.threadpool.TtlExecutors;
 import com.honghao.cloud.userapi.base.BaseResponse;
+import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.common.enums.RoleTypeEnum;
+import com.honghao.cloud.userapi.component.FeignCommon;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.domain.mapper.master.WaybillBcListMapper;
 import com.honghao.cloud.userapi.dto.easypoi.WaybillBcListEasyPoi;
@@ -17,10 +19,7 @@ import com.honghao.cloud.userapi.service.WaybillBcListService;
 import com.honghao.cloud.userapi.utils.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotBlank;
@@ -47,6 +46,10 @@ public class TestController {
     private BatchFacade batchFacade;
     @Resource
     private MessageSender messageSender;
+    @Resource
+    private OrderClient orderClient;
+    @Resource
+    private FeignCommon feignCommon;
 //    @Resource
 //    private Redisson redisson;
     @Resource
@@ -246,6 +249,14 @@ public class TestController {
             insertList.addAll(value);
         }
         return BaseResponse.successData(map);
+    }
+
+
+    @PostMapping("/test/test")
+    public BaseResponse test(@RequestBody WaybillBcList waybillBcList){
+
+        feignCommon.test(waybillBcList);
+        return BaseResponse.success();
     }
 
     @GetMapping("/dataSourceTest")

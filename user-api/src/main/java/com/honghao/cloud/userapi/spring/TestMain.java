@@ -17,7 +17,6 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -50,7 +49,7 @@ public class TestMain {
         System.out.println(t);
 
         String[] beanDefinitionNames = an.getBeanDefinitionNames();
-        Arrays.stream(beanDefinitionNames).forEach(System.out::println);
+//        Arrays.stream(beanDefinitionNames).forEach(System.out::println);
 //        an.register(Fox.class);
 
         //注册对象到容器中
@@ -71,7 +70,7 @@ public class TestMain {
 
     public static void each(AnnotationConfigApplicationContext an){
         String[] beanDefinitionNames = an.getBeanDefinitionNames();
-        Arrays.stream(beanDefinitionNames).forEach(System.out::println);
+//        Arrays.stream(beanDefinitionNames).forEach(System.out::println);
     }
 
     @Test

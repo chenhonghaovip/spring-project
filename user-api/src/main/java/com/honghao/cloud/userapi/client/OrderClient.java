@@ -1,7 +1,7 @@
 package com.honghao.cloud.userapi.client;
 
+import com.honghao.cloud.userapi.aspect.FeignExceptionDeal;
 import com.honghao.cloud.userapi.base.BaseResponse;
-import com.honghao.cloud.userapi.client.hystrix.OrderClientFallbackFactory;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 @FeignClient(
         name = OrderClient.SERVER_ID
-        ,fallbackFactory = OrderClientFallbackFactory.class
+//        ,fallbackFactory = OrderClientFallbackFactory.class
 )
 public interface OrderClient {
     String SERVER_ID = "ORDER-API";
@@ -28,6 +28,7 @@ public interface OrderClient {
      * @param data string
      * @return 删除
      */
+    @FeignExceptionDeal
     @PostMapping("/order/create")
     BaseResponse<String> createUser(@RequestParam String data);
 
