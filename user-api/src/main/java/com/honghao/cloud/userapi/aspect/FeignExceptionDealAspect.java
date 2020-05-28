@@ -13,9 +13,11 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.retry.RetryException;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  * feign接口超时处理切面
@@ -44,14 +46,19 @@ public class FeignExceptionDealAspect {
             joinPoint.proceed(args);
 
         } catch (RetryException | HystrixRuntimeException re){
-            log.error(re.getMessage());
             Signature sig = joinPoint.getSignature();
             MethodSignature msig = (MethodSignature) sig;
+
             String beanName = joinPoint.getSignature().getDeclaringType().getName();
             Object target = joinPoint.getTarget();
             Method currentMethod = target.getClass().getMethod(msig.getName(), msig.getParameterTypes());
-            DTO dto = DTO.builder().t(args[0].getClass().newInstance()).context(args).methodName(currentMethod.getName()).beanName(beanName).build();
 
+            GetMapping annotation = sig.getDeclaringType().getDeclaredMethod(currentMethod.getName(), currentMethod.getParameterTypes()).getAnnotation(GetMapping.class);
+            if (Objects.nonNull(annotation)){
+                return;
+            }
+
+            DTO dto = DTO.builder().t(args[0].getClass().newInstance()).context(args).methodName(currentMethod.getName()).beanName(beanName).build();
             String key = beanName+currentMethod.getName()+args[0].toString();
             System.out.println(key);
             if (jedisOperator.incr(key)>5){
