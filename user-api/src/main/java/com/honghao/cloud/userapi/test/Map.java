@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.test.springtest;
+package com.honghao.cloud.userapi.test;
 
 /**
  * @author chenhonghao

@@ -117,8 +117,27 @@ public class MessageSender {
 		rabbitTemplate.convertAndSend(RabbitConfig.TEST_1,message);
 	}
 
+	/**
+	 * 公用延迟队列处理
+	 * @param queueName 队列名称
+	 * @param content 队列内容
+	 * @param time 延迟时间 毫秒数
+	 */
+	public <T> void  publicDelayQueueProcessing(T content, String queueName , final int time) {
+		int delayTime = time*60*1000;
+		MessagePostProcessor messagePostProcessor = message -> {
+			message.getMessageProperties().setExpiration(String.valueOf(delayTime));
+			return message;
+		};
+		rabbitTemplate.convertAndSend(queueName, content, messagePostProcessor);
+	}
 
-	public void productConfirm(String message){
-
+	/**
+	 * 公用队列处理
+	 * @param str 队列信息
+	 * @param queueName 队列名称
+	 */
+	public void publicQueueProcessing(String str , String queueName){
+		rabbitTemplate.convertAndSend(queueName ,str);
 	}
 }

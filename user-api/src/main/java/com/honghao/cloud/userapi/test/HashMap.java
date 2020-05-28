@@ -1,6 +1,5 @@
 package com.honghao.cloud.userapi.test;
 
-import com.honghao.cloud.userapi.test.springtest.Map;
 import lombok.Data;
 
 /**

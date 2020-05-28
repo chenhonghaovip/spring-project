@@ -26,7 +26,7 @@ public class MyTypeFilter implements TypeFilter {
         Resource resource = metadataReader.getResource();
 
         String className = classMetadata.getClassName();
-        System.out.println(className);
+//        System.out.println(className);
         if (className.contains("Ban")){
             return true;
         }

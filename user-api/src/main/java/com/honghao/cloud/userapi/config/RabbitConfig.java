@@ -276,8 +276,9 @@ public class RabbitConfig {
                 .to(waybillOrderExchange());
     }
 
+
     @Bean
-    public Queue test_1(){
-        return new Queue(TEST_1);
+    public Queue honghao_queue(){
+        return new Queue("honghao_queue");
     }
 }

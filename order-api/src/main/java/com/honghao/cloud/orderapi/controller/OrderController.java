@@ -31,7 +31,13 @@ public class OrderController {
     @PostMapping("/create")
     @ApiOperation(value = "创建订单",notes = "创建订单")
     public BaseResponse<String> createUser(@RequestParam String data) {
-        orderFacade.createUser(data);
+//        orderFacade.createUser(data);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("ddddddddddddddddddddddd");
         return BaseResponse.successData("name111");
     }
 
