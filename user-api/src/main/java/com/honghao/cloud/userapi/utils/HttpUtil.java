@@ -1,19 +1,25 @@
 package com.honghao.cloud.userapi.utils;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.honghao.cloud.userapi.aspect.DTOT;
+import com.honghao.cloud.userapi.aspect.FeignExceptionDeal;
+import com.honghao.cloud.userapi.base.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpEntity;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -23,73 +29,69 @@ import java.util.Objects;
  *
  */
 @Slf4j
+@Component
 public class HttpUtil {
-	public static String httpPost(String url, String enity) {
-		CloseableHttpClient httpClient = HttpClients.createDefault();
-		HttpPost post = new HttpPost(url);
-		StringEntity stringEntity = new StringEntity(enity, "UTF-8");
-		stringEntity.setContentType("application/json");
-		post.setEntity(stringEntity);
+
+	private static ApplicationContext applicationContext;
+
+	@Resource
+	public void setApplicationContext(ApplicationContext applicationContext) {
+		HttpUtil.applicationContext = applicationContext;
+	}
+
+	/**
+	 * get请求查询
+	 * @param url 请求路径
+	 */
+	public void doGet(String url) {
+		CloseableHttpClient client = HttpClientBuilder.create().build();
+		HttpGet get = new HttpGet(url);
 		try {
-			CloseableHttpResponse response = httpClient.execute(post);
-			HttpEntity entity = response.getEntity();
-			String content = EntityUtils.toString(entity, "utf-8");
-			return content;
+			HttpResponse response = client.execute(get);
+			String res = EntityUtils.toString(response.getEntity());
+			System.out.println(res);
 		} catch (IOException e) {
 			log.error(e.getMessage());
 		}
-		return null;
 	}
 
-	public static String doPost(String url,int seconds) {
-		seconds = seconds*1000;
-		CloseableHttpClient client = HttpClients.createDefault();
-		HttpPost post = new HttpPost(url);
-		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(seconds).setConnectionRequestTimeout(seconds)
-				.setSocketTimeout(seconds).build();
-		post.setConfig(requestConfig);
-		String result = "";
+	/**
+	 * post请求
+	 * @param url 请求路径
+	 * @param json 请求数据
+	 * @param seconds 超时时长
+	 * @return JSONObject
+	 */
+
+	public static String doPost(String url,String json,int seconds){
+		DTOT dtot = DTOT.builder().data(json).url(url).seconds(seconds).build();
 		try {
-			HttpResponse res = client.execute(post);
-			if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-				HttpEntity entity = res.getEntity();
-				result = EntityUtils.toString(entity);
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+			HttpUtil bean = applicationContext.getBean(HttpUtil.class);
+			return bean.post(dtot).getData();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return result;
+		return StringUtils.EMPTY;
 	}
 
-	public static JSONObject doPost(String url,String json,int seconds){
-		seconds = seconds*1000;
-		HttpPost post = new HttpPost(url);
+	@FeignExceptionDeal
+	public BaseResponse<String> post(@RequestBody DTOT data) throws IOException {
+		CloseableHttpClient client = HttpClients.createDefault();
+		int seconds = data.getSeconds()*1000;
+
+		HttpPost post = new HttpPost(data.getUrl());
+
 		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(seconds).setConnectionRequestTimeout(seconds).setSocketTimeout(seconds).build();
 		post.setConfig(requestConfig);
-		StringEntity s = new StringEntity(json,"UTF-8");
+
+		StringEntity s = new StringEntity(data.getData(),"UTF-8");
 		s.setContentType("application/json");
 		post.setEntity(s);
-		HttpUtil httpUtil = new HttpUtil();
-		String result = null;
-		try {
-			result = httpUtil.doPost(post);
-		} catch (IOException e) {
-			log.error(e.getMessage());
-		}
-		if (result!=null){
-			return JSON.parseObject(result);
-		}
-		return null;
-	}
-
-	public String doPost(HttpPost post) throws IOException{
-		CloseableHttpClient client = HttpClients.createDefault();
 		HttpResponse res;
-
 		res = client.execute(post);
 		if(Objects.nonNull(res) && res.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
-			return EntityUtils.toString(res.getEntity());
+			return BaseResponse.successData(EntityUtils.toString(res.getEntity()));
 		}
-		return null;
+		return BaseResponse.successData(StringUtils.EMPTY);
 	}
 }

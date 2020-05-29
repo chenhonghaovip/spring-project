@@ -13,14 +13,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DTO<T> {
-    private String beanName;
+public class DTOT {
+    private String url;
 
-    private String methodName;
+    private String data;
 
-    private Object[] context;
+    private Integer seconds;
 
-    private T t;
-
-    private String paramType;
 }
