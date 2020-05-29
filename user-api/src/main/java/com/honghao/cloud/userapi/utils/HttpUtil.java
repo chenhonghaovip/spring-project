@@ -1,5 +1,6 @@
 package com.honghao.cloud.userapi.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
@@ -14,6 +15,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * 
@@ -61,23 +63,33 @@ public class HttpUtil {
 
 	public static JSONObject doPost(String url,String json,int seconds){
 		seconds = seconds*1000;
-		CloseableHttpClient client = HttpClients.createDefault();
 		HttpPost post = new HttpPost(url);
 		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(seconds).setConnectionRequestTimeout(seconds).setSocketTimeout(seconds).build();
 		post.setConfig(requestConfig);
-		JSONObject response = null;
+		StringEntity s = new StringEntity(json,"UTF-8");
+		s.setContentType("application/json");
+		post.setEntity(s);
+		HttpUtil httpUtil = new HttpUtil();
+		String result = null;
 		try {
-			StringEntity s = new StringEntity(json,"UTF-8");
-			s.setContentType("application/json");
-			post.setEntity(s);
-			HttpResponse res = client.execute(post);
-			if(res.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
-				String result = EntityUtils.toString(res.getEntity());
-				response = JSONObject.parseObject(result);
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+			result = httpUtil.doPost(post);
+		} catch (IOException e) {
+			log.error(e.getMessage());
 		}
-		return response;
+		if (result!=null){
+			return JSON.parseObject(result);
+		}
+		return null;
+	}
+
+	public String doPost(HttpPost post) throws IOException{
+		CloseableHttpClient client = HttpClients.createDefault();
+		HttpResponse res;
+
+		res = client.execute(post);
+		if(Objects.nonNull(res) && res.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
+			return EntityUtils.toString(res.getEntity());
+		}
+		return null;
 	}
 }

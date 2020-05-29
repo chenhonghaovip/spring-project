@@ -4,6 +4,7 @@ import com.honghao.cloud.userapi.aspect.FeignExceptionDeal;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +29,7 @@ public interface OrderClient {
      * @param data string
      * @return 删除
      */
-    @FeignExceptionDeal
+    @FeignExceptionDeal(retryTimes = 5)
     @PostMapping("/order/create")
     BaseResponse<String> createUser(@RequestParam String data);
 
@@ -47,4 +48,15 @@ public interface OrderClient {
      */
     @PostMapping("/order/batchQuery")
     List<WaybillBcList> batchQuery(@RequestBody List<String> list);
+
+
+    /**
+     * 查询
+     * @param wId 订单号
+     * @param batchId 批次号
+     * @return BaseResponse
+     */
+    @FeignExceptionDeal
+    @GetMapping("/singleQuery")
+    BaseResponse<WaybillBcList> singleQuery(@RequestParam("wId") String wId, @RequestParam("batchId") String batchId);
 }
