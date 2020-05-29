@@ -10,7 +10,12 @@ import java.lang.annotation.*;
  */
 @Documented
 @Inherited
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FeignExceptionDeal {
+    /**
+     * 重试次数
+     * @return int 默认重试三次
+     */
+    int retryTimes() default 3;
 }

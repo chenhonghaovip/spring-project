@@ -257,6 +257,12 @@ public class TestController {
     public BaseResponse test(@RequestBody WaybillBcList waybillBcList){
 
         orderClient.createUser(JSON.toJSONString(waybillBcList));
+
+        orderClient.singleQuery("123","431");
+        List<String> strings = Arrays.asList("1","2");
+        String request = JSON.toJSONString(strings);
+        JSONObject jsonObject = HttpUtil.doPost("http://10.16.14.38:8082/order/batchQuery", request, 1);
+        System.out.println(JSON.toJSONString(jsonObject));
         return BaseResponse.success();
     }
 
@@ -287,14 +293,6 @@ public class TestController {
             countDownLatch.countDown();
         }
     }
-
-    @Test
-    public void test1() {
-        for (int i = 0; i < 1000; i++) {
-//            test(i);
-        }
-    }
-
 
     @Test
     public void test() {

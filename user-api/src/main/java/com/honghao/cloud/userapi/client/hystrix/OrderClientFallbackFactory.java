@@ -44,6 +44,11 @@ public class OrderClientFallbackFactory implements FallbackFactory<OrderClient> 
                 return Collections.emptyList();
             }
 
+            @Override
+            public BaseResponse<WaybillBcList> singleQuery(String wId, String batchId) {
+                return null;
+            }
+
         };
     }
 }

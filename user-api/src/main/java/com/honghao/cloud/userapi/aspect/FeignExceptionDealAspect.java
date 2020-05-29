@@ -1,6 +1,7 @@
 package com.honghao.cloud.userapi.aspect;
 
 import com.alibaba.fastjson.JSON;
+import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;
 import com.honghao.cloud.userapi.utils.JedisOperator;
 import com.netflix.hystrix.exception.HystrixRuntimeException;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
@@ -38,30 +40,35 @@ public class FeignExceptionDealAspect {
     public void point(){
     }
 
+    @SuppressWarnings("unchecked")
     @Around("point()")
-    public void around(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         // 请求参数
         Object[] args = joinPoint.getArgs();
         try {
-            joinPoint.proceed(args);
-
-        } catch (RetryException | HystrixRuntimeException re){
+            return joinPoint.proceed(args);
+        } catch (RetryException | HystrixRuntimeException | IOException re){
             Signature sig = joinPoint.getSignature();
             MethodSignature msig = (MethodSignature) sig;
+            // 获取目标类
+            Class type = sig.getDeclaringType();
+            String beanName = type.getName();
 
-            String beanName = joinPoint.getSignature().getDeclaringType().getName();
-            Object target = joinPoint.getTarget();
-            Method currentMethod = target.getClass().getMethod(msig.getName(), msig.getParameterTypes());
+            // 获取目标方法
+            Method declaredMethod = type.getDeclaredMethod(msig.getName(), msig.getParameterTypes());
 
-            GetMapping annotation = sig.getDeclaringType().getDeclaredMethod(currentMethod.getName(), currentMethod.getParameterTypes()).getAnnotation(GetMapping.class);
+            // 获取目标方法上的注解（只处理非GetMapping类型的http请求）
+            GetMapping annotation = declaredMethod.getAnnotation(GetMapping.class);
             if (Objects.nonNull(annotation)){
-                return;
+                return BaseResponse.success();
             }
+            FeignExceptionDeal feignExceptionDeal = declaredMethod.getAnnotation(FeignExceptionDeal.class);
+            int times = feignExceptionDeal.retryTimes();
 
-            DTO dto = DTO.builder().t(args[0].getClass().newInstance()).context(args).methodName(currentMethod.getName()).beanName(beanName).build();
-            String key = beanName+currentMethod.getName()+args[0].toString();
+            DTO dto = DTO.builder().t(args[0].getClass().newInstance()).context(args).methodName(declaredMethod.getName()).beanName(beanName).build();
+            String key = beanName+declaredMethod.getName()+args[0].toString();
             System.out.println(key);
-            if (jedisOperator.incr(key)>5){
+            if (jedisOperator.incr(key)>times){
                 jedisOperator.del(key);
                 //入库
                 System.out.println("============================ruhuchuli");
@@ -70,10 +77,9 @@ public class FeignExceptionDealAspect {
                 System.out.println("-----------------------------");
                 messageSender.publicQueueProcessing(JSON.toJSONString(dto), "honghao_queue");
             }
-            return;
         } catch (Throwable throwable) {
             log.error(throwable.getMessage());
         }
-        System.out.println("success");
+        return BaseResponse.error();
     }
 }
