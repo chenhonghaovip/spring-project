@@ -49,6 +49,7 @@ public class FeignExceptionDealAspect {
             return joinPoint.proceed(args);
         } catch (RetryException | HystrixRuntimeException | IOException re){
             Signature sig = joinPoint.getSignature();
+
             MethodSignature msig = (MethodSignature) sig;
             // 获取目标类
             Class type = sig.getDeclaringType();
@@ -65,7 +66,12 @@ public class FeignExceptionDealAspect {
             FeignExceptionDeal feignExceptionDeal = declaredMethod.getAnnotation(FeignExceptionDeal.class);
             int times = feignExceptionDeal.retryTimes();
 
-            DTO dto = DTO.builder().t(args[0].getClass().newInstance()).context(args).methodName(declaredMethod.getName()).beanName(beanName).build();
+            DTO dto = DTO.builder()
+                    .t(args[0].getClass().newInstance())
+                    .paramType(args[0].getClass().getName())
+                    .context(args)
+                    .methodName(declaredMethod.getName())
+                    .beanName(beanName).build();
             String key = beanName+declaredMethod.getName()+args[0].toString();
             System.out.println(key);
             if (jedisOperator.incr(key)>times){

@@ -29,6 +29,10 @@ public class Honghao implements ApplicationContextAware {
         try {
             Class<?> aClass = Class.forName(beanName);
             Object bean = applicationContext.getBean(aClass);
+            Class<?> declaringClass = Class.forName(dto.getParamType()).getConstructors()[0].getDeclaringClass();
+
+            System.out.println(Class.forName(dto.getParamType()).getConstructors()[0].getDeclaringClass());
+
             Optional<Method> any = Arrays.stream(aClass.getDeclaredMethods()).filter(each -> each.getName().equals(dto.getMethodName())).findAny();
             if (any.isPresent()){
                 any.get().invoke(bean,dto.getContext());

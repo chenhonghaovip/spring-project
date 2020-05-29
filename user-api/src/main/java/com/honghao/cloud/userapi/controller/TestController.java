@@ -1,6 +1,5 @@
 package com.honghao.cloud.userapi.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.threadpool.TtlExecutors;
@@ -51,6 +50,8 @@ public class TestController {
     private OrderClient orderClient;
     @Resource
     private FeignCommon feignCommon;
+    @Resource
+    private HttpUtil httpUtil;
 //    @Resource
 //    private Redisson redisson;
     @Resource
@@ -256,13 +257,13 @@ public class TestController {
     @PostMapping("/test/test")
     public BaseResponse test(@RequestBody WaybillBcList waybillBcList){
 
-        orderClient.createUser(JSON.toJSONString(waybillBcList));
-
-        orderClient.singleQuery("123","431");
-        List<String> strings = Arrays.asList("1","2");
-        String request = JSON.toJSONString(strings);
-        JSONObject jsonObject = HttpUtil.doPost("http://10.16.14.38:8082/order/batchQuery", request, 1);
-        System.out.println(JSON.toJSONString(jsonObject));
+        orderClient.createUser(waybillBcList);
+//
+//        orderClient.singleQuery("123","431");
+//        List<String> strings = Arrays.asList("1","2");
+//        String request = JSON.toJSONString(strings);
+//        String result = HttpUtil.doPost("http://10.16.14.38:8082/order/batchQuery", request, 1);
+//        System.out.println(result);
         return BaseResponse.success();
     }
 
@@ -338,26 +339,5 @@ public class TestController {
         ttlExecutorService.submit(()->{
             System.out.println("第二次"+Thread.currentThread().getName()+"value:"+ttl.get());
         });
-    }
-
-    /**
-     * @author YK
-     * @date:2017-03-29 上午9:54
-     */
-    public static class HttpReptileUtils {
-
-        /**
-         * @param args
-         */
-        public static void main(String[] args) {
-            String url = "http://mobsec-dianhua.baidu.com/dianhua_api/open/location?tel=17810252046";
-            String json = loadJSON(url);
-            System.out.println(json);
-        }
-
-        public static String loadJSON (String url) {
-            String s = HttpUtil.doPost(url, 10);
-            return s;
-        }
     }
 }

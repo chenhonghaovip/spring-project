@@ -68,7 +68,7 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
 
         EventDemo eventListener=new EventDemo(this,eventDTO);
         applicationEventPublisher.publishEvent(eventListener);
-        BaseResponse<String> baseResponse = orderClient.createUser("dddddd");
+        BaseResponse<String> baseResponse = orderClient.createUser(new WaybillBcList());
         if (baseResponse.isResult()){
             log.info("接口调用成功");
             System.out.println(baseResponse.getData());

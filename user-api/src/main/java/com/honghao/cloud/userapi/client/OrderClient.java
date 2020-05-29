@@ -31,7 +31,7 @@ public interface OrderClient {
      */
     @FeignExceptionDeal(retryTimes = 5)
     @PostMapping("/order/create")
-    BaseResponse<String> createUser(@RequestParam String data);
+    BaseResponse<String> createUser(@RequestParam WaybillBcList data);
 
     /**
      * 批量删除token
