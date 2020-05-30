@@ -73,7 +73,7 @@ public class FeignExceptionDealAspect {
                     .methodName(declaredMethod.getName())
                     .beanName(beanName).build();
             String key = beanName+declaredMethod.getName()+args[0].toString();
-            System.out.println(key);
+//            System.out.println(key);
             if (jedisOperator.incr(key)>times){
                 jedisOperator.del(key);
                 //入库
