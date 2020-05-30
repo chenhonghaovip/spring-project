@@ -8,10 +8,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author chenhonghao
@@ -30,16 +31,16 @@ public class Honghao implements ApplicationContextAware {
             Class<?> aClass = Class.forName(beanName);
             Object bean = applicationContext.getBean(aClass);
             Class<?> declaringClass = Class.forName(dto.getParamType()).getConstructors()[0].getDeclaringClass();
+            DTOEnum dtoEnum;
+            if ((dtoEnum = DTOEnum.formCode(declaringClass.getName()))!=null){
+                List<?> collect = Arrays.stream(dto.getContext()).map(each -> JSON.parseObject(JSON.toJSONString(each), dtoEnum.getObject().getClass())).collect(Collectors.toList());
 
-            System.out.println(Class.forName(dto.getParamType()).getConstructors()[0].getDeclaringClass());
-
-            Optional<Method> any = Arrays.stream(aClass.getDeclaredMethods()).filter(each -> each.getName().equals(dto.getMethodName())).findAny();
-            if (any.isPresent()){
-                any.get().invoke(bean,dto.getContext());
+                Optional<Method> any = Arrays.stream(aClass.getDeclaredMethods()).filter(each -> each.getName().equals(dto.getMethodName())).findAny();
+                if (any.isPresent()){
+                    any.get().invoke(bean,collect.toArray());
+                }
             }
-        } catch (IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
-            log.error(e.getMessage());
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
     }
