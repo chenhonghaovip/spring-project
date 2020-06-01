@@ -1,5 +1,6 @@
 package com.honghao.cloud.userapi.client;
 
+import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.userapi.aspect.FeignExceptionDeal;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
@@ -31,7 +32,7 @@ public interface OrderClient {
      */
     @FeignExceptionDeal(retryTimes = 5)
     @PostMapping("/order/create")
-    BaseResponse<String> createUser(@RequestParam WaybillBcList data);
+    BaseResponse<String> createUser(@RequestBody JSONObject data);
 
     /**
      * 批量删除token

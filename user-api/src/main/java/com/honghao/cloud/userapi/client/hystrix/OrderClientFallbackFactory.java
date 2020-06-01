@@ -1,5 +1,6 @@
 package com.honghao.cloud.userapi.client.hystrix;
 
+import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
@@ -26,7 +27,7 @@ public class OrderClientFallbackFactory implements FallbackFactory<OrderClient> 
 
 
             @Override
-            public BaseResponse<String> createUser(WaybillBcList data) {
+            public BaseResponse<String> createUser(JSONObject data) {
                 return null;
             }
 

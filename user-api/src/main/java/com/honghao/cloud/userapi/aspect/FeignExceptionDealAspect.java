@@ -2,6 +2,8 @@ package com.honghao.cloud.userapi.aspect;
 
 import com.alibaba.fastjson.JSON;
 import com.honghao.cloud.userapi.base.BaseResponse;
+import com.honghao.cloud.userapi.domain.entity.ErrMsg;
+import com.honghao.cloud.userapi.domain.mapper.master.ErrMsgMapper;
 import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;
 import com.honghao.cloud.userapi.utils.JedisOperator;
 import com.netflix.hystrix.exception.HystrixRuntimeException;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -31,6 +34,8 @@ import java.util.Objects;
 @Aspect
 @Component
 public class FeignExceptionDealAspect {
+    @Resource
+    private ErrMsgMapper errMsgMapper;
     @Resource
     private JedisOperator jedisOperator;
     @Resource
@@ -67,16 +72,16 @@ public class FeignExceptionDealAspect {
             int times = feignExceptionDeal.retryTimes();
 
             DTO dto = DTO.builder()
-                    .t(args[0].getClass().newInstance())
                     .paramType(args[0].getClass().getName())
                     .context(args)
                     .methodName(declaredMethod.getName())
                     .beanName(beanName).build();
             String key = beanName+declaredMethod.getName()+args[0].toString();
-//            System.out.println(key);
             if (jedisOperator.incr(key)>times){
                 jedisOperator.del(key);
                 //入库
+                ErrMsg errMsg = ErrMsg.builder().createDate(new Date()).msg(JSON.toJSONString(dto)).build();
+                errMsgMapper.insertSelective(errMsg);
                 System.out.println("============================ruhuchuli");
             } else {
                 jedisOperator.expire(key,30);

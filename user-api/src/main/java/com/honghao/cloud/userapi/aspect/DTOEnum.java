@@ -19,7 +19,9 @@ public enum DTOEnum {
     /**
      * first
      */
-    first("com.honghao.cloud.userapi.domain.entity.WaybillBcList",new WaybillBcList())
+    first("com.honghao.cloud.userapi.domain.entity.WaybillBcList",new WaybillBcList()),
+
+    second("com.honghao.cloud.userapi.aspect.DTOT",new DTOT())
     ;
 
     private String name;

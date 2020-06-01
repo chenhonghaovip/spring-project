@@ -30,16 +30,20 @@ public class Honghao implements ApplicationContextAware {
         try {
             Class<?> aClass = Class.forName(beanName);
             Object bean = applicationContext.getBean(aClass);
-            Class<?> declaringClass = Class.forName(dto.getParamType()).getConstructors()[0].getDeclaringClass();
             DTOEnum dtoEnum;
-            if ((dtoEnum = DTOEnum.formCode(declaringClass.getName()))!=null){
+            Object[] objects;
+            if ((dtoEnum = DTOEnum.formCode(dto.getParamType()))!=null){
                 List<?> collect = Arrays.stream(dto.getContext()).map(each -> JSON.parseObject(JSON.toJSONString(each), dtoEnum.getObject().getClass())).collect(Collectors.toList());
-
-                Optional<Method> any = Arrays.stream(aClass.getDeclaredMethods()).filter(each -> each.getName().equals(dto.getMethodName())).findAny();
-                if (any.isPresent()){
-                    any.get().invoke(bean,collect.toArray());
-                }
+                objects = collect.toArray();
+            }else {
+                objects = dto.getContext();
             }
+            Optional<Method> any = Arrays.stream(aClass.getDeclaredMethods()).filter(each -> each.getName().equals(dto.getMethodName())).findAny();
+            if (any.isPresent()){
+                any.get().invoke(bean,objects);
+            }
+
+
         } catch (Exception e) {
             log.error(e.getMessage());
         }
