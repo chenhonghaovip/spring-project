@@ -20,7 +20,5 @@ public class DTO<T> {
 
     private Object[] context;
 
-    private T t;
-
     private String paramType;
 }

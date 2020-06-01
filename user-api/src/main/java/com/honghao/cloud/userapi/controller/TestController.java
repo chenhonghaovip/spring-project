@@ -1,5 +1,6 @@
 package com.honghao.cloud.userapi.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.threadpool.TtlExecutors;
@@ -7,7 +8,9 @@ import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.common.enums.RoleTypeEnum;
 import com.honghao.cloud.userapi.component.FeignCommon;
+import com.honghao.cloud.userapi.domain.entity.ErrMsg;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
+import com.honghao.cloud.userapi.domain.mapper.master.ErrMsgMapper;
 import com.honghao.cloud.userapi.domain.mapper.master.WaybillBcListMapper;
 import com.honghao.cloud.userapi.dto.easypoi.WaybillBcListEasyPoi;
 import com.honghao.cloud.userapi.dto.request.*;
@@ -50,6 +53,8 @@ public class TestController {
     private OrderClient orderClient;
     @Resource
     private FeignCommon feignCommon;
+    @Resource
+    private ErrMsgMapper errMsgMapper;
     @Resource
     private HttpUtil httpUtil;
 //    @Resource
@@ -257,15 +262,26 @@ public class TestController {
     @PostMapping("/test/test")
     public BaseResponse test(@RequestBody WaybillBcList waybillBcList){
 
-        orderClient.createUser(waybillBcList);
-//
-//        orderClient.singleQuery("123","431");
-//        List<String> strings = Arrays.asList("1","2");
-//        String request = JSON.toJSONString(strings);
-//        String result = HttpUtil.doPost("http://10.16.14.38:8082/order/batchQuery", request, 1);
-//        System.out.println(result);
+        orderClient.createUser(new JSONObject());
+
+        orderClient.singleQuery("123","431");
+        List<String> strings = Arrays.asList("1","2");
+        String request = JSON.toJSONString(strings);
+        String result = HttpUtil.doPost("http://10.16.14.38:8082/order/batchQuery", request, 1);
+        System.out.println(result);
         return BaseResponse.success();
     }
+
+    @GetMapping("/retryTest/retryTest")
+    public BaseResponse retryTest(@RequestParam String date){
+        List<ErrMsg> select = errMsgMapper.select();
+        select.forEach(each->{
+            errMsgMapper.deleteByPrimaryKey(each.getId());
+            messageSender.publicQueueProcessing(each.getMsg(), "honghao_queue");
+        });
+        return BaseResponse.success();
+    }
+
 
     @GetMapping("/dataSourceTest")
     public BaseResponse orderList(){

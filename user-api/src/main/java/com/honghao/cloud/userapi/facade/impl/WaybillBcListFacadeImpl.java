@@ -1,5 +1,6 @@
 package com.honghao.cloud.userapi.facade.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.config.ParamConfig;
@@ -68,7 +69,7 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
 
         EventDemo eventListener=new EventDemo(this,eventDTO);
         applicationEventPublisher.publishEvent(eventListener);
-        BaseResponse<String> baseResponse = orderClient.createUser(new WaybillBcList());
+        BaseResponse<String> baseResponse = orderClient.createUser(new JSONObject());
         if (baseResponse.isResult()){
             log.info("接口调用成功");
             System.out.println(baseResponse.getData());
