@@ -8,6 +8,7 @@ import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +29,10 @@ public class OrderClientFallbackFactory implements FallbackFactory<OrderClient> 
 
             @Override
             public BaseResponse<String> createUser(JSONObject data) {
-                return null;
+                if (throwable instanceof IOException){
+
+                }
+                return BaseResponse.successData("");
             }
 
             @Override
