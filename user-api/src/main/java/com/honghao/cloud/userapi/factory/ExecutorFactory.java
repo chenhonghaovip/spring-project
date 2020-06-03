@@ -16,7 +16,7 @@ public class ExecutorFactory {
 
     public static ThreadPoolExecutor buildThreadPoolExecutor(int core,int max,String preName){
         AtomicInteger atomicInteger = new AtomicInteger(0);
-        return new ThreadPoolExecutor(core, max, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<>(10), r -> new Thread(r,preName+atomicInteger.incrementAndGet()),new MyRejectedExecutionHandler());
+        return new ThreadPoolExecutor(core, max, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<>(1000), r -> new Thread(r,preName+atomicInteger.incrementAndGet()),new MyRejectedExecutionHandler());
     }
 
     public static class MyRejectedExecutionHandler implements RejectedExecutionHandler {
