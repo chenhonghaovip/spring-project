@@ -14,6 +14,7 @@ import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import com.honghao.cloud.userapi.factory.ExecutorFactory;
 import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;
 import com.honghao.cloud.userapi.utils.HttpUtil;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +48,7 @@ public class TestController {
     private ErrMsgMapper errMsgMapper;
 
     @PostMapping("/test/test")
+    @GlobalTransactional
     public BaseResponse test(@RequestBody WaybillBcList waybillBcList){
 
         orderClient.createUser(new JSONObject());
