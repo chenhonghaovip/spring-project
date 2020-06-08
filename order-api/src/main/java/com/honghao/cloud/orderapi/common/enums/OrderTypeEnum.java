@@ -38,7 +38,7 @@ public class OrderTypeEnum {
 
     @PostConstruct
     private void getOrderTypeEnumList(){
-        log.info("订单类型集合：{}", JSON.parseArray(orderType,CommonDTO.class));
+//        log.info("订单类型集合：{}", JSON.parseArray(orderType,CommonDTO.class));
         this.orderTypeEnumList = JSON.parseArray(orderType,CommonDTO.class);
     }
 

@@ -1,5 +1,6 @@
 package com.honghao.cloud.orderapi.facade;
 
+import com.honghao.cloud.orderapi.base.BaseResponse;
 import com.honghao.cloud.orderapi.domain.entity.WaybillBcList;
 
 import java.util.List;
@@ -11,12 +12,13 @@ import java.util.List;
  * @date 2019-07-18 17:27
  */
 public interface OrderFacade {
+
     /**
-     * 创建用户
+     * 创建订单
      * @param data data
      * @return Boolean
      */
-    Boolean createUser(String data);
+    BaseResponse createOrders(String data);
 
     /**
      * 批次查询

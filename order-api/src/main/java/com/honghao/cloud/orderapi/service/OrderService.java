@@ -10,5 +10,5 @@ public interface OrderService {
     /**
      * 插入用户数据
      */
-    void createUser();
+    void createOrders(String data);
 }

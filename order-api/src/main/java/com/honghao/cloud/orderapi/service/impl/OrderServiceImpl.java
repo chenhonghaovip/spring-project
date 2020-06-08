@@ -1,8 +1,14 @@
 package com.honghao.cloud.orderapi.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.honghao.cloud.orderapi.domain.entity.Order;
+import com.honghao.cloud.orderapi.domain.mapper.OrderMapper;
 import com.honghao.cloud.orderapi.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 
 /**
  * 订单服务实现类
@@ -13,10 +19,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
-
+    @Resource
+    private OrderMapper orderMapper;
 
     @Override
-    public void createUser() {
-        log.info("订单服务");
+    @Transactional(rollbackFor = Exception.class)
+    public void createOrders(String data) {
+        Order order = JSON.parseObject(data,Order.class);
+        orderMapper.insert(order);
     }
 }
