@@ -29,25 +29,24 @@ public class BaseResponse<T> implements Serializable {
         return new BaseResponse<>(true,200,data,"请求成功");
     }
 
-    public static BaseResponse success() {
-        return new BaseResponse(true, 200, null, "请求成功");
+    public static <T> BaseResponse<T> success() {
+        return new BaseResponse<>(true, 200, null, "请求成功");
     }
 
-    public static BaseResponse success(String msg) {
-        return new BaseResponse(true, 200, null, msg);
+    public static <T> BaseResponse<T> error(String msg) {
+        return new BaseResponse<>(false, -1, null, msg);
     }
 
-    public static BaseResponse error(String msg) {
-        return new BaseResponse(false, -1, null, msg);
+    public static <T> BaseResponse<T> error(Boolean result, Integer code, String remark) {
+        return new BaseResponse<>(result, code, null, remark);
     }
 
-    public static BaseResponse error(Boolean result, Integer code, String remark) {
-        return new BaseResponse(result, code, null, remark);
+    public static <T> BaseResponse<T> error() {
+        return new BaseResponse<>(false, -1, null, "请求失败");
     }
 
-    public static BaseResponse error() {
-        return new BaseResponse(false, -1, null, "请求失败");
+    public static <T> BaseResponse<T> error(BaseErrorInfoInterface baseErrorInfoInterface) {
+        return new BaseResponse<>(false, Integer.valueOf(baseErrorInfoInterface.getResultCode()), null, baseErrorInfoInterface.getResultMsg());
     }
-
 
 }

@@ -1,7 +1,6 @@
 package com.honghao.cloud.orderapi.controller;
 
 import com.honghao.cloud.orderapi.base.BaseResponse;
-import com.honghao.cloud.orderapi.config.TestThreadPoolConfig;
 import com.honghao.cloud.orderapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.orderapi.test.order_service.BaseOrderStatus;
 import com.honghao.cloud.orderapi.test.order_service.Context;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.Map;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 测试
@@ -28,14 +26,6 @@ public class TestController {
     private Context context;
     @Resource
     private Map<String, BaseOrderStatus> baseOrderStatusMap;
-
-    @PostMapping("/test01")
-    public BaseResponse<String> test01(@RequestBody String data){
-        ThreadPoolExecutor threadPoolExecutor = TestThreadPoolConfig.create(1,5);
-        threadPoolExecutor.execute(() -> System.out.println("111111111"));
-
-        return BaseResponse.successData("123456");
-    }
 
     /**
      * 状态模式测试

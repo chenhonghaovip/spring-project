@@ -3,7 +3,6 @@ package com.honghao.cloud.userapi.listener.rabbitmq.customer;
 import com.honghao.cloud.userapi.common.constant.QueueConstant;
 import com.honghao.cloud.userapi.config.RabbitConfig;
 import com.honghao.cloud.userapi.config.RabbitExchangeConfig;
-import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
@@ -12,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.Resource;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 消费者
@@ -27,8 +27,6 @@ public class RabbitReceive
     private RabbitConfig rabbitConfig;
     @Resource
     private RabbitExchangeConfig rabbitExchangeConfig;
-    @Resource
-    private WaybillBcListFacade waybillBcListFacade;
 
     @Bean
     public SimpleMessageListenerContainer messageContainer() {
@@ -41,11 +39,11 @@ public class RabbitReceive
         //设置确认模式手工确认
         container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
         container.setMessageListener((ChannelAwareMessageListener) (message, channel) -> {
-            String msg = new String(message.getBody(), "UTF-8");
+            String msg = new String(message.getBody(), StandardCharsets.UTF_8);
             System.out.println("receive msg : " + msg);
             if (QueueConstant.TEST_QUEUE.equals(message.getMessageProperties().getConsumerQueue())){
                 try {
-                    Boolean flag = waybillBcListFacade.createUser2(msg);
+                    Boolean flag = true;
                     if (flag){
                         channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
                         log.info("测试消息确认");
