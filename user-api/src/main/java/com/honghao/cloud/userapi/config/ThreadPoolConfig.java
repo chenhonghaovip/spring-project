@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 @EnableAsync
 public class ThreadPoolConfig {
-    public static final String SIMPLE_POOL = "asyncPool";
+    private static final String SIMPLE_POOL = "asyncPool";
 
     @Bean(SIMPLE_POOL)
     public Executor simplePool() {

@@ -1,22 +1,24 @@
-package com.honghao.cloud.userapi.config.apollo;
+package com.honghao.cloud.orderapi.config.apollo;
 
 import com.ctrip.framework.apollo.model.ConfigChangeEvent;
 import com.ctrip.framework.apollo.spring.annotation.ApolloConfigChangeListener;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
 import org.springframework.cloud.context.environment.EnvironmentChangeEvent;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
 /**
+ * apollo自动刷新配置
+ *
  * @author chenhonghao
- * @date 2020-01-10 17:28
+ * @date 2020-01-02 16:34
  */
 @Slf4j
 @Component
-public class ApolloRefreshConfig1 {
-    @Resource
+public class ApolloRefreshConfig implements ApplicationContextAware {
     private ApplicationContext applicationContext;
 
     @ApolloConfigChangeListener
@@ -32,4 +34,9 @@ public class ApolloRefreshConfig1 {
         log.info("TaskSchedule properties refreshed!");
     }
 
+
+    @Override
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 }
