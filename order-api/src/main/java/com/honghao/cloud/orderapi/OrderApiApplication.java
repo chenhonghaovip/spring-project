@@ -5,15 +5,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * @author chenhonghao
  * @date 2019-7-17
  */
+@EnableTransactionManagement
 @EnableFeignClients
 @EnableEurekaClient
-@EnableSwagger2
 @MapperScan("com.honghao.cloud.orderapi.domain.mapper")
 @SpringBootApplication
 public class OrderApiApplication {
