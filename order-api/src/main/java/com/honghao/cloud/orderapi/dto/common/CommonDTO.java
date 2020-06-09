@@ -10,6 +10,12 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class CommonDTO {
+    /**
+     * 标识
+     */
     private Integer code;
+    /**
+     * 内容
+     */
     private String desc;
 }

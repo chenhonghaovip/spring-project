@@ -8,6 +8,7 @@ import org.springframework.cloud.context.environment.EnvironmentChangeEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
 /**
  * apollo自动刷新配置
@@ -16,7 +17,7 @@ import org.springframework.lang.NonNull;
  * @date 2020-01-02 16:34
  */
 @Slf4j
-//@Component
+@Component
 public class ApolloRefreshConfig implements ApplicationContextAware {
     private ApplicationContext applicationContext;
 
