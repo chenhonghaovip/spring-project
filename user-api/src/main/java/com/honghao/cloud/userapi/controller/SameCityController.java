@@ -30,7 +30,6 @@ import java.util.Map;
 public class SameCityController {
     @Resource
     private SameCitySearchFacade sameCitySearchFacade;
-
     @Resource
     private SameCityServiceFacade sameCityServiceFacade;
     @Resource
