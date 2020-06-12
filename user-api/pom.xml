@@ -129,11 +129,7 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.redisson</groupId>-->
-<!--            <artifactId>redisson-spring-boot-starter</artifactId>-->
-<!--            <version>3.12.4</version>-->
-<!--        </dependency>-->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
@@ -143,11 +139,7 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
-        <!--zipkin全链路追踪-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-zipkin</artifactId>-->
-<!--        </dependency>-->
+
         <!-- 数据库连接池 -->
         <dependency>
             <groupId>cn.afterturn</groupId>
@@ -203,17 +195,6 @@
             <version>2.11.4</version>
         </dependency>
 
-        <!-- 引入 Spring Cloud Alibaba Seata 相关依赖，使用 Seata 实现分布式事务，并实现对其的自动配置 -->
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-alibaba-seata</artifactId>-->
-<!--            <version>2.2.0.RELEASE</version>-->
-<!--        </dependency>-->
-<!--        <dependency> &lt;!&ndash; 主要想使用 seata 1.1.0 版本 &ndash;&gt;-->
-<!--            <groupId>io.seata</groupId>-->
-<!--            <artifactId>seata-spring-boot-starter</artifactId>-->
-<!--            <version>1.1.0</version>-->
-<!--        </dependency>-->
     </dependencies>
 
     <dependencyManagement>
