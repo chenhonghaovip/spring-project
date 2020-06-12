@@ -1,13 +1,16 @@
 package com.honghao.cloud.userapi.controller;
 
+import com.honghao.cloud.userapi.base.BaseAssert;
+import com.honghao.cloud.userapi.base.BaseResponse;
+import com.honghao.cloud.userapi.common.enums.ErrorCodeEnum;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
@@ -19,16 +22,19 @@ import java.text.SimpleDateFormat;
  * @date 2019-07-17 17:22
  */
 @Slf4j
+@Validated
+@Api("用户接口服务")
 @RestController
 @RequestMapping("/user")
-@Api("用户接口服务")
-@Validated
 public class UserController {
     private static final ThreadLocal<SimpleDateFormat> THREAD_LOCAL = ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
     @Resource
     private WaybillBcListFacade waybillBcListFacade;
-    @Resource
-    @Qualifier("spring.redis.pool")
-    private JedisPool jedisPool;
 
+
+    @GetMapping("/test")
+    public BaseResponse test(@RequestParam("wId") String data){
+        BaseAssert.isNull(data,ErrorCodeEnum.OBJECT_CANNOT_BE_EMPTY);
+        return BaseResponse.success();
+    }
 }

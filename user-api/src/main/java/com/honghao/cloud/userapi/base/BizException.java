@@ -23,7 +23,7 @@ public class BizException extends RuntimeException{
      */
     protected String errorMsg;
 
-    public BizException() {
+    BizException() {
         super();
     }
 
@@ -39,7 +39,7 @@ public class BizException extends RuntimeException{
         this.errorMsg = errorInfoInterface.getResultMsg();
     }
 
-    public BizException(String errorMsg) {
+    BizException(String errorMsg) {
         super(errorMsg);
         this.errorMsg = errorMsg;
     }

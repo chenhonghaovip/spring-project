@@ -51,7 +51,6 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public BaseResponse dateSource() {
-
         EventDTO eventDTO= EventDTO.builder().code(1)
                 .desc("chenhonghao").build();
         EventDemo eventListener=new EventDemo(this,eventDTO);
