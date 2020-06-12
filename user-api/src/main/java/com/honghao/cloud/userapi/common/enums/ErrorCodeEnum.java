@@ -71,6 +71,30 @@ public enum ErrorCodeEnum implements BaseErrorInfoInterface {
      * 服务调用异常
      */
     API_GATEWAY_ERROR("100005", "网络繁忙，请稍后再试"),
+
+    /**
+     * 对象不能为空
+     */
+    OBJECT_CANNOT_BE_EMPTY("100006", "当前对象不能为空"),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ;
     private String code;
     private String message;

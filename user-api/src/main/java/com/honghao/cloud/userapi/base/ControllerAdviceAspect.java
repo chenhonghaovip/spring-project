@@ -1,5 +1,6 @@
 package com.honghao.cloud.userapi.base;
 
+import com.alibaba.fastjson.JSON;
 import com.honghao.cloud.userapi.common.enums.ErrorCodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.ConversionNotSupportedException;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
@@ -223,8 +225,8 @@ public class ControllerAdviceAspect {
 	 * @return BaseResponse
 	 */
 	@ExceptionHandler(value = BizException.class)
-	public BaseResponse bizExceptionHandler(BizException e){
-		log.error("发生业务异常！原因是:{}",e.getErrorMsg());
+	public BaseResponse bizExceptionHandler(HttpServletRequest httpServletRequest,BizException e){
+		log.error("发生业务异常！参数为：{}，原因是:{}", JSON.toJSONString(httpServletRequest.getParameterMap()),e.getErrorMsg());
 		return BaseResponse.error(e.getErrorCode(),e.getErrorMsg());
 	}
 
