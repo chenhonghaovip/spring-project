@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.test.face;
+package com.honghao.cloud.userapi.test.face.thread;
 
 import com.honghao.cloud.userapi.factory.ExecutorFactory;
 

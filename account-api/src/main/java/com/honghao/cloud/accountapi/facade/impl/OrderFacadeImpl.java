@@ -2,6 +2,7 @@ package com.honghao.cloud.accountapi.facade.impl;
 
 
 import com.honghao.cloud.accountapi.base.BaseResponse;
+import com.honghao.cloud.accountapi.client.OrderClient;
 import com.honghao.cloud.accountapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.accountapi.facade.OrderFacade;
 import com.honghao.cloud.accountapi.service.OrderService;
@@ -23,10 +24,13 @@ import java.util.stream.Collectors;
 public class OrderFacadeImpl implements OrderFacade {
     @Resource
     private OrderService orderService;
+    @Resource
+    private OrderClient orderClient;
 
 
     @Override
     public BaseResponse createOrders(String data) {
+        orderClient.create(data);
         orderService.createOrders(data);
         return BaseResponse.success();
     }

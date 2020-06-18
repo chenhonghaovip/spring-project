@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.test.face;
+package com.honghao.cloud.userapi.test.face.thread;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
@@ -8,7 +8,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * @date 2020-05-21 20:02
  */
 public class Test11 {
-    private final static Object lock = new Object();
     static AtomicInteger atomicInteger = new AtomicInteger(1);
     private static ReentrantLock reentrantLock = new ReentrantLock();
 
