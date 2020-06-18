@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.test.face;
+package com.honghao.cloud.userapi.test.face.thread;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;

@@ -25,7 +25,8 @@ public class Loo {
     @JSONField(name = "name_11")
     private String age;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8")
     private Date date;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate localDate;
