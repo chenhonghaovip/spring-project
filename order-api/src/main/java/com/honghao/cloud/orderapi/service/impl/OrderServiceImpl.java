@@ -4,9 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.honghao.cloud.orderapi.domain.entity.Order;
 import com.honghao.cloud.orderapi.domain.mapper.OrderMapper;
 import com.honghao.cloud.orderapi.service.OrderService;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -23,7 +23,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderMapper orderMapper;
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @GlobalTransactional
     public void createOrders(String data) {
         Order order = JSON.parseObject(data,Order.class);
         orderMapper.insert(order);

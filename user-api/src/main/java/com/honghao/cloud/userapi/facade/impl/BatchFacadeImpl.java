@@ -40,6 +40,7 @@ public class BatchFacadeImpl implements BatchFacade {
 
     @PostConstruct
     public void init(){
+//        ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(1);
         ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             List<Request> list = new ArrayList<>();
