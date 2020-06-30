@@ -4,8 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.threadpool.TtlExecutors;
+import com.google.common.base.Charsets;
+import com.google.common.hash.Funnel;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
+import com.honghao.cloud.userapi.component.RedisService;
 import com.honghao.cloud.userapi.domain.entity.ErrMsg;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.domain.mapper.master.ErrMsgMapper;
@@ -13,6 +16,7 @@ import com.honghao.cloud.userapi.facade.BatchFacade;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import com.honghao.cloud.userapi.factory.ExecutorFactory;
 import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;
+import com.honghao.cloud.userapi.utils.BloomFilterHelper;
 import com.honghao.cloud.userapi.utils.HttpUtil;
 import com.honghao.cloud.userapi.utils.JedisOperator;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +43,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 @RestController
 @RequestMapping("/testController")
 public class TestController {
+    private BloomFilterHelper<String> orderBloomFilterHelper = new BloomFilterHelper<>((Funnel<String>) (from, into) -> into.putString(from, Charsets.UTF_8)
+            .putString(from, Charsets.UTF_8), 100 , 0.01);
+
     private ThreadPoolExecutor threadPoolExecutor = ExecutorFactory.buildThreadPoolExecutor(2,4,"test");
     @Resource
     private WaybillBcListFacade waybillBcListFacade;
@@ -52,6 +59,8 @@ public class TestController {
     private ErrMsgMapper errMsgMapper;
     @Resource
     private JedisOperator jedisOperator;
+    @Resource
+    private RedisService redisService;
 
     @PostMapping("/test/test")
     public BaseResponse test(@RequestBody WaybillBcList waybillBcList){
@@ -170,5 +179,13 @@ public class TestController {
         ttlExecutorService.submit(()->{
             System.out.println("第二次"+Thread.currentThread().getName()+"value:"+ttl.get());
         });
+    }
+
+    @GetMapping
+    public BaseResponse getList(){
+        String batchId = "2020012548548627";
+        redisService.includeByBloomFilter(orderBloomFilterHelper, "order", batchId);
+        redisService.addByBloomFilter(orderBloomFilterHelper, "order", batchId);
+        return BaseResponse.success();
     }
 }
