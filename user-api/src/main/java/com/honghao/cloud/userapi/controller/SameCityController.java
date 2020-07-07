@@ -40,6 +40,7 @@ public class SameCityController {
         try {
             scheduler.start();
             System.out.println("111111111111111111111111111");
+            System.out.println("333333333333333333333");
         } catch (SchedulerException e) {
             e.printStackTrace();
         }
