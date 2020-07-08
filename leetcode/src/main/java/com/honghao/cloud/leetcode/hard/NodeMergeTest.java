@@ -1,5 +1,6 @@
 package com.honghao.cloud.leetcode.hard;
 
+import com.honghao.cloud.leetcode.ListNode;
 import org.junit.Test;
 
 /**
@@ -113,11 +114,5 @@ public class NodeMergeTest {
             l2 = null;
         }
         return first.next;
-    }
-
-    public class ListNode {
-        int val;
-        ListNode next;
-        ListNode(int x) { val = x; }
     }
 }

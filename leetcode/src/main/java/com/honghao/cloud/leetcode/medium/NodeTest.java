@@ -1,5 +1,7 @@
 package com.honghao.cloud.leetcode.medium;
 
+
+import com.honghao.cloud.leetcode.ListNode;
 import org.junit.Test;
 
 /**
@@ -42,17 +44,5 @@ public class NodeTest {
         return pre.next;
     }
 
-
-
-
-
-
-
-
-    public class ListNode {
-        int val;
-        ListNode next;
-        ListNode(int x) { val = x; }
-    }
 
 }

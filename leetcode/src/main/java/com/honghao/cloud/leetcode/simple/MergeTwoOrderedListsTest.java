@@ -1,5 +1,6 @@
 package com.honghao.cloud.leetcode.simple;
 
+import com.honghao.cloud.leetcode.ListNode;
 import org.junit.Test;
 
 /**
@@ -53,14 +54,5 @@ public class MergeTwoOrderedListsTest {
             l2 = null;
         }
         return first.next;
-    }
-
-
-    public class ListNode {
-        int val;
-        ListNode next;
-        ListNode() {}
-        ListNode(int val) { this.val = val; }
-        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
     }
 }
