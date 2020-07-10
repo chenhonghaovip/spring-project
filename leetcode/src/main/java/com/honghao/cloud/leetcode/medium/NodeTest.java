@@ -1,7 +1,7 @@
 package com.honghao.cloud.leetcode.medium;
 
 
-import com.honghao.cloud.leetcode.ListNode;
+import com.honghao.cloud.leetcode.common.ListNode;
 import org.junit.Test;
 
 /**

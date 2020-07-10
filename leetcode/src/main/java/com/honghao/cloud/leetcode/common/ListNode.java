@@ -1,4 +1,4 @@
-package com.honghao.cloud.leetcode;
+package com.honghao.cloud.leetcode.common;
 
 /**
  * @author chenhonghao
