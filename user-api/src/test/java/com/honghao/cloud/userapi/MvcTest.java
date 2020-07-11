@@ -39,7 +39,6 @@ public class MvcTest {
     @Test
     public void test02(){
         log.info("开始接口测试工作");
-        messageSender.testQueue("name is chenhonghao");
     }
 
     @Test
