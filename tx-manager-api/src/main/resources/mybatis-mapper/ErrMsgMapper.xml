@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.honghao.cloud.txmanagerapi.domain.mapper.ErrMsgMapper">
+  <resultMap id="BaseResultMap" type="com.honghao.cloud.txmanagerapi.domain.entity.ErrMsg">
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.honghao.cloud.txmanagerapi.domain.entity.ErrMsg">
+    <result column="msg" jdbcType="LONGVARCHAR" property="msg" />
+  </resultMap>
+  <sql id="Blob_Column_List">
+    msg
+  </sql>
+  <insert id="insert" parameterType="com.honghao.cloud.txmanagerapi.domain.entity.ErrMsg">
+    insert into err_msg (id, create_date, msg
+      )
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{msg,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.honghao.cloud.txmanagerapi.domain.entity.ErrMsg">
+    insert into err_msg
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="msg != null">
+        msg,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="msg != null">
+        #{msg,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>
