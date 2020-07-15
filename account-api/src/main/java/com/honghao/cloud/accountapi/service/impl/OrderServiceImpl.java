@@ -27,6 +27,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(rollbackFor = Exception.class)
     public void createOrders(String data) {
         Order order = JSON.parseObject(data,Order.class);
-        orderMapper.insert(order);
+        order.setBatchId("111111");
+        orderMapper.updateByPrimaryKeySelective(order);
     }
 }
