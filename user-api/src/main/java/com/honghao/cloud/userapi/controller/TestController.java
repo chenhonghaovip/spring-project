@@ -32,7 +32,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * java8
@@ -187,5 +189,36 @@ public class TestController {
         redisService.includeByBloomFilter(orderBloomFilterHelper, "order", batchId);
         redisService.addByBloomFilter(orderBloomFilterHelper, "order", batchId);
         return BaseResponse.success();
+    }
+
+    @Test
+    public void test(){
+        ReentrantLock reentrantLock = new ReentrantLock();
+        reentrantLock.lock();
+
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        countDownLatch.countDown();
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        LinkedBlockingQueue<String> linkedBlockingQueue = new LinkedBlockingQueue<>();
+        boolean add = linkedBlockingQueue.add("1");
+        boolean offer = linkedBlockingQueue.offer("2");
+        try {
+            linkedBlockingQueue.put("3");
+        } catch (InterruptedException e) {
+            log.error(e.getMessage());
+        }
+
+        String remove = linkedBlockingQueue.remove();
+        String poll = linkedBlockingQueue.poll();
+        try {
+            String take = linkedBlockingQueue.take();
+        } catch (InterruptedException e) {
+            log.error(e.getMessage());
+        }
     }
 }

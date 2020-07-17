@@ -23,6 +23,20 @@ public class ExecutorFactory {
 
         @Override
         public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+            if (executor.isShutdown()) {
+                return;
+            }
+
+            BlockingQueue<Runnable> workQueue = executor.getQueue();
+            Runnable firstWork = workQueue.poll();
+            boolean newTaskAdd = workQueue.offer(r);
+            if (firstWork != null) {
+                firstWork.run();
+            }
+            if (!newTaskAdd) {
+                executor.execute(r);
+            }
+
             System.out.println("my info is :"+"Task " + r.toString() +
                     " rejected from " +
                     executor.toString());
