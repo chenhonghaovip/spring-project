@@ -2,6 +2,7 @@ package com.honghao.cloud.userapi.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.userapi.aspect.FeignExceptionDeal;
+import com.honghao.cloud.userapi.aspect.LogInfo;
 import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -30,6 +31,7 @@ public interface OrderClient {
      * @param data string
      * @return 删除
      */
+    @LogInfo
     @FeignExceptionDeal(retryTimes = 5)
     @PostMapping("/order/create")
     BaseResponse<String> createUser(@RequestBody JSONObject data);
