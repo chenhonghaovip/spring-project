@@ -7,7 +7,7 @@ import com.honghao.cloud.accountapi.domain.entity.Order;
 import com.honghao.cloud.accountapi.domain.mapper.OrderMapper;
 import com.honghao.cloud.accountapi.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,19 +29,20 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private OrderMapper orderMapper;
     @Resource
-    private RedisTemplate<Object,Object> redisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createOrders(String data) {
+        stringRedisTemplate.opsForValue().set("123","123");
         Order order = JSON.parseObject(data,Order.class);
         order.setBatchId("111111");
         orderMapper.updateByPrimaryKeySelective(order);
     }
 
     @Override
-    public BaseResponse redisTest(String userId) {
-        Object o = redisTemplate.opsForValue().get(userId);
+    public BaseResponse cacheBreakdown(String userId) {
+        Object o = stringRedisTemplate.opsForValue().get(userId);
         if (Objects.nonNull(o)){
             return BaseResponse.success();
         }
@@ -54,13 +55,13 @@ public class OrderServiceImpl implements OrderService {
         reentrantLock.lock();
         try {
             // 利用DCL(Double Check Lock)双锁检查机制
-            Object temp = redisTemplate.opsForValue().get(userId);
+            Object temp = stringRedisTemplate.opsForValue().get(userId);
             if (Objects.nonNull(temp)){
                 return BaseResponse.success();
             }
             // 查询数据库并且放入到缓存中
             Order order = orderMapper.selectByPrimaryKey(userId);
-            redisTemplate.opsForValue().set(userId,order);
+            stringRedisTemplate.opsForValue().set(userId,JSON.toJSONString(order));
             return BaseResponse.success();
         } finally {
             // 当前锁的等待队列为空时，删除该锁
@@ -69,7 +70,11 @@ public class OrderServiceImpl implements OrderService {
             }
             reentrantLock.unlock();
         }
+    }
 
-
+    @Override
+    public BaseResponse cachePenetration(String userId) {
+        stringRedisTemplate.opsForValue().setBit("key",3,true);
+        return null;
     }
 }
