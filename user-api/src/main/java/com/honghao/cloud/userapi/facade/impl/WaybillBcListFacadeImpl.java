@@ -2,7 +2,6 @@ package com.honghao.cloud.userapi.facade.impl;
 
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
-import com.honghao.cloud.userapi.config.ParamConfig;
 import com.honghao.cloud.userapi.domain.entity.CloudDeliveryMan;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.dto.request.EventDTO;
@@ -33,8 +32,6 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
     private AsyncTask asyncTask;
     @Resource
     private OrderClient orderClient;
-    @Resource
-    private ParamConfig paramConfig;
     @Resource
     private JedisOperator jedisOperator;
     @Resource

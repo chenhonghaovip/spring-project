@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/order")
 @Api("用户接口服务")
-public class OrderController {
+public class AccountController {
     @Resource
     private OrderFacade orderFacade;
 
