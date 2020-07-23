@@ -1,8 +1,8 @@
 package com.honghao.cloud.accountapi.facade;
 
 
-import com.honghao.cloud.accountapi.base.BaseResponse;
 import com.honghao.cloud.accountapi.domain.entity.WaybillBcList;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 
 import java.util.List;
 

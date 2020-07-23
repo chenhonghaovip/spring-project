@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.test.face.thread;
 
-import com.honghao.cloud.userapi.factory.ExecutorFactory;
+import com.honghao.cloud.basic.common.base.factory.ExecutorFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.Semaphore;

@@ -3,7 +3,7 @@ package com.honghao.cloud.userapi.test.redis;
 import com.google.common.base.Charsets;
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
-import com.honghao.cloud.userapi.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.userapi.utils.JedisOperator;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -27,12 +27,12 @@ import javax.annotation.Resource;
 @RequestMapping("/bloomFilterTest")
 @RestController
 public class BloomFilterTest {
-    private static final int capacity = 1000000;
-    private static final int key = 999998;
-    private static BloomFilter<String> bloomFilter = BloomFilter.create(Funnels.stringFunnel(Charsets.UTF_8), capacity);
+    private static final int CAPACITY = 1000000;
+    private static final int KEY = 999998;
+    private static BloomFilter<String> bloomFilter = BloomFilter.create(Funnels.stringFunnel(Charsets.UTF_8), CAPACITY);
 
     static {
-        for (int i = 0; i < capacity; i++) {
+        for (int i = 0; i < CAPACITY; i++) {
             bloomFilter.put(String.valueOf(i));
         }
     }
@@ -51,7 +51,7 @@ public class BloomFilterTest {
         long end = System.nanoTime();
         System.out.println("布隆过滤器消耗时间:" + (end - start));
         int sum = 0;
-        for (int i = capacity + 20000; i < capacity + 30000; i++) {
+        for (int i = CAPACITY + 20000; i < CAPACITY + 30000; i++) {
             if (bloomFilter.mightContain(String.valueOf(i))) {
                 sum = sum + 1;
             }

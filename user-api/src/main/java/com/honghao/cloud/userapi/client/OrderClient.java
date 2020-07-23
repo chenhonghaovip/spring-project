@@ -1,9 +1,9 @@
 package com.honghao.cloud.userapi.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.userapi.aspect.FeignExceptionDeal;
 import com.honghao.cloud.userapi.aspect.LogInfo;
-import com.honghao.cloud.userapi.base.BaseResponse;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

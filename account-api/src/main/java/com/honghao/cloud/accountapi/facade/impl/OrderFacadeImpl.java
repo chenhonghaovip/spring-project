@@ -1,13 +1,13 @@
 package com.honghao.cloud.accountapi.facade.impl;
 
 
-import com.honghao.cloud.accountapi.base.BaseResponse;
 import com.honghao.cloud.accountapi.client.OrderClient;
 import com.honghao.cloud.accountapi.common.factory.ExecutorFactory;
 import com.honghao.cloud.accountapi.domain.entity.Order;
 import com.honghao.cloud.accountapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.accountapi.facade.OrderFacade;
 import com.honghao.cloud.accountapi.service.OrderService;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

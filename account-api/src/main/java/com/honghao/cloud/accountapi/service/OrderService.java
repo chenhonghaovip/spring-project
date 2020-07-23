@@ -1,6 +1,7 @@
 package com.honghao.cloud.accountapi.service;
 
-import com.honghao.cloud.accountapi.base.BaseResponse;
+
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 
 /**
  * 订单服务接口

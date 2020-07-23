@@ -125,7 +125,12 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
         </dependency>
-
+        <!-- 自定义工具类 -->
+        <dependency>
+            <groupId>com.honghao.cloud</groupId>
+            <artifactId>basic-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <!--seata-->
 <!--        <dependency>-->
 <!--            <groupId>com.alibaba.cloud</groupId>-->

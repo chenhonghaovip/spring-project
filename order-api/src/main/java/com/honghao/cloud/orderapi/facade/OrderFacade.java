@@ -1,6 +1,6 @@
 package com.honghao.cloud.orderapi.facade;
 
-import com.honghao.cloud.orderapi.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.orderapi.domain.entity.WaybillBcList;
 
 import java.util.List;

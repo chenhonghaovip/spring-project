@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.common.enums;
 
-import com.honghao.cloud.userapi.base.BaseErrorInfoInterface;
+import com.honghao.cloud.basic.common.base.base.BaseErrorInfoInterface;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.facade.impl;
 
-import com.honghao.cloud.userapi.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.facade.BatchFacade;
@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.LockSupport;
 import java.util.stream.Collectors;
 
@@ -26,8 +25,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class BatchFacadeImpl implements BatchFacade {
-    private static final AtomicInteger ATOMIC_INTEGER = new AtomicInteger(0);
-    private static final int max = 1000;
 
     private LinkedBlockingQueue<Request> queues = new LinkedBlockingQueue<>();
 

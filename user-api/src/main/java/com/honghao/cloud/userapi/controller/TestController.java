@@ -6,7 +6,8 @@ import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.threadpool.TtlExecutors;
 import com.google.common.base.Charsets;
 import com.google.common.hash.Funnel;
-import com.honghao.cloud.userapi.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.factory.ExecutorFactory;
 import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.component.RedisService;
 import com.honghao.cloud.userapi.domain.entity.ErrMsg;
@@ -14,7 +15,6 @@ import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.domain.mapper.master.ErrMsgMapper;
 import com.honghao.cloud.userapi.facade.BatchFacade;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
-import com.honghao.cloud.userapi.factory.ExecutorFactory;
 import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;
 import com.honghao.cloud.userapi.utils.BloomFilterHelper;
 import com.honghao.cloud.userapi.utils.HttpUtil;
@@ -143,7 +143,7 @@ public class TestController {
                 try {
                     countDownLatch.await();
                     BaseResponse<WaybillBcList> response = batchFacade.queryCommon1(String.valueOf(finalI));
-                    if (response.isResult() && response.getData().getWId().equals("874")){
+                    if (response.isResult() && "874".equals(response.getData().getWId())){
                         log.info("请求参数为{},结果为：{}",finalI,response.getData());
                     }
                 } catch (Exception e) {

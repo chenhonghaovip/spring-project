@@ -1,7 +1,7 @@
 package com.honghao.cloud.userapi.aspect;
 
 import com.alibaba.fastjson.JSON;
-import com.honghao.cloud.userapi.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.userapi.domain.entity.ErrMsg;
 import com.honghao.cloud.userapi.domain.mapper.master.ErrMsgMapper;
 import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;

@@ -124,6 +124,12 @@
             <artifactId>tx-manage-starter</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <!-- 自定义工具类 -->
+        <dependency>
+            <groupId>com.honghao.cloud</groupId>
+            <artifactId>basic-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 

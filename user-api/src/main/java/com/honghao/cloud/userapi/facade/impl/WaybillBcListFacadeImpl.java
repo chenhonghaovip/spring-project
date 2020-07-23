@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.facade.impl;
 
-import com.honghao.cloud.userapi.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.config.ParamConfig;
 import com.honghao.cloud.userapi.domain.entity.CloudDeliveryMan;

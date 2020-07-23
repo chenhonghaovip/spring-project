@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.controller;
 
-import com.honghao.cloud.userapi.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.dto.response.SameCityNumVO;
 import com.honghao.cloud.userapi.facade.SameCitySearchFacade;
