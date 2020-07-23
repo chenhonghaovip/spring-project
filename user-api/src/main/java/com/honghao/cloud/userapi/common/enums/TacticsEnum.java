@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.tactics;
+package com.honghao.cloud.userapi.common.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

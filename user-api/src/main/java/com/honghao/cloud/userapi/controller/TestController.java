@@ -27,7 +27,6 @@ import redis.clients.jedis.GeoUnit;
 import redis.clients.jedis.params.geo.GeoRadiusParam;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -123,11 +122,6 @@ public class TestController {
         return BaseResponse.success();
     }
 
-    @RequestMapping("/dddddd")
-    public BaseResponse<String> dddddd(HttpServletRequest httpServletRequest) {
-        httpServletRequest.getParameter("data");
-        return BaseResponse.successData(httpServletRequest.getParameter("data"));
-    }
     /**
      * 多数据源事务处理
      * @return BaseResponse
@@ -183,34 +177,15 @@ public class TestController {
         });
     }
 
-    @GetMapping
+    /**
+     * redis实现布隆过滤器功能
+     * @return BaseResponse
+     */
+    @GetMapping("/getList")
     public BaseResponse getList(){
         String batchId = "2020012548548627";
         redisService.includeByBloomFilter(orderBloomFilterHelper, "order", batchId);
         redisService.addByBloomFilter(orderBloomFilterHelper, "order", batchId);
         return BaseResponse.success();
-    }
-
-    @Test
-    public void test(){
-        CountDownLatch countDownLatch = new CountDownLatch(1);
-        for (int i = 0; i < 5; i++) {
-            threadPoolExecutor.execute(() -> {
-                try {
-                    log.info("阻塞线程：{}",Thread.currentThread().getName());
-                    countDownLatch.await();
-                    log.info("唤醒线程：{}",Thread.currentThread().getName());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-        countDownLatch.countDown();
-        try {
-            Thread.sleep(500000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
     }
 }
