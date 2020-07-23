@@ -18,4 +18,11 @@ public interface BatchFacade {
      * @throws Exception Exception
      */
     BaseResponse<WaybillBcList> queryCommon(String data) throws Exception;
+
+    /**
+     * 利用线程阻塞机制实现请求合并
+     * @param data 请求数据
+     * @return BaseResponse
+     */
+    BaseResponse<WaybillBcList> queryCommon1(String data);
 }

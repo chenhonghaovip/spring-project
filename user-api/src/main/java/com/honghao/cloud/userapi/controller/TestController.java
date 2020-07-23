@@ -32,9 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * java8
@@ -48,7 +46,7 @@ public class TestController {
     private BloomFilterHelper<String> orderBloomFilterHelper = new BloomFilterHelper<>((Funnel<String>) (from, into) -> into.putString(from, Charsets.UTF_8)
             .putString(from, Charsets.UTF_8), 100 , 0.01);
 
-    private ThreadPoolExecutor threadPoolExecutor = ExecutorFactory.buildThreadPoolExecutor(2,4,"test");
+    private ThreadPoolExecutor threadPoolExecutor = ExecutorFactory.buildThreadPoolExecutor(1000,1200,"test");
     @Resource
     private WaybillBcListFacade waybillBcListFacade;
     @Resource
@@ -144,20 +142,22 @@ public class TestController {
      */
     @GetMapping("/selectInfo")
     public void select(){
-        CountDownLatch countDownLatch = new CountDownLatch(1000);
+        CountDownLatch countDownLatch = new CountDownLatch(1);
         for (int i = 0; i < 1000; i++) {
             int finalI = i;
             threadPoolExecutor.execute(() -> {
                 try {
                     countDownLatch.await();
-                    BaseResponse<WaybillBcList> response = batchFacade.queryCommon(String.valueOf(finalI));
-                    System.out.println("请求结果为"+response.getData());
+                    BaseResponse<WaybillBcList> response = batchFacade.queryCommon1(String.valueOf(finalI));
+                    if (response.isResult() && response.getData().getWId().equals("874")){
+                        log.info("请求参数为{},结果为：{}",finalI,response.getData());
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             });
-            countDownLatch.countDown();
         }
+        countDownLatch.countDown();
     }
 
     /**
@@ -193,32 +193,24 @@ public class TestController {
 
     @Test
     public void test(){
-        ReentrantLock reentrantLock = new ReentrantLock();
-        reentrantLock.lock();
-
         CountDownLatch countDownLatch = new CountDownLatch(1);
-
+        for (int i = 0; i < 5; i++) {
+            threadPoolExecutor.execute(() -> {
+                try {
+                    log.info("阻塞线程：{}",Thread.currentThread().getName());
+                    countDownLatch.await();
+                    log.info("唤醒线程：{}",Thread.currentThread().getName());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
         countDownLatch.countDown();
         try {
-            countDownLatch.await();
+            Thread.sleep(500000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        LinkedBlockingQueue<String> linkedBlockingQueue = new LinkedBlockingQueue<>();
-        boolean add = linkedBlockingQueue.add("1");
-        boolean offer = linkedBlockingQueue.offer("2");
-        try {
-            linkedBlockingQueue.put("3");
-        } catch (InterruptedException e) {
-            log.error(e.getMessage());
-        }
 
-        String remove = linkedBlockingQueue.remove();
-        String poll = linkedBlockingQueue.poll();
-        try {
-            String take = linkedBlockingQueue.take();
-        } catch (InterruptedException e) {
-            log.error(e.getMessage());
-        }
     }
 }

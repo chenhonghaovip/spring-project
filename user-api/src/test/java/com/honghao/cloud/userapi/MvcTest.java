@@ -84,15 +84,14 @@ public class MvcTest {
             int finalI = i;
             threadPoolExecutor.execute(() -> {
                 try {
+                    countDownLatch.countDown();
                     countDownLatch.await();
-                    BaseResponse<WaybillBcList> response = batchFacade.queryCommon(String.valueOf(finalI));
+                    BaseResponse<WaybillBcList> response = batchFacade.queryCommon1(String.valueOf(finalI));
                     System.out.println("请求结果为"+response.getData());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             });
-            countDownLatch.countDown();
         }
     }
-
 }

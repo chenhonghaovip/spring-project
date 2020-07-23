@@ -49,49 +49,55 @@ public class BatchFacadeImpl implements BatchFacade {
 
     @PostConstruct
     public void init(){
-        ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(1, t-> new Thread(""+ATOMIC_INTEGER.getAndIncrement()));
+//        ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(1, t-> new Thread(""+ATOMIC_INTEGER.getAndIncrement()));
+        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         scheduledExecutorService.scheduleAtFixedRate(() -> {
-            List<Request> list = new ArrayList<>();
-            if (queues.size()==0) {
-                return;
-            }
-            for (int i =0;i<queues.size() ;i++) {
-                Request request1 = queues.poll();
-                list.add(request1);
+//            List<Request> list = new ArrayList<>();
+//            if (queues.size()==0) {
+//                return;
+//            }
+//            for (int i =0;i<queues.size() ;i++) {
+//                Request request1 = queues.poll();
+//                list.add(request1);
+//            }
+//
+//
+//            List<String> data = list.stream().map(Request::getMovieCode).collect(Collectors.toList());
+//            //批量请求
+//            List<WaybillBcList> responses = orderClient.batchQuery(data);
+//            log.info("合并请求数量为：{}，参数为：{}，结果为：{}",list.size(),data,responses);
+//            //获取返回结果
+//            Map<String,WaybillBcList> resultMap = new HashMap<>(responses.size()*2);
+//            responses.forEach(each->resultMap.put(each.getWId(),each));
+//
+//
+//            for (Request request : list) {
+//                request.getFuture().complete(resultMap.get(request.getMovieCode()));
+//            }
+
+            try {
+                if (queues1.size()==0){
+                    return;
+                }
+                List<Request> list1 = new ArrayList<>();
+                for (int i = 0; i < queues1.size(); i++) {
+                    list1.add(queues1.poll());
+                }
+                List<String> data1 = list1.stream().map(Request::getMovieCode).collect(Collectors.toList());
+                //批量请求
+                List<WaybillBcList> responses1 = orderClient.batchQuery(data1);
+                log.info("合并请求数量为：{}，参数为：{}，结果为：{}",list1.size(),data1,responses1);
+                Map<String,WaybillBcList> resultMap1 = new HashMap<>(list1.size()*2);
+                responses1.forEach(each -> resultMap1.put(each.getWId(), each));
+                for (Request request : list1) {
+                    request.setWaybillBcList(resultMap1.get(request.getMovieCode()));
+                    LockSupport.unpark(request.getThread());
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage());
             }
 
-
-            List<String> data = list.stream().map(Request::getMovieCode).collect(Collectors.toList());
-            //批量请求
-            List<WaybillBcList> responses = orderClient.batchQuery(data);
-            log.info("合并请求数量为：{}，参数为：{}，结果为：{}",list.size(),data,responses);
-            //获取返回结果
-            Map<String,WaybillBcList> resultMap = new HashMap<>(responses.size()*2);
-            responses.forEach(each->resultMap.put(each.getWId(),each));
-
-
-            for (Request request : list) {
-                request.getFuture().complete(resultMap.get(request.getMovieCode()));
-            }
-
-            if (queues1.size()==0){
-                return;
-            }
-            List<Request> list1 = new ArrayList<>();
-            for (int i = 0; i < queues1.size(); i++) {
-                list1.add(queues1.poll());
-            }
-            List<String> data1 = list1.stream().map(Request::getMovieCode).collect(Collectors.toList());
-            //批量请求
-            List<WaybillBcList> responses1 = orderClient.batchQuery(data1);
-            Map<String,WaybillBcList> resultMap1 = new HashMap<>(responses.size()*2);
-            responses1.forEach(each -> resultMap1.put(each.getWId(), each));
-            for (Request request : list1) {
-                request.setWaybillBcList(resultMap1.get(request.getMovieCode()));
-                LockSupport.unpark(request.getThread());
-            }
-
-        },0,10, TimeUnit.MILLISECONDS);
+        },0,100, TimeUnit.MILLISECONDS);
     }
 
 
@@ -105,6 +111,8 @@ public class BatchFacadeImpl implements BatchFacade {
         return BaseResponse.successData(future.get());
     }
 
+
+    @Override
     public BaseResponse<WaybillBcList> queryCommon1(String data) {
         Request request = new Request();
         request.setMovieCode(data);
