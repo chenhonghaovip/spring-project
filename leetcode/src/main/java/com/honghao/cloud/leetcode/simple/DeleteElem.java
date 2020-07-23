@@ -43,10 +43,10 @@ public class DeleteElem {
 
 
     public int strStr(String haystack, String needle) {
-        int L = needle.length(), n = haystack.length();
+        int l = needle.length(), n = haystack.length();
 
-        for (int start = 0; start < n - L + 1; ++start) {
-            if (haystack.substring(start, start + L).equals(needle)) {
+        for (int start = 0; start < n - l + 1; ++start) {
+            if (haystack.substring(start, start + l).equals(needle)) {
                 return start;
             }
         }

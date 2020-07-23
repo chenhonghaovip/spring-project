@@ -12,7 +12,7 @@ import java.util.List;
  * @author chenhonghao
  * @date 2019-07-18 17:27
  */
-public interface OrderFacade {
+public interface AccountFacade {
 
     /**
      * 创建订单

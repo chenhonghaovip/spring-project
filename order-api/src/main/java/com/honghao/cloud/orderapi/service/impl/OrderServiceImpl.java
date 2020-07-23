@@ -22,7 +22,6 @@ public class OrderServiceImpl implements OrderService {
     private OrderMapper orderMapper;
 
     @Override
-//    @GlobalTransactional
     public void createOrders(String data) {
         Order order = JSON.parseObject(data,Order.class);
         orderMapper.insert(order);

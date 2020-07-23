@@ -2,18 +2,27 @@ package com.honghao.cloud.accountapi.service.impl;
 
 
 import com.alibaba.fastjson.JSON;
+import com.honghao.cloud.accountapi.common.enums.ErrorCodeEnum;
 import com.honghao.cloud.accountapi.domain.entity.Order;
+import com.honghao.cloud.accountapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.accountapi.domain.mapper.OrderMapper;
-import com.honghao.cloud.accountapi.service.OrderService;
+import com.honghao.cloud.accountapi.service.AccountService;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -24,12 +33,16 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @Slf4j
 @Service
-public class OrderServiceImpl implements OrderService {
+public class AccountServiceImpl implements AccountService {
     private ConcurrentHashMap<String, ReentrantLock> concurrentHashMap = new ConcurrentHashMap<>();
+    @Resource
+    private Redisson redisson;
     @Resource
     private OrderMapper orderMapper;
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+    @Resource
+    private RedisTemplate<Object,Object> redisTemplate;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -74,7 +87,47 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public BaseResponse cachePenetration(String userId) {
-        stringRedisTemplate.opsForValue().setBit("key",3,true);
-        return null;
+        return BaseResponse.success();
+    }
+
+    @Override
+    public BaseResponse redisLcok(String userId) {
+        String clientId = UUID.randomUUID().toString();
+        try {
+            Boolean aBoolean = stringRedisTemplate.opsForValue().setIfAbsent(userId, clientId, 10, TimeUnit.SECONDS);
+            if (!aBoolean){
+                return BaseResponse.error(ErrorCodeEnum.API_GATEWAY_ERROR);
+            }
+
+            // 业务处理
+        } finally {
+            if (clientId.equals(stringRedisTemplate.opsForValue().get(userId))){
+                stringRedisTemplate.delete(userId);
+            }
+        }
+        return BaseResponse.success();
+    }
+
+    @Override
+    public BaseResponse redissonLcok(String userId) {
+        RLock lock = redisson.getLock(userId);
+        lock.lock(10,TimeUnit.SECONDS);
+
+        try {
+            return BaseResponse.success();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public BaseResponse redisList(String userId) {
+        List<WaybillBcList> waybillBcLists = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            waybillBcLists.add(WaybillBcList.builder().batchId(userId+i).build());
+        }
+        redisTemplate.delete(userId);
+        redisTemplate.opsForList().leftPushAll(userId,waybillBcLists.toArray());
+        return BaseResponse.successData(redisTemplate.opsForList().range(userId,0,-1));
     }
 }

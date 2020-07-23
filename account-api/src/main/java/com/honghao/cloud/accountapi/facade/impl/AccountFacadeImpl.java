@@ -4,8 +4,8 @@ package com.honghao.cloud.accountapi.facade.impl;
 import com.honghao.cloud.accountapi.client.OrderClient;
 import com.honghao.cloud.accountapi.domain.entity.Order;
 import com.honghao.cloud.accountapi.domain.entity.WaybillBcList;
-import com.honghao.cloud.accountapi.facade.OrderFacade;
-import com.honghao.cloud.accountapi.service.OrderService;
+import com.honghao.cloud.accountapi.facade.AccountFacade;
+import com.honghao.cloud.accountapi.service.AccountService;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +13,10 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 
 /**
@@ -25,10 +27,10 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class OrderFacadeImpl implements OrderFacade {
+public class AccountFacadeImpl implements AccountFacade {
     private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(10,40,"test");
     @Resource
-    private OrderService orderService;
+    private AccountService orderService;
     @Resource
     private OrderClient orderClient;
 
@@ -68,28 +70,5 @@ public class OrderFacadeImpl implements OrderFacade {
         }
 
         return list.stream().map(each-> WaybillBcList.builder().wId(each).batchId(each).build()).collect(Collectors.toList());
-    }
-
-    private static FutureTask<Integer> futureTask = new FutureTask<>(() -> {
-        Thread.sleep(100000);
-        return new Random(100).nextInt(100);
-    });
-
-    public static void main(String[] args) {
-        Future<Integer> submit = threadPoolExecutor.submit(() -> {
-            Thread.sleep(10000);
-            return new Random(100).nextInt();
-        });
-
-        for (int i = 0; i < 4; i++) {
-            threadPoolExecutor.submit(()->{
-                try {
-                    Integer integer = submit.get();
-                    System.out.println(Thread.currentThread().getName()+integer);
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
     }
 }

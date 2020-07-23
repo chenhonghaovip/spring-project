@@ -2,7 +2,8 @@ package com.honghao.cloud.accountapi.controller;
 
 
 import com.honghao.cloud.accountapi.domain.entity.WaybillBcList;
-import com.honghao.cloud.accountapi.facade.OrderFacade;
+import com.honghao.cloud.accountapi.facade.AccountFacade;
+import com.honghao.cloud.accountapi.service.AccountService;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,7 +25,9 @@ import java.util.List;
 @Api("用户接口服务")
 public class AccountController {
     @Resource
-    private OrderFacade orderFacade;
+    private AccountFacade orderFacade;
+    @Resource
+    private AccountService accountService;
 
     @PostMapping("/create")
     @ApiOperation(value = "创建订单",notes = "创建订单")
@@ -45,11 +48,11 @@ public class AccountController {
 
     /**
      * 批次查询
-     * @param wId wId
+     * @param userId userId
      * @return List<WaybillBcList>
      */
     @GetMapping("/singleQuery")
-    public BaseResponse<WaybillBcList> singleQuery(@RequestParam("wId") String wId,@RequestParam("batchId") String batchId){
-        return BaseResponse.successData(new WaybillBcList());
+    public BaseResponse singleQuery(@RequestParam("userId") String userId){
+        return accountService.redisList(userId);
     }
 }
