@@ -23,9 +23,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The type Named thread factory.
+ *  线程工厂
  *
- * @author slievrly
- * @author ggndnn
+ * @author chenhonghao
  */
 public class NamedThreadFactory implements ThreadFactory {
     private final static Map<String, AtomicInteger> PREFIX_COUNTER = new ConcurrentHashMap<>();
@@ -66,7 +66,7 @@ public class NamedThreadFactory implements ThreadFactory {
      * @param totalSize the total size
      */
     public NamedThreadFactory(String prefix, int totalSize) {
-        this(prefix, totalSize, true);
+        this(prefix, totalSize, false);
     }
 
     @Override

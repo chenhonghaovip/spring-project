@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.test.face.thread;
 
-import com.honghao.cloud.basic.common.base.factory.ExecutorFactory;
+import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.Semaphore;
@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class SemaphoreTest {
     public static void main(String[] args) {
-        ThreadPoolExecutor threadPoolExecutor = ExecutorFactory.buildThreadPoolExecutor(3,3,"test_");
+        ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(3,3,"test_");
         AtomicInteger atomicInteger = new AtomicInteger(1);
         //信号量，只允许 3个线程同时访问
         Semaphore semaphore = new Semaphore(1);

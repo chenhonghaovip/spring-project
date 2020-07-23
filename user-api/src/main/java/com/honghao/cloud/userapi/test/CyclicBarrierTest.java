@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.test;
 
-import com.honghao.cloud.basic.common.base.factory.ExecutorFactory;
+import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -24,7 +24,7 @@ public class CyclicBarrierTest {
             atomicBoolean.set(true);
         }
                 );
-        ThreadPoolExecutor threadPoolExecutor = ExecutorFactory.buildThreadPoolExecutor(10,40,"test");
+        ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(10,40,"test");
         //开启多个线程执行子任务
        while (true){
            if (atomicBoolean.getAndSet(false) && atomicInteger.getAndIncrement()<100){

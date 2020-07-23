@@ -7,7 +7,7 @@ import com.alibaba.ttl.threadpool.TtlExecutors;
 import com.google.common.base.Charsets;
 import com.google.common.hash.Funnel;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
-import com.honghao.cloud.basic.common.base.factory.ExecutorFactory;
+import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.component.RedisService;
 import com.honghao.cloud.userapi.domain.entity.ErrMsg;
@@ -45,7 +45,7 @@ public class TestController {
     private BloomFilterHelper<String> orderBloomFilterHelper = new BloomFilterHelper<>((Funnel<String>) (from, into) -> into.putString(from, Charsets.UTF_8)
             .putString(from, Charsets.UTF_8), 100 , 0.01);
 
-    private ThreadPoolExecutor threadPoolExecutor = ExecutorFactory.buildThreadPoolExecutor(1000,1200,"test");
+    private ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(1000,1200,"test");
     @Resource
     private WaybillBcListFacade waybillBcListFacade;
     @Resource
@@ -162,7 +162,7 @@ public class TestController {
     @Test
     public void testInfo(){
         TransmittableThreadLocal<Integer> ttl = new TransmittableThreadLocal<>();
-        ThreadPoolExecutor threadPool = ExecutorFactory.buildThreadPoolExecutor(1,1,"odoofd");
+        ThreadPoolExecutor threadPool = ThreadPoolFactory.buildThreadPoolExecutor(1,1,"odoofd");
         ExecutorService ttlExecutorService = TtlExecutors.getTtlExecutorService(threadPool);
         ttl.set(1);
         ttlExecutorService.submit(()->{

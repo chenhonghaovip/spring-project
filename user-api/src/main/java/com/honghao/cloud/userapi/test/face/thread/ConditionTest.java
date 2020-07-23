@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.test.face.thread;
 
-import com.honghao.cloud.basic.common.base.factory.ExecutorFactory;
+import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -19,7 +19,7 @@ public class ConditionTest {
     public static void main(String[] args) {
         Condition condition = reentrantLock.newCondition();
         AtomicInteger atomicInteger = new AtomicInteger(0);
-        ThreadPoolExecutor threadPoolExecutor = ExecutorFactory.buildThreadPoolExecutor(3, 3, "test");
+        ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(3, 3, "test");
         threadPoolExecutor.submit(()-> {
             while (true){
                 reentrantLock.lock();

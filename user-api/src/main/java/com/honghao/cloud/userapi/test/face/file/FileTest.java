@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.test.face.file;
 
-import com.honghao.cloud.basic.common.base.factory.ExecutorFactory;
+import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Slf4j
 public class FileTest {
     private static ConcurrentHashMap<String,Integer> map = new ConcurrentHashMap<>();
-    ThreadPoolExecutor threadPoolExecutor = ExecutorFactory.buildThreadPoolExecutor(4,10,"file—import");
+    ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(4,10,"file—import");
 
     public static void main(String[] args) {
         String path = "F:\\u02\\logs\\waybill";

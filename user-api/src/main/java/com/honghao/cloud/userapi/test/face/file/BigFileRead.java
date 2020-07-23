@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.test.face.file;
 
-import com.honghao.cloud.basic.common.base.factory.ExecutorFactory;
+import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -23,7 +23,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Slf4j
 public class BigFileRead {
     private static ConcurrentHashMap<String,Integer> map = new ConcurrentHashMap<>();
-    private static ThreadPoolExecutor threadPoolExecutor = ExecutorFactory.buildThreadPoolExecutor(20,100,"file—import");
+    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(20,100,"file—import");
 
 
     public static void main(String[] args) {

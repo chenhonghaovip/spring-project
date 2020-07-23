@@ -6,7 +6,7 @@ import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- * 拒绝策略
+ * 自定义拒绝策略
  *
  * @author chenhonghao
  * @date 2020-07-23 15:33
