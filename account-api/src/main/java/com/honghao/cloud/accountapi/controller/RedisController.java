@@ -92,4 +92,15 @@ public class RedisController {
     public BaseResponse redisZSet(@RequestBody String userId){
         return redisService.redisZSet(userId);
     }
+
+    /**
+     * redis模拟实现微博热搜排行榜（点击）
+     * @return BaseResponse
+     */
+    @PostMapping("/hotSearchOnWeibo")
+    public BaseResponse hotSearchOnWeibo(@RequestBody String key){
+        return redisService.hotSearchOnWeibo(key);
+    }
+
+
 }

@@ -44,16 +44,22 @@ public interface RedisService {
     BaseResponse redisList(String userId);
 
     /**
-     * redis实现list
+     * redis实现Set
      * @param userId userId
      * @return BaseResponse
      */
     BaseResponse redisSet(String userId);
 
     /**
-     * redis实现list
+     * redis实现ZSet
      * @param userId userId
      * @return BaseResponse
      */
     BaseResponse redisZSet(String userId);
+
+    /**
+     * redis模拟实现微博热搜排行榜（点击）
+     * @return BaseResponse
+     */
+    BaseResponse hotSearchOnWeibo(String key);
 }
