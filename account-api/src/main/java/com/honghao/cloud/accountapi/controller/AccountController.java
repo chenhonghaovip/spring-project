@@ -4,6 +4,7 @@ package com.honghao.cloud.accountapi.controller;
 import com.honghao.cloud.accountapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.accountapi.facade.AccountFacade;
 import com.honghao.cloud.accountapi.service.AccountService;
+import com.honghao.cloud.accountapi.service.RedisService;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,6 +29,8 @@ public class AccountController {
     private AccountFacade orderFacade;
     @Resource
     private AccountService accountService;
+    @Resource
+    private RedisService redisService;
 
     @PostMapping("/create")
     @ApiOperation(value = "创建订单",notes = "创建订单")
@@ -53,6 +56,6 @@ public class AccountController {
      */
     @GetMapping("/singleQuery")
     public BaseResponse singleQuery(@RequestParam("userId") String userId){
-        return accountService.redisList(userId);
+        return redisService.redisList(userId);
     }
 }
