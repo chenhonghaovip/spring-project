@@ -1,0 +1,40 @@
+package com.honghao.cloud.userapi.socket;
+
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.OutputStream;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
+
+/**
+ * @author chenhonghao
+ * @date 2020-07-17 20:28
+ */
+@Slf4j
+public class BIOClient extends Thread{
+    private String host;
+
+    private int port;
+
+    public BIOClient(String host, int port) {
+        this.host = host;
+        this.port = port;
+    }
+
+    @Override
+    public void run() {
+        try(Socket socket = new Socket(host,port); OutputStream o = socket.getOutputStream()){
+            Scanner scanner = new Scanner(System.in);
+            String msg = scanner.nextLine();
+            o.write(msg.getBytes(StandardCharsets.UTF_8));
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        BIOClient bioClient = new BIOClient("localhost",9010);
+        bioClient.start();
+    }
+}
