@@ -55,11 +55,19 @@ public interface RedisService {
      * @param userId userId
      * @return BaseResponse
      */
-    BaseResponse redisZSet(String userId);
+    BaseResponse redisSortedSet(String userId);
 
     /**
      * redis模拟实现微博热搜排行榜（点击）
+     * @param key 请求参数
      * @return BaseResponse
      */
     BaseResponse hotSearchOnWeibo(String key);
+
+    /**
+     * 查询微博热搜数据
+     * @param type 查询类型
+     * @return 热搜数据
+     */
+    BaseResponse getHot(String type);
 }

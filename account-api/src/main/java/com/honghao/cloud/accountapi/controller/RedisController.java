@@ -88,9 +88,9 @@ public class RedisController {
      * @param userId userId
      * @return BaseResponse
      */
-    @PostMapping("/redisZSet")
-    public BaseResponse redisZSet(@RequestBody String userId){
-        return redisService.redisZSet(userId);
+    @PostMapping("/redisSortedSet")
+    public BaseResponse redisSortedSet(@RequestBody String userId){
+        return redisService.redisSortedSet(userId);
     }
 
     /**
@@ -102,5 +102,13 @@ public class RedisController {
         return redisService.hotSearchOnWeibo(key);
     }
 
-
+    /**
+     * 微博热搜查询
+     * @param type 查询类型
+     * @return BaseResponse
+     */
+    @PostMapping("/getHot")
+    public BaseResponse getHot(@RequestBody String type){
+        return redisService.getHot(type);
+    }
 }
