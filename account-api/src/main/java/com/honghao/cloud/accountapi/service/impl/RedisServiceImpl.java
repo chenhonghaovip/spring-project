@@ -45,13 +45,15 @@ public class RedisServiceImpl implements RedisService {
     @PostConstruct
     public void timerTask(){
         SCHEDULED_THREAD_POOL_EXECUTOR.scheduleAtFixedRate(()->{
-            long times = System.currentTimeMillis() / (60 * 60 * 1000);
+            // 利用list数据结构实现队列消费功能
             String key = "list12345";
             Object object;
             while (Objects.nonNull(object = redisTemplate.opsForList().rightPop(key))){
                 System.out.println(object);
             }
+
             // 刷新每日，每周，每月的热点数据
+            long times = System.currentTimeMillis() / (60 * 60 * 1000);
             refreshDay(times);
             refreshWeek(times);
             refreshMonth(times);
