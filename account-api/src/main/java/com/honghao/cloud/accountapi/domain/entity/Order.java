@@ -3,6 +3,9 @@ package com.honghao.cloud.accountapi.domain.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
+/**
+ * @author CHH
+ */
 public class Order {
     private String wId;
 

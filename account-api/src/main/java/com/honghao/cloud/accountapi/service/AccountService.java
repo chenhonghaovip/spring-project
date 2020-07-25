@@ -10,6 +10,7 @@ package com.honghao.cloud.accountapi.service;
 public interface AccountService {
     /**
      * 插入用户数据
+     * @param data data
      */
     void createOrders(String data);
 

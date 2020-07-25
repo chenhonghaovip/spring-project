@@ -4,6 +4,9 @@ import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
 
 import java.util.List;
 
+/**
+ * @author CHH
+ */
 public interface ShopInfoMapper {
     int deleteByPrimaryKey(String shopId);
 
