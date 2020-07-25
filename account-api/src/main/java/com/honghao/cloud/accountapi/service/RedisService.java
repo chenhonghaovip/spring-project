@@ -1,5 +1,6 @@
 package com.honghao.cloud.accountapi.service;
 
+import com.honghao.cloud.accountapi.dto.request.LikePointVO;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 
 /**
@@ -70,4 +71,27 @@ public interface RedisService {
      * @return 热搜数据
      */
     BaseResponse getHot(String type);
+
+    /**
+     * 朋友圈点赞和取消点赞功能实现
+     * @param likePointVO likePointVO
+     * @return BaseResponse
+     */
+    BaseResponse likePoint(LikePointVO likePointVO);
+
+
+    /**
+     * 朋友圈点赞总数
+     * @param likePointVO likePointVO
+     * @return BaseResponse
+     */
+    BaseResponse likePointCount(LikePointVO likePointVO);
+
+
+    /**
+     * 朋友圈点赞和取消点赞功能实现
+     * @param likePointVO likePointVO
+     * @return BaseResponse
+     */
+    BaseResponse isLikePoint(LikePointVO likePointVO);
 }

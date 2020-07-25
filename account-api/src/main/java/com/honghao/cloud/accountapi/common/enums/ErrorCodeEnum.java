@@ -71,6 +71,12 @@ public enum ErrorCodeEnum implements BaseErrorInfoInterface {
      * 服务调用异常
      */
     API_GATEWAY_ERROR("100005", "网络繁忙，请稍后再试"),
+
+
+    /**
+     * 数据不存在
+     */
+    DATA_DOES_NOT_EXIST("100006", "数据不存在"),
     ;
     private String code;
     private String message;

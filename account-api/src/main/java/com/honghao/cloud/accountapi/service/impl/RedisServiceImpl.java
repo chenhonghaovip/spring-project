@@ -1,15 +1,18 @@
 package com.honghao.cloud.accountapi.service.impl;
 
+import com.honghao.cloud.accountapi.common.CacheTemplate;
 import com.honghao.cloud.accountapi.common.enums.ErrorCodeEnum;
 import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
 import com.honghao.cloud.accountapi.domain.mapper.ShopInfoMapper;
 import com.honghao.cloud.accountapi.dto.common.Dict;
+import com.honghao.cloud.accountapi.dto.request.LikePointVO;
 import com.honghao.cloud.accountapi.service.RedisService;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
@@ -39,6 +42,8 @@ public class RedisServiceImpl implements RedisService {
     private Redisson redisson;
     @Resource
     private ShopInfoMapper shopInfoMapper;
+    @Resource
+    private CacheTemplate<Object> cacheTemplate;
     @Resource
     private RedisTemplate<String,Object> redisTemplate;
 
@@ -100,8 +105,14 @@ public class RedisServiceImpl implements RedisService {
         }
     }
 
+    /**
+     * 利用redis中的bitmap实现redis布隆过滤器
+     * @param userId userId
+     * @return BaseResponse
+     */
     @Override
     public BaseResponse cachePenetration(String userId) {
+        cacheTemplate.redisFindCache(userId,10,TimeUnit.SECONDS,()-> shopInfoMapper.selectByPrimaryKey(userId),true,"temp");
         return BaseResponse.success();
     }
 
@@ -231,6 +242,38 @@ public class RedisServiceImpl implements RedisService {
         }
         Set<ZSetOperations.TypedTuple<Object>> set = redisTemplate.opsForZSet().reverseRangeWithScores(type, 0, -1);
         return BaseResponse.successData(set);
+    }
+
+    @Override
+    public BaseResponse likePoint(LikePointVO data) {
+        try {
+            redisTemplate.execute((RedisCallback<Object>) redisConnection -> {
+                redisConnection.setBit((Dict.BIT_MAP + data.getId()).getBytes(),data.getUserId(),data.getStatus());
+                redisConnection.expire((Dict.BIT_MAP + data.getId()).getBytes(),1000*60*60);
+                redisConnection.close();
+                return null;
+            });
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return BaseResponse.error(e.getMessage());
+        }
+        return BaseResponse.success();
+    }
+
+    @Override
+    public BaseResponse likePointCount(LikePointVO likePointVO) {
+        Object execute = redisTemplate.execute((RedisCallback<Object>) redisConnection -> {
+            Long aLong = redisConnection.bitCount((Dict.BIT_MAP + likePointVO.getId()).getBytes());
+            redisConnection.close();
+            return aLong;
+        });
+        return BaseResponse.successData((Long)execute);
+    }
+
+    @Override
+    public BaseResponse isLikePoint(LikePointVO likePointVO) {
+        Boolean bit = redisTemplate.opsForValue().getBit(Dict.BIT_MAP + likePointVO.getId(), likePointVO.getUserId());
+        return BaseResponse.successData(bit);
     }
 
     private void refreshDay(Long time){

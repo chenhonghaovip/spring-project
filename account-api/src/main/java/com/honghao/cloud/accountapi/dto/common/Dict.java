@@ -26,4 +26,9 @@ public class Dict {
      * 微博 - 月热点
      */
     public static final String WEIBO_MONTH = "weibo_month:";
+
+    /**
+     * bitMap位图
+     */
+    public static final String BIT_MAP = "bit_map";
 }
