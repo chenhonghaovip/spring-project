@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.utils;
+package com.honghao.cloud.basic.common.base.utils;
 
 import com.google.common.base.Preconditions;
 import com.google.common.hash.Funnel;
@@ -15,7 +15,7 @@ public class BloomFilterHelper<T> {
 
     private Funnel<T> funnel;
 
-    public BloomFilterHelper(Funnel<T> funnel, int expectedInsertions, double fpp) {
+    public BloomFilterHelper(Funnel<T> funnel, long expectedInsertions, double fpp) {
         Preconditions.checkArgument(funnel != null, "funnel不能为空");
         this.funnel = funnel;
         bitSize = optimalNumOfBits(expectedInsertions, fpp);

@@ -112,8 +112,7 @@ public class RedisServiceImpl implements RedisService {
      */
     @Override
     public BaseResponse cachePenetration(String userId) {
-        cacheTemplate.redisFindCache(userId,10,TimeUnit.SECONDS,()-> shopInfoMapper.selectByPrimaryKey(userId),true,"temp");
-        return BaseResponse.success();
+        return cacheTemplate.redisFindCache(userId,10,TimeUnit.SECONDS,()-> shopInfoMapper.selectByPrimaryKey(userId),true,"temp");
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.honghao.cloud.userapi.component;
 
 import com.google.common.base.Preconditions;
-import com.honghao.cloud.userapi.utils.BloomFilterHelper;
+import com.honghao.cloud.basic.common.base.utils.BloomFilterHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;

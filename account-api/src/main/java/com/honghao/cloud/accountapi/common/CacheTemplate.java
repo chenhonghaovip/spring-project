@@ -1,13 +1,18 @@
 package com.honghao.cloud.accountapi.common;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.Funnel;
 import com.honghao.cloud.accountapi.common.enums.ErrorCodeEnum;
 import com.honghao.cloud.accountapi.common.factory.CacheLoad;
+import com.honghao.cloud.accountapi.config.ApolloConfig;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.utils.BloomFilterHelper;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -18,18 +23,26 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class CacheTemplate<T> {
+    private BloomFilterHelper<String> bloomFilterHelper;
     @Resource
     private Redisson redisson;
+    @Resource
+    private ApolloConfig apolloConfig;
     @Resource
     private RedisBloomFilter redisBloomFilter;
     @Resource
     private RedisTemplate<String,Object> redisTemplate;
 
+    @PostConstruct
+    public void init(){
+        this.bloomFilterHelper= new BloomFilterHelper<>((Funnel<String>) (from, into) -> into.putString(from, Charsets.UTF_8)
+                .putString(from, Charsets.UTF_8), apolloConfig.getExpectedInsertions(), apolloConfig.getFpp());
+    }
 
     public BaseResponse redisFindCache(String key, long expire, TimeUnit timeUnit, CacheLoad<T> cacheLoad, boolean filter,String bloomKey){
         // 布隆过滤器校验
         if (filter){
-            boolean b = redisBloomFilter.get(bloomKey, key);
+            boolean b = redisBloomFilter.includeByBloomFilter(bloomFilterHelper,bloomKey, key);
             if (!b){
                 return BaseResponse.error(ErrorCodeEnum.DATA_DOES_NOT_EXIST);
             }
