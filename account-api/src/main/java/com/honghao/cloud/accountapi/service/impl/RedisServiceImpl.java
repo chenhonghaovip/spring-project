@@ -43,7 +43,7 @@ public class RedisServiceImpl implements RedisService {
     @Resource
     private ShopInfoMapper shopInfoMapper;
     @Resource
-    private CacheTemplate<Object> cacheTemplate;
+    private CacheTemplate<ShopInfo> cacheTemplate;
     @Resource
     private RedisTemplate<String,Object> redisTemplate;
 
@@ -112,7 +112,7 @@ public class RedisServiceImpl implements RedisService {
      */
     @Override
     public BaseResponse cachePenetration(String userId) {
-        return cacheTemplate.redisFindCache(userId,10,TimeUnit.SECONDS,()-> shopInfoMapper.selectByPrimaryKey(userId),true,"temp");
+        return cacheTemplate.redisStringCache(null,userId,10,TimeUnit.MINUTES,()-> shopInfoMapper.selectByPrimaryKey("1"));
     }
 
     @Override

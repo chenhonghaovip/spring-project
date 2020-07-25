@@ -31,4 +31,9 @@ public class Dict {
      * bitMap位图
      */
     public static final String BIT_MAP = "bit_map";
+
+    /**
+     * redisson锁前缀
+     */
+    public static final String R_LOCK = "r_lock";
 }
