@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="eureka-server" />
+        <module name="basic-common" />
+        <module name="account-api" />
+        <module name="user-api" />
+        <module name="order-api" />
+        <module name="leetcode" />
+        <module name="tx-manage-starter" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="account-api" target="1.8" />
+      <module name="basic-common" target="1.8" />
+      <module name="dispatch-api" target="1.8" />
+      <module name="eureka-server" target="1.8" />
+      <module name="leetcode" target="1.8" />
+      <module name="order-api" target="1.8" />
+      <module name="tx-manage-starter" target="1.8" />
+      <module name="tx-manager-api" target="1.8" />
+      <module name="user-api" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="account-api" options="-parameters" />
+      <module name="basic-common" options="-parameters" />
+      <module name="dispatch-api" options="-parameters" />
+      <module name="eureka-server" options="-parameters" />
+      <module name="leetcode" options="-parameters" />
+      <module name="order-api" options="-parameters" />
+      <module name="tx-manage-starter" options="-parameters" />
+      <module name="tx-manager-api" options="-parameters" />
+      <module name="user-api" options="-parameters" />
+    </option>
+  </component>
+</project>

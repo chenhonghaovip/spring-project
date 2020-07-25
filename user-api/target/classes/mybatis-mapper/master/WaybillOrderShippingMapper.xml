@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.honghao.cloud.userapi.domain.mapper.master.WaybillOrderShippingMapper">
+  <resultMap id="BaseResultMap" type="com.honghao.cloud.userapi.domain.entity.WaybillOrderShipping">
+    <id column="w_id" jdbcType="CHAR" property="wId" />
+    <result column="distance" jdbcType="DECIMAL" property="distance" />
+    <result column="basics" jdbcType="DECIMAL" property="basics" />
+    <result column="overhang" jdbcType="DECIMAL" property="overhang" />
+    <result column="fastigium" jdbcType="DECIMAL" property="fastigium" />
+    <result column="weather" jdbcType="DECIMAL" property="weather" />
+    <result column="platform_subsidy" jdbcType="DECIMAL" property="platformSubsidy" />
+    <result column="platform_income" jdbcType="DECIMAL" property="platformIncome" />
+    <result column="discount" jdbcType="DECIMAL" property="discount" />
+    <result column="coupon_user_id" jdbcType="CHAR" property="couponUserId" />
+    <result column="coupon_type" jdbcType="TINYINT" property="couponType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="delete_flag" jdbcType="TINYINT" property="deleteFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    w_id, distance, basics, overhang, fastigium, weather, platform_subsidy, platform_income, 
+    discount, coupon_user_id, coupon_type, create_time, delete_flag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from waybill_order_shipping
+    where w_id = #{wId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from waybill_order_shipping
+    where w_id = #{wId,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillOrderShipping">
+    insert into waybill_order_shipping (w_id, distance, basics, 
+      overhang, fastigium, weather, 
+      platform_subsidy, platform_income, discount, 
+      coupon_user_id, coupon_type, create_time, 
+      delete_flag)
+    values (#{wId,jdbcType=CHAR}, #{distance,jdbcType=DECIMAL}, #{basics,jdbcType=DECIMAL}, 
+      #{overhang,jdbcType=DECIMAL}, #{fastigium,jdbcType=DECIMAL}, #{weather,jdbcType=DECIMAL}, 
+      #{platformSubsidy,jdbcType=DECIMAL}, #{platformIncome,jdbcType=DECIMAL}, #{discount,jdbcType=DECIMAL}, 
+      #{couponUserId,jdbcType=CHAR}, #{couponType,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{deleteFlag,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillOrderShipping">
+    insert into waybill_order_shipping
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="wId != null">
+        w_id,
+      </if>
+      <if test="distance != null">
+        distance,
+      </if>
+      <if test="basics != null">
+        basics,
+      </if>
+      <if test="overhang != null">
+        overhang,
+      </if>
+      <if test="fastigium != null">
+        fastigium,
+      </if>
+      <if test="weather != null">
+        weather,
+      </if>
+      <if test="platformSubsidy != null">
+        platform_subsidy,
+      </if>
+      <if test="platformIncome != null">
+        platform_income,
+      </if>
+      <if test="discount != null">
+        discount,
+      </if>
+      <if test="couponUserId != null">
+        coupon_user_id,
+      </if>
+      <if test="couponType != null">
+        coupon_type,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="wId != null">
+        #{wId,jdbcType=CHAR},
+      </if>
+      <if test="distance != null">
+        #{distance,jdbcType=DECIMAL},
+      </if>
+      <if test="basics != null">
+        #{basics,jdbcType=DECIMAL},
+      </if>
+      <if test="overhang != null">
+        #{overhang,jdbcType=DECIMAL},
+      </if>
+      <if test="fastigium != null">
+        #{fastigium,jdbcType=DECIMAL},
+      </if>
+      <if test="weather != null">
+        #{weather,jdbcType=DECIMAL},
+      </if>
+      <if test="platformSubsidy != null">
+        #{platformSubsidy,jdbcType=DECIMAL},
+      </if>
+      <if test="platformIncome != null">
+        #{platformIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="discount != null">
+        #{discount,jdbcType=DECIMAL},
+      </if>
+      <if test="couponUserId != null">
+        #{couponUserId,jdbcType=CHAR},
+      </if>
+      <if test="couponType != null">
+        #{couponType,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null">
+        #{deleteFlag,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillOrderShipping">
+    update waybill_order_shipping
+    <set>
+      <if test="distance != null">
+        distance = #{distance,jdbcType=DECIMAL},
+      </if>
+      <if test="basics != null">
+        basics = #{basics,jdbcType=DECIMAL},
+      </if>
+      <if test="overhang != null">
+        overhang = #{overhang,jdbcType=DECIMAL},
+      </if>
+      <if test="fastigium != null">
+        fastigium = #{fastigium,jdbcType=DECIMAL},
+      </if>
+      <if test="weather != null">
+        weather = #{weather,jdbcType=DECIMAL},
+      </if>
+      <if test="platformSubsidy != null">
+        platform_subsidy = #{platformSubsidy,jdbcType=DECIMAL},
+      </if>
+      <if test="platformIncome != null">
+        platform_income = #{platformIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="discount != null">
+        discount = #{discount,jdbcType=DECIMAL},
+      </if>
+      <if test="couponUserId != null">
+        coupon_user_id = #{couponUserId,jdbcType=CHAR},
+      </if>
+      <if test="couponType != null">
+        coupon_type = #{couponType,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag = #{deleteFlag,jdbcType=TINYINT},
+      </if>
+    </set>
+    where w_id = #{wId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillOrderShipping">
+    update waybill_order_shipping
+    set distance = #{distance,jdbcType=DECIMAL},
+      basics = #{basics,jdbcType=DECIMAL},
+      overhang = #{overhang,jdbcType=DECIMAL},
+      fastigium = #{fastigium,jdbcType=DECIMAL},
+      weather = #{weather,jdbcType=DECIMAL},
+      platform_subsidy = #{platformSubsidy,jdbcType=DECIMAL},
+      platform_income = #{platformIncome,jdbcType=DECIMAL},
+      discount = #{discount,jdbcType=DECIMAL},
+      coupon_user_id = #{couponUserId,jdbcType=CHAR},
+      coupon_type = #{couponType,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      delete_flag = #{deleteFlag,jdbcType=TINYINT}
+    where w_id = #{wId,jdbcType=CHAR}
+  </update>
+</mapper>

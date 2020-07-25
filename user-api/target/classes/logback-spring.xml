@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <property name="log" value="/logs/user-api/user.log" />
+
+    <appender name="LOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log}</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level><!-- 此日志文件只记录DEBUG级别的 -->
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log}-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <!--每个日志文件最大100MB-->
+            <maxFileSize>100MB</maxFileSize>
+        </triggeringPolicy>
+        <!--定义输出格式-->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} [%file : %line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--    logger：日志所处的包   level：日志打印级别-->
+    <logger name="com.honghao.cloud.userapi" level="debug"/>
+
+    <!--root是默认的logger 这里设定输出级别是debug-->
+    <root level="INFO">
+        <!--定义了两个appender，日志会通过往这两个appender里面写-->
+        <appender-ref ref="LOGFILE" />
+    </root>
+
+</configuration>
