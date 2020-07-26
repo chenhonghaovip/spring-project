@@ -1,4 +1,4 @@
-package com.honghao.cloud.accountapi.common.factory;
+package com.honghao.cloud.basic.common.base.bean;
 
 /**
  * @author chenhonghao

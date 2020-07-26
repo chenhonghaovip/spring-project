@@ -1,12 +1,8 @@
-package com.honghao.cloud.accountapi.common;
+package com.honghao.cloud.basic.common.base.bean;
 
 import com.google.common.base.Preconditions;
 import com.honghao.cloud.basic.common.base.utils.BloomFilterHelper;
-import lombok.Data;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * redis布隆过滤器
@@ -14,12 +10,21 @@ import javax.annotation.Resource;
  * @author chenhonghao
  * @date 2020-07-25 16:40
  */
-@Data
-@Component
 public class RedisBloomFilter {
-    @Resource
+
     private RedisTemplate<String,Object> redisTemplate;
 
+    public RedisTemplate<String, Object> getRedisTemplate() {
+        return redisTemplate;
+    }
+
+    public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
+    public RedisBloomFilter(RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     /**
      * 根据给定的布隆过滤器添加值

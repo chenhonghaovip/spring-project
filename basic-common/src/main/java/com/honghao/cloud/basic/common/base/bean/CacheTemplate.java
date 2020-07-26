@@ -1,18 +1,20 @@
-package com.honghao.cloud.accountapi.common;
+package com.honghao.cloud.basic.common.base.bean;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Funnel;
-import com.honghao.cloud.accountapi.common.enums.ErrorCodeEnum;
-import com.honghao.cloud.accountapi.common.factory.CacheLoad;
-import com.honghao.cloud.accountapi.config.ApolloConfig;
-import com.honghao.cloud.accountapi.dto.common.Dict;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.basic.common.base.utils.BloomFilterHelper;
 import org.apache.commons.lang.StringUtils;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
+import org.redisson.spring.starter.RedissonAutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -23,9 +25,14 @@ import java.util.concurrent.TimeUnit;
  * @author chenhonghao
  * @date 2020-07-25 16:14
  */
-@Component
+@Configuration
+@AutoConfigureAfter({RedisAutoConfiguration.class, RedissonAutoConfiguration.class})
+@ConditionalOnClass({Redisson.class,RedisTemplate.class})
+@EnableConfigurationProperties(ApolloConfig.class)
 public class CacheTemplate<T> {
-    private BloomFilterHelper<String> bloomFilterHelper;
+    private static final String R_LOCK = "r_lock";
+    private BloomFilterHelper<String> bloomFilterHelper ;
+
     @Resource
     private Redisson redisson;
     @Resource
@@ -34,6 +41,11 @@ public class CacheTemplate<T> {
     private RedisBloomFilter redisBloomFilter;
     @Resource
     private RedisTemplate<String,Object> redisTemplate;
+
+    @Bean
+    public RedisBloomFilter redisBloomFilter(RedisTemplate redisTemplate){
+        return new RedisBloomFilter(redisTemplate);
+    }
 
     @PostConstruct
     public void init(){
@@ -69,7 +81,7 @@ public class CacheTemplate<T> {
         if (StringUtils.isNotBlank(bloomKey)){
             boolean b = redisBloomFilter.includeByBloomFilter(bloomFilterHelper,bloomKey, businessId);
             if (!b){
-                return BaseResponse.error(ErrorCodeEnum.DATA_DOES_NOT_EXIST);
+                return BaseResponse.error("无效的数据");
             }
         }
 
@@ -79,7 +91,7 @@ public class CacheTemplate<T> {
         if (Objects.nonNull(o)){
             return BaseResponse.successData(o);
         }
-        RLock lock = redisson.getLock(Dict.R_LOCK + key);
+        RLock lock = redisson.getLock(R_LOCK + key);
         lock.lock();
         try {
             if (Objects.nonNull(o = redisTemplate.opsForValue().get(key))){
@@ -94,7 +106,7 @@ public class CacheTemplate<T> {
                 }
                 return BaseResponse.successData(o);
             }
-            return BaseResponse.error(ErrorCodeEnum.DATA_DOES_NOT_EXIST);
+            return BaseResponse.error("无效的数据");
         } finally {
             lock.unlock();
         }
@@ -115,7 +127,7 @@ public class CacheTemplate<T> {
         if (StringUtils.isNotBlank(bloomKey)){
             boolean b = redisBloomFilter.includeByBloomFilter(bloomFilterHelper,bloomKey, filed);
             if (!b){
-                return BaseResponse.error(ErrorCodeEnum.DATA_DOES_NOT_EXIST);
+                return BaseResponse.error("无效的数据");
             }
         }
 
@@ -124,7 +136,7 @@ public class CacheTemplate<T> {
         if (Objects.nonNull(o)){
             return BaseResponse.successData(o);
         }
-        RLock lock = redisson.getLock(Dict.R_LOCK + key);
+        RLock lock = redisson.getLock(R_LOCK + key);
         lock.lock();
 
         try {
@@ -136,9 +148,10 @@ public class CacheTemplate<T> {
                 redisTemplate.opsForHash().putIfAbsent(key,filed,o);
                 return BaseResponse.successData(o);
             }
-            return BaseResponse.error(ErrorCodeEnum.DATA_DOES_NOT_EXIST);
+            return BaseResponse.error("无效的数据");
         } finally {
             lock.unlock();
         }
     }
+
 }

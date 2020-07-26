@@ -7,6 +7,7 @@ import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -25,6 +26,8 @@ import java.util.List;
 public class AccountController {
     @Resource
     private AccountFacade orderFacade;
+    @Resource
+    private ApplicationContext applicationContext;
 
     @PostMapping("/create")
     @ApiOperation(value = "创建订单",notes = "创建订单")

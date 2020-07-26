@@ -1,13 +1,13 @@
 package com.honghao.cloud.accountapi.service.impl;
 
-import com.honghao.cloud.accountapi.common.CacheTemplate;
+import com.honghao.cloud.accountapi.common.dict.Dict;
 import com.honghao.cloud.accountapi.common.enums.ErrorCodeEnum;
 import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
 import com.honghao.cloud.accountapi.domain.mapper.ShopInfoMapper;
-import com.honghao.cloud.accountapi.dto.common.Dict;
 import com.honghao.cloud.accountapi.dto.request.LikePointVO;
 import com.honghao.cloud.accountapi.service.RedisService;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.bean.CacheTemplate;
 import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;

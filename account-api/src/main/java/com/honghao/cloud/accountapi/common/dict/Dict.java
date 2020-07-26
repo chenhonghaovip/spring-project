@@ -1,4 +1,4 @@
-package com.honghao.cloud.accountapi.dto.common;
+package com.honghao.cloud.accountapi.common.dict;
 
 /**
  * 数据字典

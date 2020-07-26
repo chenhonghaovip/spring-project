@@ -1,6 +1,6 @@
 package com.honghao.cloud.accountapi;
 
-import com.honghao.cloud.accountapi.dto.common.Dict;
+import com.honghao.cloud.accountapi.common.dict.Dict;
 import com.honghao.cloud.accountapi.service.RedisService;
 import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import org.junit.Test;
