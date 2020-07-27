@@ -10,7 +10,6 @@ import org.redisson.api.RLock;
 import org.redisson.spring.starter.RedissonAutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,8 +25,8 @@ import java.util.concurrent.TimeUnit;
  * @date 2020-07-25 16:14
  */
 @Configuration
-@AutoConfigureAfter({RedisAutoConfiguration.class, RedissonAutoConfiguration.class})
-@ConditionalOnClass({Redisson.class,RedisTemplate.class})
+@AutoConfigureAfter({RedissonAutoConfiguration.class})
+@ConditionalOnClass({Redisson.class})
 @EnableConfigurationProperties(ApolloConfig.class)
 public class CacheTemplate<T> {
     private static final String R_LOCK = "r_lock";
