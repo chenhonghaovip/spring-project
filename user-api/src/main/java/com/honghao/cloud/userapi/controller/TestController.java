@@ -4,13 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.threadpool.TtlExecutors;
-import com.google.common.base.Charsets;
-import com.google.common.hash.Funnel;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.bean.CacheTemplate;
 import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
-import com.honghao.cloud.basic.common.base.utils.BloomFilterHelper;
 import com.honghao.cloud.userapi.client.OrderClient;
-import com.honghao.cloud.userapi.component.RedisService;
 import com.honghao.cloud.userapi.domain.entity.ErrMsg;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.domain.mapper.master.ErrMsgMapper;
@@ -42,9 +39,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 @RestController
 @RequestMapping("/testController")
 public class TestController {
-    private BloomFilterHelper<String> orderBloomFilterHelper = new BloomFilterHelper<>((Funnel<String>) (from, into) -> into.putString(from, Charsets.UTF_8)
-            .putString(from, Charsets.UTF_8), 100 , 0.01);
-
     private ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(1000,1200,"test");
     @Resource
     private WaybillBcListFacade waybillBcListFacade;
@@ -59,11 +53,11 @@ public class TestController {
     @Resource
     private JedisOperator jedisOperator;
     @Resource
-    private RedisService redisService;
+    private CacheTemplate<ErrMsg> cacheTemplate;
 
     @PostMapping("/test/test")
     public BaseResponse test(@RequestBody WaybillBcList waybillBcList){
-
+        System.out.println(waybillBcList);
         orderClient.createUser(new JSONObject());
 
         orderClient.singleQuery("123","431");
@@ -76,6 +70,7 @@ public class TestController {
 
     @GetMapping("/retryTest/retryTest")
     public BaseResponse retryTest(@RequestParam String date){
+        System.out.println(date);
         List<ErrMsg> select = errMsgMapper.select();
         select.forEach(each->{
             errMsgMapper.deleteByPrimaryKey(each.getId());
@@ -113,7 +108,9 @@ public class TestController {
             lo = geoRadiusResponse.getCoordinate().getLongitude();
             la = geoRadiusResponse.getCoordinate().getLongitude();
             dist = geoRadiusResponse.getDistance();
+            System.out.println(wId+lo+la+dist);
         }
+
         //获取这两个key值之间的距离
         Double dis = jedisOperator.geodist("test02","11111","22222",GeoUnit.M);
         System.out.println(dis.doubleValue());
@@ -172,9 +169,7 @@ public class TestController {
 
         ttl.set(3);
 
-        ttlExecutorService.submit(()->{
-            System.out.println("第二次"+Thread.currentThread().getName()+"value:"+ttl.get());
-        });
+        ttlExecutorService.submit(()-> System.out.println("第二次"+Thread.currentThread().getName()+"value:"+ttl.get()));
     }
 
     /**
@@ -184,8 +179,6 @@ public class TestController {
     @GetMapping("/getList")
     public BaseResponse getList(){
         String batchId = "2020012548548627";
-        redisService.includeByBloomFilter(orderBloomFilterHelper, "order", batchId);
-        redisService.addByBloomFilter(orderBloomFilterHelper, "order", batchId);
-        return BaseResponse.success();
+        return cacheTemplate.redisStringCache("order", batchId, () -> errMsgMapper.selectByPrimaryKey(123445L));
     }
 }
