@@ -1,6 +1,6 @@
 package com.honghao.cloud.orderapi.facade.impl;
 
-import com.honghao.cloud.orderapi.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.orderapi.client.AccountClient;
 import com.honghao.cloud.orderapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.orderapi.facade.OrderFacade;

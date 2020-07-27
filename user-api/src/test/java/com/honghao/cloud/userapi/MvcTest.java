@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi;
 
-import com.honghao.cloud.userapi.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.userapi.controller.DeliveryController;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.facade.BatchFacade;
@@ -39,7 +39,6 @@ public class MvcTest {
     @Test
     public void test02(){
         log.info("开始接口测试工作");
-        messageSender.testQueue("name is chenhonghao");
     }
 
     @Test
@@ -85,15 +84,14 @@ public class MvcTest {
             int finalI = i;
             threadPoolExecutor.execute(() -> {
                 try {
+                    countDownLatch.countDown();
                     countDownLatch.await();
-                    BaseResponse<WaybillBcList> response = batchFacade.queryCommon(String.valueOf(finalI));
+                    BaseResponse<WaybillBcList> response = batchFacade.queryCommon1(String.valueOf(finalI));
                     System.out.println("请求结果为"+response.getData());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             });
-            countDownLatch.countDown();
         }
     }
-
 }

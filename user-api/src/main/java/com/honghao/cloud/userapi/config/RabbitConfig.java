@@ -73,7 +73,6 @@ public class RabbitConfig {
      */
     private static final String DELAY_PROCESS_QUEUE_NAME = "delay_process_queue_name";
 
-    public static final String TEST_1 = "test_1";
 
     /**
      * 默认的线程数
@@ -156,8 +155,8 @@ public class RabbitConfig {
     }
 
     /**
-     * 绑定队列到指定的
-     * @return
+     * 绑定队列到指定的交换机通过关键字topic
+     * @return Binding
      */
     @Bean
     public Binding smsDelayBinding() {

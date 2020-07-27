@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.test.face.file;
 
-import com.honghao.cloud.userapi.factory.ExecutorFactory;
+import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayOutputStream;
@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 @Slf4j
 public class BigTest {
-    private static ThreadPoolExecutor threadPoolExecutor = ExecutorFactory.buildThreadPoolExecutor(4,10,"t4est");
+    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(4,10,"t4est");
     private static List<StartEndPair> list = new ArrayList<>();
     private static long fileSize;
     private static RandomAccessFile rAccessFile;

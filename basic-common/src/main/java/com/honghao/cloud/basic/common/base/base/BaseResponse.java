@@ -1,4 +1,4 @@
-package com.honghao.cloud.userapi.base;
+package com.honghao.cloud.basic.common.base.base;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

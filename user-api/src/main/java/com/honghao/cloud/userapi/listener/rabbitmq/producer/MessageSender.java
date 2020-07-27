@@ -54,70 +54,6 @@ public class MessageSender {
 	}
 
 	/**
-	 * 延迟处理 time 分钟数 action 处理的类名，方法为 doAction data 处理参数
-	 * @param content 请求报文
-	 */
-	public void delayDoAction(Object content) {
-		MessagePostProcessor messagePostProcessor = message -> {
-			message.getMessageProperties().setExpiration(String.valueOf(60*1000));
-			return message;
-		};
-		rabbitTemplate.convertAndSend(RabbitConfig.DELAY_TEN_MIN_DEATH, content, messagePostProcessor);
-	}
-
-	public void sendMessage(Object content) {
-		log.info("开始短信消息发送");
-		MessagePostProcessor messagePostProcessor = message -> {
-			message.getMessageProperties().setExpiration(String.valueOf(2*1000));
-			//开启消息持久化
-			message.getMessageProperties().setDeliveryMode(MessageDeliveryMode.PERSISTENT);
-			return message;
-		};
-		rabbitTemplate.convertAndSend(RabbitConfig.QUEUE_MSG_SMS_SEND_TTL, content, messagePostProcessor);
-	}
-
-	/**
-	 * 用户信息推送队列
-	 * @param message 请求报文
-	 */
-	public void testQueue(String message){
-		rabbitTemplate.setMandatory(true);
-		rabbitTemplate.setReturnCallback((message1, i, s, s1, s2) -> {
-			log.info("ackMQSender 发送消息被退回" + s1 + s2);
-		});
-		/**
-		 * 如果设置了spring.rabbitmq.publisher-confirms=true(默认是false),生产者会收到rabitmq-server返回的ack
-		 * 这个回调方法里面没有原始消息,相当于只是一个通知作用
-		 */
-		this.rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
-			if (!ack) {
-				log.info("ackMQSender 消息发送失败" + cause + correlationData.toString());
-			} else {
-				log.info("ackMQSender 消息发送成功 ");
-			}
-		});
-		rabbitTemplate.convertAndSend(RabbitConfig.TEST_QUEUE,message);
-	}
-
-	/**
-	 * 用户信息推送队列
-	 * @param message 请求报文
-	 */
-	public void outQueue(String message){
-		System.out.println("用户信息推送队列");
-		rabbitTemplate.convertAndSend(RabbitConfig.WAYBILL_ORDER_EXCHANGE,"",message);
-	}
-
-	/**
-	 * 数据迁移测试
-	 * @param message 请求报文
-	 */
-	public void test01(String message){
-
-		rabbitTemplate.convertAndSend(RabbitConfig.TEST_1,message);
-	}
-
-	/**
 	 * 公用延迟队列处理
 	 * @param queueName 队列名称
 	 * @param content 队列内容
@@ -127,6 +63,8 @@ public class MessageSender {
 		int delayTime = time*60*1000;
 		MessagePostProcessor messagePostProcessor = message -> {
 			message.getMessageProperties().setExpiration(String.valueOf(delayTime));
+            //开启消息持久化
+            message.getMessageProperties().setDeliveryMode(MessageDeliveryMode.PERSISTENT);
 			return message;
 		};
 		rabbitTemplate.convertAndSend(queueName, content, messagePostProcessor);

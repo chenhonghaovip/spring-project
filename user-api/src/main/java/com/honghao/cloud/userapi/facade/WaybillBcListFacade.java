@@ -1,6 +1,7 @@
 package com.honghao.cloud.userapi.facade;
 
-import com.honghao.cloud.userapi.base.BaseResponse;
+
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 
 /**
  * 订单信息操作

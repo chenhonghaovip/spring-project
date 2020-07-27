@@ -1,6 +1,6 @@
 package com.honghao.cloud.orderapi.controller;
 
-import com.honghao.cloud.orderapi.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.orderapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.orderapi.facade.OrderFacade;
 import io.swagger.annotations.Api;

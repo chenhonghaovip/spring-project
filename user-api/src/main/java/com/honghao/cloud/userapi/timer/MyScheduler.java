@@ -44,9 +44,7 @@ public class MyScheduler {
             TimeUnit.MINUTES.sleep(1);
             scheduler.shutdown();
             System.out.println("--------scheduler shutdown ! ------------");
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (SchedulerException | InterruptedException e) {
             e.printStackTrace();
         }
 

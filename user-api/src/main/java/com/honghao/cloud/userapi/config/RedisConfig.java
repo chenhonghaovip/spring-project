@@ -31,7 +31,7 @@ public class RedisConfig {
 
 	@Bean(name = "spring.redis.pool")
 	public JedisPool jedisPool(@Qualifier("spring.redis.pool.config") JedisPoolConfig config) {
-		JedisPool pool = new JedisPool(config, host, port);
+		JedisPool pool = new JedisPool(config, host, port,2000,password);
 		log.info("init redis...");
 		return pool;
 	}

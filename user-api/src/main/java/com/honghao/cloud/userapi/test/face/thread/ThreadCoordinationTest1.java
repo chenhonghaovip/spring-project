@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.test.face.thread;
 
-import com.honghao.cloud.userapi.factory.ExecutorFactory;
+import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -21,7 +21,7 @@ public class ThreadCoordinationTest1 {
     }
     public void test() {
 
-        ThreadPoolExecutor threadPoolExecutor = ExecutorFactory.buildThreadPoolExecutor(3, 3, "test");
+        ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(3, 3, "test");
         CyclicBarrier cyclicBarrier = new CyclicBarrier(3);
         threadPoolExecutor.submit(()-> {
             int a ;

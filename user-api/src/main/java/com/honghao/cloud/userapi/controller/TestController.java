@@ -6,7 +6,9 @@ import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.threadpool.TtlExecutors;
 import com.google.common.base.Charsets;
 import com.google.common.hash.Funnel;
-import com.honghao.cloud.userapi.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
+import com.honghao.cloud.basic.common.base.utils.BloomFilterHelper;
 import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.component.RedisService;
 import com.honghao.cloud.userapi.domain.entity.ErrMsg;
@@ -14,9 +16,7 @@ import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.domain.mapper.master.ErrMsgMapper;
 import com.honghao.cloud.userapi.facade.BatchFacade;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
-import com.honghao.cloud.userapi.factory.ExecutorFactory;
 import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;
-import com.honghao.cloud.userapi.utils.BloomFilterHelper;
 import com.honghao.cloud.userapi.utils.HttpUtil;
 import com.honghao.cloud.userapi.utils.JedisOperator;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,6 @@ import redis.clients.jedis.GeoUnit;
 import redis.clients.jedis.params.geo.GeoRadiusParam;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -46,7 +45,7 @@ public class TestController {
     private BloomFilterHelper<String> orderBloomFilterHelper = new BloomFilterHelper<>((Funnel<String>) (from, into) -> into.putString(from, Charsets.UTF_8)
             .putString(from, Charsets.UTF_8), 100 , 0.01);
 
-    private ThreadPoolExecutor threadPoolExecutor = ExecutorFactory.buildThreadPoolExecutor(2,4,"test");
+    private ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(1000,1200,"test");
     @Resource
     private WaybillBcListFacade waybillBcListFacade;
     @Resource
@@ -123,11 +122,6 @@ public class TestController {
         return BaseResponse.success();
     }
 
-    @RequestMapping("/dddddd")
-    public BaseResponse<String> dddddd(HttpServletRequest httpServletRequest) {
-        httpServletRequest.getParameter("data");
-        return BaseResponse.successData(httpServletRequest.getParameter("data"));
-    }
     /**
      * 多数据源事务处理
      * @return BaseResponse
@@ -142,20 +136,22 @@ public class TestController {
      */
     @GetMapping("/selectInfo")
     public void select(){
-        CountDownLatch countDownLatch = new CountDownLatch(1000);
+        CountDownLatch countDownLatch = new CountDownLatch(1);
         for (int i = 0; i < 1000; i++) {
             int finalI = i;
             threadPoolExecutor.execute(() -> {
                 try {
                     countDownLatch.await();
-                    BaseResponse<WaybillBcList> response = batchFacade.queryCommon(String.valueOf(finalI));
-                    System.out.println("请求结果为"+response.getData());
+                    BaseResponse<WaybillBcList> response = batchFacade.queryCommon1(String.valueOf(finalI));
+                    if (response.isResult() && "874".equals(response.getData().getWId())){
+                        log.info("请求参数为{},结果为：{}",finalI,response.getData());
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             });
-            countDownLatch.countDown();
         }
+        countDownLatch.countDown();
     }
 
     /**
@@ -166,7 +162,7 @@ public class TestController {
     @Test
     public void testInfo(){
         TransmittableThreadLocal<Integer> ttl = new TransmittableThreadLocal<>();
-        ThreadPoolExecutor threadPool = ExecutorFactory.buildThreadPoolExecutor(1,1,"odoofd");
+        ThreadPoolExecutor threadPool = ThreadPoolFactory.buildThreadPoolExecutor(1,1,"odoofd");
         ExecutorService ttlExecutorService = TtlExecutors.getTtlExecutorService(threadPool);
         ttl.set(1);
         ttlExecutorService.submit(()->{
@@ -181,7 +177,11 @@ public class TestController {
         });
     }
 
-    @GetMapping
+    /**
+     * redis实现布隆过滤器功能
+     * @return BaseResponse
+     */
+    @GetMapping("/getList")
     public BaseResponse getList(){
         String batchId = "2020012548548627";
         redisService.includeByBloomFilter(orderBloomFilterHelper, "order", batchId);

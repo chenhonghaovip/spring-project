@@ -3,6 +3,9 @@ package com.honghao.cloud.accountapi.domain.mapper;
 
 import com.honghao.cloud.accountapi.domain.entity.Order;
 
+/**
+ * @author CHH
+ */
 public interface OrderMapper {
     int deleteByPrimaryKey(String wId);
 

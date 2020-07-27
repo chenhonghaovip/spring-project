@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.test.face.thread;
 
-import com.honghao.cloud.userapi.factory.ExecutorFactory;
+import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,7 +20,7 @@ public class ThreadCoordinationTest {
     }
     public void test() {
 
-        ThreadPoolExecutor threadPoolExecutor = ExecutorFactory.buildThreadPoolExecutor(3, 3, "test");
+        ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(3, 3, "test");
 
         threadPoolExecutor.submit(()-> {
             while (true){
