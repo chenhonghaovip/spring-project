@@ -4,6 +4,7 @@ import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ public class TenMinDelay {
 	 * 消费队列信息
 	 * @param str json字符串
 	 */
+	@RabbitListener(queues = "test")
 	@RabbitHandler
 	public void process(String str, Channel channel, Message message) throws IOException {
 		try {
@@ -29,7 +31,7 @@ public class TenMinDelay {
 			//丢弃消息
 			channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);
 			//消息重新返回队列
-//			channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
+			channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
 			log.info("消息队列发送操作异常");
 		}
 

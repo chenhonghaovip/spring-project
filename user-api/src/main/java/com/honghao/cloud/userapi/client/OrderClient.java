@@ -2,7 +2,6 @@ package com.honghao.cloud.userapi.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
-import com.honghao.cloud.userapi.aspect.FeignExceptionDeal;
 import com.honghao.cloud.userapi.client.hystrix.OrderClientFallbackFactory;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -31,7 +30,6 @@ public interface OrderClient {
      * @param data string
      * @return 删除
      */
-    @FeignExceptionDeal(retryTimes = 5)
     @PostMapping("/order/create")
     BaseResponse<String> createUser(@RequestBody JSONObject data);
 
@@ -58,7 +56,6 @@ public interface OrderClient {
      * @param batchId 批次号
      * @return BaseResponse
      */
-    @FeignExceptionDeal
     @GetMapping("/singleQuery")
     BaseResponse<WaybillBcList> singleQuery(@RequestParam("wId") String wId, @RequestParam("batchId") String batchId);
 }

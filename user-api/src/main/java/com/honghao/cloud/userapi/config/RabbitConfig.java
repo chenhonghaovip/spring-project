@@ -4,17 +4,15 @@ package com.honghao.cloud.userapi.config;
 import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
-import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.rabbit.listener.api.ChannelAwareMessageListener;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,50 +71,42 @@ public class RabbitConfig {
      */
     private static final String DELAY_PROCESS_QUEUE_NAME = "delay_process_queue_name";
 
-
-    /**
-     * 默认的线程数
-     */
-    private static final int DEFAULT_CONCURRENT = 5;
-
-    /**
-     * 每个消费者获取最大投递数量 (默认50)
-     */
-    private static final int DEFAULT_PREFETCH_COUNT = 100;
-    @Value("${spring.rabbitmq.addresses}")
-    private String address;
-
-    @Value("${spring.rabbitmq.username}")
-    private String username;
-
-    @Value("${spring.rabbitmq.password}")
-    private String password;
-
-    @Bean(name = "connectionFactory")
-    @Primary
-    public ConnectionFactory connectionFactory() {
-        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-        connectionFactory.setAddresses(address);
-        connectionFactory.setUsername(username);
-        connectionFactory.setPassword(password);
-        connectionFactory.setPublisherConfirms(true);
-        return connectionFactory;
+    public static final String TEST = "test";
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+        return rabbitTemplate;
     }
+    /**
+     * 简单消息监听容器
+     * @param connectionFactory connectionFactory
+     * @return SimpleMessageListenerContainer
+     */
+    @Bean
+    public SimpleMessageListenerContainer messageContainer(ConnectionFactory connectionFactory) {
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
+        // 设置要监听的队列,可以实现对单个或多个queue的ack模式修改
+        container.setQueueNames(TEST);
+        container.setExposeListenerChannel(true);
+        // 设置监听数据
+        container.setMaxConcurrentConsumers(50);
+        container.setConcurrentConsumers(1);
+        // 设置确认模式手工确认
+        container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+        container.setMessageListener((ChannelAwareMessageListener) (message, channel) -> {
+            String msg = new String(message.getBody(), StandardCharsets.UTF_8);
 
-    @Bean(name = "rabbitTemplate")
-    @Primary
-    public RabbitTemplate rabbitTemplate(@Qualifier("connectionFactory") ConnectionFactory connectionFactory) {
-        return new RabbitTemplate(connectionFactory);
-    }
-
-    @Bean(name = "factory")
-    public SimpleRabbitListenerContainerFactory factory(SimpleRabbitListenerContainerFactoryConfigurer configurer,
-                                                        @Qualifier("connectionFactory") ConnectionFactory connectionFactory) {
-        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-        factory.setPrefetchCount(DEFAULT_PREFETCH_COUNT);
-        factory.setConcurrentConsumers(DEFAULT_CONCURRENT);
-        configurer.configure(factory, connectionFactory);
-        return factory;
+            try {
+                System.out.println("receive msg : " + msg);
+                channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
+                log.info("测试消息确认");
+            }catch (Exception e){
+                channel.basicNack(message.getMessageProperties().getDeliveryTag(),false,false);
+                log.info("测试消息异常");
+            }
+        });
+        return container;
     }
     /**
      * 实际消费队列
@@ -273,11 +263,5 @@ public class RabbitConfig {
     public Binding test02Binding() {
         return BindingBuilder.bind(test02())
                 .to(waybillOrderExchange());
-    }
-
-
-    @Bean
-    public Queue honghao_queue(){
-        return new Queue("honghao_queue");
     }
 }

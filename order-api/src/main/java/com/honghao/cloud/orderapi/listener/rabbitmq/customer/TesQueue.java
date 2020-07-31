@@ -1,9 +1,7 @@
 package com.honghao.cloud.orderapi.listener.rabbitmq.customer;
 
-import com.honghao.cloud.orderapi.config.RabbitConfig;
 import com.honghao.cloud.orderapi.dto.request.CardDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class TesQueue {
 
-    @RabbitListener(queues = RabbitConfig.TEST_QUEUE_1)
+//    @RabbitListener(queues = RabbitConfig.TEST_QUEUE_1)
     public void sendMessage(String message){
         try {
             log.info("");

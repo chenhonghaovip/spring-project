@@ -2,6 +2,7 @@ package com.honghao.cloud.orderapi.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
  * 参数类配置
@@ -10,6 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @date 2019-07-20 01:08
  */
 @Data
+@Component
 @ConfigurationProperties(prefix = "honghao")
 public class ParamConfig {
     /**

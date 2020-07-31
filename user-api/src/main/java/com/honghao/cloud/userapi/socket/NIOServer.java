@@ -15,6 +15,7 @@ import java.util.Set;
  */
 public class NIOServer {
     public static void main(String[] args) throws IOException {
+
         Selector selector = Selector.open();
 
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
@@ -28,6 +29,12 @@ public class NIOServer {
                 continue;
             }
             Set<SelectionKey> selectionKeys = selector.selectedKeys();
+//            for (SelectionKey selectionKey : selectionKeys) {
+//                if (selectionKey.isAcceptable()){
+//
+//                }
+//            }
+
             Iterator<SelectionKey> iterator = selectionKeys.iterator();
             while (iterator.hasNext()){
                 SelectionKey next = iterator.next();

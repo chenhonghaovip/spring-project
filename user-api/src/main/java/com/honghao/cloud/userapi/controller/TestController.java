@@ -1,6 +1,5 @@
 package com.honghao.cloud.userapi.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.threadpool.TtlExecutors;
@@ -14,17 +13,11 @@ import com.honghao.cloud.userapi.domain.mapper.master.ErrMsgMapper;
 import com.honghao.cloud.userapi.facade.BatchFacade;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;
-import com.honghao.cloud.userapi.utils.HttpUtil;
-import com.honghao.cloud.userapi.utils.JedisOperator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.web.bind.annotation.*;
-import redis.clients.jedis.GeoRadiusResponse;
-import redis.clients.jedis.GeoUnit;
-import redis.clients.jedis.params.geo.GeoRadiusParam;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -51,8 +44,6 @@ public class TestController {
     @Resource
     private ErrMsgMapper errMsgMapper;
     @Resource
-    private JedisOperator jedisOperator;
-    @Resource
     private CacheTemplate<ErrMsg> cacheTemplate;
 
     @PostMapping("/test/test")
@@ -61,10 +52,6 @@ public class TestController {
         orderClient.createUser(new JSONObject());
 
         orderClient.singleQuery("123","431");
-        List<String> strings = Arrays.asList("1","2");
-        String request = JSON.toJSONString(strings);
-        String result = HttpUtil.doPost("http://10.16.14.38:8082/order/batchQuery", request, 1);
-        System.out.println(result);
         return BaseResponse.success();
     }
 
@@ -76,46 +63,6 @@ public class TestController {
             errMsgMapper.deleteByPrimaryKey(each.getId());
             messageSender.publicQueueProcessing(each.getMsg(), "honghao_queue");
         });
-        return BaseResponse.success();
-    }
-    /**
-     * geoHash测试
-     * @param data data
-     * @return BaseResponse
-     */
-    @PostMapping("/test003")
-    public BaseResponse test03(@RequestBody String data){
-        System.out.println(data);
-        //存放geo信息，存放到redis中为zset结构
-        jedisOperator.geoadd("test02",Double.valueOf("121.3717178602589"),Double.valueOf("31.17087293836589"),"33333");
-        jedisOperator.geoadd("test02",Double.valueOf("121.3716178602589"),Double.valueOf("31.17087293836589"),"44444");
-        jedisOperator.geoadd("test02",Double.valueOf("121.3715178602589"),Double.valueOf("31.17087293836589"),"55555");
-        jedisOperator.geoadd("test02",Double.valueOf("121.3719178602589"),Double.valueOf("31.17087293836589"),"11111");
-        jedisOperator.geoadd("test02",Double.valueOf("121.3718178602589"),Double.valueOf("31.17087293836589"),"22222");
-
-        //获取半径范围内的所有订单信息（主键值，经纬度，距离信息），并且按照顺序升序排序
-        List<GeoRadiusResponse> list1 = jedisOperator.georadius("test02", Double.valueOf("121.3719178602589"), Double.valueOf("31.17087293836589"), 1, GeoUnit.M, GeoRadiusParam.geoRadiusParam().withCoord().withDist().sortDescending());
-        for (GeoRadiusResponse geoRadiusResponse : list1) {
-            geoRadiusResponse.getMemberByString();
-            System.out.println( geoRadiusResponse.getMemberByString() + " distance:" + geoRadiusResponse.getDistance());
-        }
-
-        List<GeoRadiusResponse> result = list1.subList(0,Math.min(list1.size(),25));
-        String wId;
-        double lo,la,dist;
-        for (GeoRadiusResponse geoRadiusResponse : result) {
-            wId = geoRadiusResponse.getMemberByString();
-            lo = geoRadiusResponse.getCoordinate().getLongitude();
-            la = geoRadiusResponse.getCoordinate().getLongitude();
-            dist = geoRadiusResponse.getDistance();
-            System.out.println(wId+lo+la+dist);
-        }
-
-        //获取这两个key值之间的距离
-        Double dis = jedisOperator.geodist("test02","11111","22222",GeoUnit.M);
-        System.out.println(dis.doubleValue());
-
-
         return BaseResponse.success();
     }
 
