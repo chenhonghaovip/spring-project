@@ -130,7 +130,7 @@ public class MessageSender {
 	 * @param content 消息内容
 	 * @param time 延迟时间 毫秒数
 	 */
-	public <T> void  publicDelayQueueProcessing(T content, String queueName , final int time) {
+	public void  publicDelayQueueProcessing(Object content, String queueName , final int time) {
 		int delayTime = time*60*1000;
 		MessagePostProcessor messagePostProcessor = message -> {
 			message.getMessageProperties().setExpiration(String.valueOf(delayTime));
@@ -146,7 +146,7 @@ public class MessageSender {
 	 * @param t 消息内容
 	 * @param queueName 队列名称
 	 */
-	public <T> void publicQueueProcessing(T t , String queueName){
+	public void publicQueueProcessing(Object t , String queueName){
 		rabbitTemplate.convertAndSend(queueName ,t);
 	}
 }
