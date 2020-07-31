@@ -56,13 +56,13 @@ public class MessageSender {
                         if (baseResponse.isResult()){
                             each.setStatus(1);
                             msgInfoMapper.updateByPrimaryKeySelective(each);
-                            commonPush(each.getTopic(),each);
+                            publicQueueProcessing(each,each.getTopic());
                         }else {
                             msgInfoMapper.deleteByPrimaryKey(each.getMsgId());
                         }
                     }else if (Integer.valueOf(1).equals(each.getStatus())){
                         // 当状态为1时，说明业务发起方已经成功处理，但是消息服务投递消息到中间件时出现异常，所以需要重新投递
-                        commonPush(each.getTopic(),each);
+                        publicQueueProcessing(each,each.getTopic());
                     }else {
                         // 可以通过手动ack机制实现
                         // 当状态为2时，说明消息已经投递到消息中间件队列中，等待消费方完成消费后发起回调
@@ -127,7 +127,7 @@ public class MessageSender {
 	/**
 	 * 公用延迟队列处理
 	 * @param queueName 队列名称
-	 * @param content 队列内容
+	 * @param content 消息内容
 	 * @param time 延迟时间 毫秒数
 	 */
 	public <T> void  publicDelayQueueProcessing(T content, String queueName , final int time) {
@@ -143,10 +143,10 @@ public class MessageSender {
 
 	/**
 	 * 公用队列处理
-	 * @param str 队列信息
+	 * @param t 消息内容
 	 * @param queueName 队列名称
 	 */
-	public void publicQueueProcessing(String str , String queueName){
-		rabbitTemplate.convertAndSend(queueName ,str);
+	public <T> void publicQueueProcessing(T t , String queueName){
+		rabbitTemplate.convertAndSend(queueName ,t);
 	}
 }

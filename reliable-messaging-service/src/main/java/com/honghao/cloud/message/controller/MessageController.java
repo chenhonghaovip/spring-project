@@ -41,7 +41,7 @@ public class MessageController {
         BeanUtils.copyProperties(msgInfoDTO,msgInfo);
         msgInfoMapper.updateByPrimaryKeySelective(msgInfo);
         if (Integer.valueOf(1).equals(msgInfoDTO.getStatus())){
-            messageSender.commonPush(RabbitConfig.TEST,msgInfo);
+            messageSender.publicQueueProcessing(msgInfo,RabbitConfig.TEST);
         }
         return BaseResponse.success();
     }

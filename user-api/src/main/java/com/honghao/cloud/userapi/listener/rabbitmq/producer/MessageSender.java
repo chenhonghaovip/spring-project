@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.MessageDeliveryMode;
 import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -19,7 +18,6 @@ import java.util.Objects;
 @Component
 public class MessageSender {
 	@Resource
-	@Qualifier("rabbitTemplate")
 	private RabbitTemplate rabbitTemplate;
 
 	/**
