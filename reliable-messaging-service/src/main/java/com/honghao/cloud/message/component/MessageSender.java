@@ -27,8 +27,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 public class MessageSender {
-//    private LinkedBlockingQueue<MsgInfo> queues = new LinkedBlockingQueue<>();
-
     private static ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1,"timer");
     @Resource
     private OrderClient orderClient;
@@ -42,9 +40,6 @@ public class MessageSender {
 	@PostConstruct
 	public void init(){
 	    scheduledThreadPoolExecutor.scheduleAtFixedRate(()->{
-	        // 可以通过批量更新来减少数据库压力
-//            List<MsgInfo> list = new ArrayList<>(queues);
-//            msgInfoMapper.updateBatch(list);
 
             List<MsgInfo> msgInfos = msgInfoMapper.selectByStatus();
             msgInfos.forEach(each->{
@@ -68,7 +63,13 @@ public class MessageSender {
                         // 当状态为2时，说明消息已经投递到消息中间件队列中，等待消费方完成消费后发起回调
                         // 如果长时间消息状态为已发送，未变为已完成，需要向消费方主动发起确认
                         // BaseResponse baseResponse = orderClient.queryStatus(each.getMsgId());
-
+                        BaseResponse baseResponse = orderClient.queryStatus(each.getMsgId());
+                        if (baseResponse.isResult()){
+                            each.setStatus(1);
+                            msgInfoMapper.updateByPrimaryKeySelective(each);
+                        }else {
+                            publicQueueProcessing(each,each.getTopic());
+                        }
                     }
                 } catch (Exception e) {
                     log.error(e.getMessage());
@@ -79,7 +80,9 @@ public class MessageSender {
 
     public RabbitTemplate.ConfirmCallback confirmCallback = (correlationData, ack, cause) -> {
         MsgInfo msgInfo = new MsgInfo();
-        msgInfo.setMsgId(Long.valueOf(Objects.requireNonNull(correlationData.getId())));
+        String id = Objects.requireNonNull(correlationData).getId();
+        assert id!=null;
+        msgInfo.setMsgId(Long.valueOf(id));
         if (!ack) {
             msgInfo.setRetryTime(msgInfo.getRetryTime()!=null?msgInfo.getRetryTime()+1:0);
             log.info("ackMQSender 消息发送失败" + cause + Objects.requireNonNull(correlationData).toString());

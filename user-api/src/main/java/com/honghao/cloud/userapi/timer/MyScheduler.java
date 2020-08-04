@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.timer;
 
-import com.honghao.cloud.userapi.factory.QuartzFactory;
+import com.honghao.cloud.basic.common.base.factory.QuartzFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.quartz.*;

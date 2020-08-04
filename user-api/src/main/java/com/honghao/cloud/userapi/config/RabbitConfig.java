@@ -86,37 +86,6 @@ public class RabbitConfig {
         factory.setMessageConverter(new Jackson2JsonMessageConverter());
         return factory;
     }
-
-    /**
-     * 简单消息监听容器
-     * @param connectionFactory connectionFactory
-     * @return SimpleMessageListenerContainer
-     */
-//    @Bean
-//    public SimpleMessageListenerContainer messageContainer(ConnectionFactory connectionFactory) {
-//        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
-//        // 设置要监听的队列,可以实现对单个或多个queue的ack模式修改
-//        container.setQueueNames(TEST);
-//        container.setExposeListenerChannel(true);
-//        // 设置监听数据
-//        container.setMaxConcurrentConsumers(50);
-//        container.setConcurrentConsumers(1);
-//        // 设置确认模式手工确认
-//        container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
-//        container.setMessageListener((ChannelAwareMessageListener) (message, channel) -> {
-//            String msg = new String(message.getBody(), StandardCharsets.UTF_8);
-//
-//            try {
-//                System.out.println("receive msg : " + msg);
-//                channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
-//                log.info("测试消息确认");
-//            }catch (Exception e){
-//                channel.basicNack(message.getMessageProperties().getDeliveryTag(),false,false);
-//                log.info("测试消息异常");
-//            }
-//        });
-//        return container;
-//    }
     /**
      * 实际消费队列
      * @return

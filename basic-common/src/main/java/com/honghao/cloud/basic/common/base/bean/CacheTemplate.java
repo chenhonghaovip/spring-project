@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.redisson.spring.starter.RedissonAutoConfiguration;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -32,6 +33,8 @@ public class CacheTemplate<T> {
     private static final String R_LOCK = "r_lock";
     private BloomFilterHelper<String> bloomFilterHelper ;
 
+    @Value("${spring.application.name}")
+    private String applicationName;
     @Resource
     private Redisson redisson;
     @Resource
@@ -84,7 +87,7 @@ public class CacheTemplate<T> {
             }
         }
 
-        String key = prefix + businessId;
+        String key = applicationName + prefix + businessId;
         // 双锁检查机制，判断是否缓存中存在，不存在时，查询数据库并且缓存
         Object o = redisTemplate.opsForValue().get(key);
         if (Objects.nonNull(o)){
@@ -131,11 +134,12 @@ public class CacheTemplate<T> {
         }
 
         // 双锁检查机制，判断是否缓存中存在，不存在时，查询数据库并且缓存
+        key = applicationName + key;
         Object o = redisTemplate.opsForHash().get(key,filed);
         if (Objects.nonNull(o)){
             return BaseResponse.successData(o);
         }
-        RLock lock = redisson.getLock(R_LOCK + key);
+        RLock lock = redisson.getLock(R_LOCK + filed);
         lock.lock();
 
         try {
@@ -152,5 +156,4 @@ public class CacheTemplate<T> {
             lock.unlock();
         }
     }
-
 }
