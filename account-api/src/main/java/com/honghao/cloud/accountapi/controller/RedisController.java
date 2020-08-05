@@ -26,6 +26,29 @@ public class RedisController {
     private RedisService redisService;
 
     /**
+     * redis删除bigkey
+     * @param userId userId
+     * @return BaseResponse
+     */
+    @PostMapping("/addBigData")
+    @ApiOperation(value = "redis添加大数据", notes = "redis添加大数据")
+    public BaseResponse addBigData(@RequestBody String userId){
+        return redisService.addBigData(userId);
+    }
+
+    /**
+     * redis删除bigkey
+     * @param userId userId
+     * @return BaseResponse
+     */
+    @PostMapping("/delBigHash")
+    @ApiOperation(value = "redis删除bigkey", notes = "redis删除bigkey")
+    public BaseResponse delBigHash(@RequestBody String userId){
+        return redisService.delBigHash(userId);
+    }
+
+
+    /**
      * redis缓存击穿处理
      * @param userId userId
      * @return BaseResponse

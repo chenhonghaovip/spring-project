@@ -8,7 +8,18 @@ import com.honghao.cloud.basic.common.base.base.BaseResponse;
  * @date 2020-07-23 21:31
  */
 public interface RedisService {
-
+    /**
+     * redis添加大量数据
+     * @param userId userId
+     * @return BaseResponse
+     */
+    BaseResponse addBigData(String userId);
+    /**
+     * redis删除bigkey
+     * @param userId userId
+     * @return BaseResponse
+     */
+    BaseResponse delBigHash(String userId);
     /**
      * redis缓存击穿处理
      * @param userId userId

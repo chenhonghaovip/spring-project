@@ -12,17 +12,17 @@ import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -38,6 +38,7 @@ public class RedisServiceImpl implements RedisService {
     private static List<ShopInfo> ids = new ArrayList<>();
     private ConcurrentHashMap<String, ReentrantLock> concurrentHashMap = new ConcurrentHashMap<>();
     private static final ScheduledThreadPoolExecutor SCHEDULED_THREAD_POOL_EXECUTOR = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1);
+    private static final ThreadPoolExecutor POOL_EXECUTOR = ThreadPoolFactory.buildThreadPoolExecutor(1,10,"add_redis");
     @Resource
     private Redisson redisson;
     @Resource
@@ -64,6 +65,7 @@ public class RedisServiceImpl implements RedisService {
             refreshMonth(times);
 
         },0,2,TimeUnit.MINUTES);
+
     }
 
     static {
@@ -71,6 +73,41 @@ public class RedisServiceImpl implements RedisService {
             String value = String.valueOf(i);
             ids.add(ShopInfo.builder().shopName(value).shopUrl(value).shopId("20200724000000"+i).shopPrice(new BigDecimal(i)).build());
         }
+    }
+
+    @Override
+    public BaseResponse addBigData(String userId) {
+        POOL_EXECUTOR.execute(()->redisTemplate.executePipelined((RedisCallback<String>) redisConnection -> {
+            for (int i = 0; i < 2000000; i++) {
+                String s = String.valueOf(i);
+                redisConnection.hSet("123456".getBytes(),s.getBytes(),s.getBytes());
+                redisConnection.hSet("1234567".getBytes(),s.getBytes(),s.getBytes());
+            }
+            redisConnection.close();
+            return null;
+        }));
+        return BaseResponse.success();
+    }
+
+    @Override
+    public BaseResponse delBigHash(String userId) {
+        long start = System.currentTimeMillis();
+//        redisTemplate.delete("123456");
+        long middle = System.currentTimeMillis();
+        System.out.println(middle-start);
+
+        Cursor<Map.Entry<Object, Object>> scan = redisTemplate.opsForHash().scan("1234567", ScanOptions.scanOptions().count(100).build());
+        while (scan.hasNext()){
+            Map.Entry<Object, Object> next = scan.next();
+            redisTemplate.opsForHash().delete("1234567",next.getKey());
+        }
+        try {
+            scan.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(System.currentTimeMillis()-middle);
+        return BaseResponse.success();
     }
 
     @Override
