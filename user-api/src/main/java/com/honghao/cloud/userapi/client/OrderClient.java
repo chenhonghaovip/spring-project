@@ -47,7 +47,7 @@ public interface OrderClient {
      * @return List<WaybillBcList>
      */
     @PostMapping("/order/batchQuery")
-    List<WaybillBcList> batchQuery(@RequestBody List<String> list);
+    BaseResponse<List<WaybillBcList>> batchQuery(@RequestBody List<String> list);
 
 
     /**

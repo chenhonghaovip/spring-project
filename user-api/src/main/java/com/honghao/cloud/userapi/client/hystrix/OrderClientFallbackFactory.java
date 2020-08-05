@@ -41,9 +41,9 @@ public class OrderClientFallbackFactory implements FallbackFactory<OrderClient> 
             }
 
             @Override
-            public List<WaybillBcList> batchQuery(List<String> list) {
+            public BaseResponse<List<WaybillBcList>> batchQuery(List<String> list) {
                 System.out.println(throwable.getMessage());
-                return list.stream().map(each-> WaybillBcList.builder().wId(each).build()).collect(Collectors.toList());
+                return BaseResponse.successData(list.stream().map(each-> WaybillBcList.builder().wId(each).build()).collect(Collectors.toList()));
             }
 
             @Override
