@@ -3,6 +3,7 @@ package com.honghao.cloud.accountapi.service.impl;
 import com.honghao.cloud.accountapi.common.dict.Dict;
 import com.honghao.cloud.accountapi.common.enums.ErrorCodeEnum;
 import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
+import com.honghao.cloud.accountapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.accountapi.domain.mapper.ShopInfoMapper;
 import com.honghao.cloud.accountapi.dto.request.LikePointVO;
 import com.honghao.cloud.accountapi.service.RedisService;
@@ -92,10 +93,8 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public BaseResponse delBigHash(String userId) {
         long start = System.currentTimeMillis();
-//        redisTemplate.delete("123456");
         long middle = System.currentTimeMillis();
         System.out.println(middle-start);
-
         Cursor<Map.Entry<Object, Object>> scan = redisTemplate.opsForHash().scan("1234567", ScanOptions.scanOptions().count(100).build());
         while (scan.hasNext()){
             Map.Entry<Object, Object> next = scan.next();
@@ -160,7 +159,6 @@ public class RedisServiceImpl implements RedisService {
             if (!aBoolean){
                 return BaseResponse.error(ErrorCodeEnum.API_GATEWAY_ERROR);
             }
-
             // 业务处理
         } finally {
             if (clientId.equals(redisTemplate.opsForValue().get(userId))){
@@ -342,5 +340,19 @@ public class RedisServiceImpl implements RedisService {
             list.add(Dict.WEIBO+(time-i));
         }
         redisTemplate.opsForZSet().unionAndStore(Dict.WEIBO + time, list, Dict.WEIBO_MONTH);
+    }
+
+    public static void main(String[] args) {
+        List<WaybillBcList> lists = new ArrayList<>();
+        for (int i = 0; i < 100000; i++) {
+            WaybillBcList waybillBcList = new WaybillBcList();
+//            lists.add(waybillBcList);
+        }
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(lists.size());
     }
 }

@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.lang.ref.SoftReference;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -127,5 +128,36 @@ public class TestController {
     public BaseResponse getList(){
         String batchId = "2020012548548627";
         return cacheTemplate.redisStringCache("order", batchId, () -> errMsgMapper.selectByPrimaryKey(123445L));
+    }
+
+    /**
+     * 软引用何时被收集
+     * 运行参数 -Xmx200m -XX:+PrintGC
+     * Created by ccr at 2018/7/14.
+     */
+    public static void main(String[] args) {
+        //100M的缓存数据
+        byte[] cacheData = new byte[100 * 1024 * 1024];
+        //将缓存数据用软引用持有
+        SoftReference<byte[]> cacheRef = new SoftReference<>(cacheData);
+        //将缓存数据的强引用去除
+        cacheData = null;
+        System.out.println("第一次GC前" + cacheData);
+        System.out.println("第一次GC前" + cacheRef.get());
+        //进行一次GC后查看对象的回收情况
+        System.gc();
+        //等待GC
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("第一次GC后" + cacheData);
+        System.out.println("第一次GC后" + cacheRef.get());
+
+        //在分配一个120M的对象，看看缓存对象的回收情况
+        byte[] newData = new byte[120 * 1024 * 1024];
+        System.out.println("分配后" + cacheData);
+        System.out.println("分配后" + cacheRef.get());
     }
 }

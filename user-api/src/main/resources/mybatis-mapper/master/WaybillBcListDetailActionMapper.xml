@@ -156,6 +156,8 @@
       </if>
     </set>
     where w_id = #{wId,jdbcType=CHAR}
+    <if test="kappId!=null and kappId!=''">and kapp_id = #{kappId}</if>
+    <if test="preKappAction!=null and preKappAction!=''">and kapp_action = #{preKappAction}</if>
   </update>
   <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillBcListDetailAction">
     update waybill_bc_list_detail_action
