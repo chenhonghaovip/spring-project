@@ -126,6 +126,17 @@ public class RedisController {
     }
 
     /**
+     * redis实现Geo
+     * @param userId userId
+     * @return BaseResponse
+     */
+    @PostMapping("/redisGeo")
+    @ApiOperation(value = "redis实现Geo", notes = "redis实现Geo")
+    public BaseResponse redisGeo(@RequestBody String userId){
+        return redisService.redisGeo(userId);
+    }
+
+    /**
      * redis模拟实现微博热搜排行榜（点击）
      * @return BaseResponse
      */
@@ -134,6 +145,8 @@ public class RedisController {
     public BaseResponse hotSearchOnWeibo(@RequestBody String key){
         return redisService.hotSearchOnWeibo(key);
     }
+
+
 
     /**
      * 微博热搜查询

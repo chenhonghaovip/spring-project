@@ -69,6 +69,14 @@ public interface RedisService {
      */
     BaseResponse redisSortedSet(String userId);
 
+
+    /**
+     * redis实现ZSet
+     * @param userId userId
+     * @return BaseResponse
+     */
+    BaseResponse redisGeo(String userId);
+
     /**
      * redis模拟实现微博热搜排行榜（点击）
      * @param key 请求参数

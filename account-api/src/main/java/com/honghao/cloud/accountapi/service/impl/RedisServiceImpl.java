@@ -3,7 +3,6 @@ package com.honghao.cloud.accountapi.service.impl;
 import com.honghao.cloud.accountapi.common.dict.Dict;
 import com.honghao.cloud.accountapi.common.enums.ErrorCodeEnum;
 import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
-import com.honghao.cloud.accountapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.accountapi.domain.mapper.ShopInfoMapper;
 import com.honghao.cloud.accountapi.dto.request.LikePointVO;
 import com.honghao.cloud.accountapi.service.RedisService;
@@ -13,6 +12,7 @@ import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
+import org.springframework.data.geo.Point;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 
@@ -261,6 +261,19 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
+    public BaseResponse redisGeo(String userId) {
+        Map<Object, Point> map = new HashMap<>();
+        for (int i = 0; i < 10; i++) {
+            map.put(String.valueOf(i),new Point(123,1.34));
+        }
+        Point point = new Point(123,1.34);
+        redisTemplate.opsForGeo().add("1234",point,"123");
+        redisTemplate.opsForGeo().add("1234",map);
+        redisTemplate.opsForGeo().remove("1234","1","2");
+        return BaseResponse.success();
+    }
+
+    @Override
     public BaseResponse hotSearchOnWeibo(String key) {
         long times = System.currentTimeMillis() / (60 * 60 * 1000);
         String redisKey = Dict.WEIBO + times;
@@ -340,19 +353,5 @@ public class RedisServiceImpl implements RedisService {
             list.add(Dict.WEIBO+(time-i));
         }
         redisTemplate.opsForZSet().unionAndStore(Dict.WEIBO + time, list, Dict.WEIBO_MONTH);
-    }
-
-    public static void main(String[] args) {
-        List<WaybillBcList> lists = new ArrayList<>();
-        for (int i = 0; i < 100000; i++) {
-            WaybillBcList waybillBcList = new WaybillBcList();
-//            lists.add(waybillBcList);
-        }
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println(lists.size());
     }
 }
