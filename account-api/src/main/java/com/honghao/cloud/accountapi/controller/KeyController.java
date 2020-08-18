@@ -25,7 +25,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class KeyController {
     private static int thirdValue = 0;
     private static long secondValue = 0L;
-    private static int secondCapacity = 10000;
+    private static final int SECOND_CAPACITY = 10000;
     private static LocalDate today = LocalDate.now();
     private static ReentrantLock reentrantLock = new ReentrantLock();
     private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -53,7 +53,7 @@ public class KeyController {
                 thirdValue = -1;
             }
             // 本地生成的第三部分达到9999条之后，第二部分重新生成
-            if (++thirdValue>=secondCapacity || secondValue == 0L){
+            if (++thirdValue>= SECOND_CAPACITY || secondValue == 0L){
                 secondValue = redisTemplate.opsForValue().increment(firstValue);
                 thirdValue = 0;
             }
@@ -71,30 +71,30 @@ public class KeyController {
      */
     @GetMapping("/test")
     public BaseResponse test() {
-        CountDownLatch countDownLatch = new CountDownLatch(10000);
+        CountDownLatch countDownLatch = new CountDownLatch(100000);
+        CountDownLatch countDownLatch1 = new CountDownLatch(100000);
         Set<String> set = new HashSet<>();
         long l = System.currentTimeMillis();
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100000; i++) {
             threadPoolExecutor.execute(()-> {
                 countDownLatch.countDown();
                 BaseResponse<String> response = primaryKeyGeneration();
-                System.out.println(response.getData());
                 set.add(response.getData());
+                countDownLatch1.countDown();
             });
         }
         try {
-            countDownLatch.await();
+            countDownLatch1.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.println(set.size());
         System.out.println("历时："+(System.currentTimeMillis()-l));
         return BaseResponse.success();
     }
 
     public static void main(String[] args) {
-        LocalDate now = LocalDate.now();
-        LocalDate localDate = now.plusDays(1);
-        System.out.println(now.isEqual(localDate));
+        int sec = 12345;
+        System.out.println(String.format("%04d", sec));;
     }
-
 }

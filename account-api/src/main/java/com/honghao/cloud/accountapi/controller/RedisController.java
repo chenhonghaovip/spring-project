@@ -5,10 +5,7 @@ import com.honghao.cloud.accountapi.service.RedisService;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -191,5 +188,16 @@ public class RedisController {
     @ApiOperation(value = "朋友圈点赞和取消点赞功能实现", notes = "朋友圈点赞和取消点赞功能实现")
     public BaseResponse isLikePoint(@RequestBody LikePointVO likePointVO){
         return redisService.isLikePoint(likePointVO);
+    }
+
+    /**
+     * redis发布与订阅功能
+     * @param userId userId
+     * @return BaseResponse
+     */
+    @GetMapping("/pubAndSub")
+    @ApiOperation(value = "redis发布与订阅功能", notes = "redis发布与订阅功能")
+    public BaseResponse pubAndSub(@RequestParam("userId") String userId){
+        return redisService.pubAndSub(userId);
     }
 }

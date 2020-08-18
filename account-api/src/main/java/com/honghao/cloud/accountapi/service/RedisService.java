@@ -113,4 +113,11 @@ public interface RedisService {
      * @return BaseResponse
      */
     BaseResponse isLikePoint(LikePointVO likePointVO);
+
+    /**
+     * redis发布与订阅功能
+     * @param userId userId
+     * @return BaseResponse
+     */
+    BaseResponse pubAndSub(String userId);
 }

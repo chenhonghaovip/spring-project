@@ -1,7 +1,9 @@
 package com.honghao.cloud.accountapi;
 
+import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
+
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -10,32 +12,32 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class Test {
     private static Random random = new Random();
+    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(10,100,"hongbao");
     private static ReentrantLock reentrantLock = new ReentrantLock();
-    static AtomicInteger atomicInteger = new AtomicInteger(10);
-    static AtomicInteger atomicInteger1 = new AtomicInteger(100);
+    private static int num = 10;
+    private static int money = 100;
+
     public static void main(String[] args) {
         for (int i = 0; i < 10; i++) {
-
-            new Thread(()->{
+            threadPoolExecutor.execute(()->{
                 reentrantLock.lock();
                 try {
-                    int sum =  atomicInteger1.get();
-                    int a = random.nextInt(30);
-                    if (atomicInteger.get()==1){
-                        System.out.println(sum);
+                    if (num==1){
+                        System.out.println(money);
                         return;
                     }
 
-                    while (sum-a<atomicInteger.get()-1 || a<1){
-                        a = random.nextInt(30);
+                    int a = random.nextInt(money/num*3);
+                    while (money-a < num-1 || a<1){
+                        a = random.nextInt(money/num*3);
                     }
-                    atomicInteger1.getAndSet(sum-a);
+                    money-=a;
+                    num--;
                     System.out.println(a);
                 } finally {
-                    atomicInteger.getAndDecrement();
                     reentrantLock.unlock();
                 }
-            }).run();
+            });
         }
     }
 }
