@@ -1,7 +1,5 @@
 package com.honghao.cloud.accountapi.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.honghao.cloud.accountapi.common.dict.Dict;
 import com.honghao.cloud.accountapi.common.enums.ErrorCodeEnum;
 import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
@@ -326,15 +324,12 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public BaseResponse pubAndSub(String userId) {
-        ShopInfo shopInfo = ShopInfo.builder().shopPrice(BigDecimal.ONE).shopId("1234").build();
-        ObjectMapper objectMapper = new ObjectMapper();
-        String s = null;
-        try {
-            s = objectMapper.writeValueAsString(shopInfo);
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage());
+        boolean aBoolean = redisTemplate.opsForValue().setBit(userId, 123L, true);
+        if (aBoolean){
+            return BaseResponse.error();
+        }else {
+            return BaseResponse.success();
         }
-        return BaseResponse.successData(s);
     }
 
     private void refreshDay(Long time){
