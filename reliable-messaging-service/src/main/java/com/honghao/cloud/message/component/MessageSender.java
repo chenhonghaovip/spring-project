@@ -75,7 +75,7 @@ public class MessageSender {
                     log.error(e.getMessage());
                 }
             });
-        },0,20, TimeUnit.SECONDS);
+        },0,20, TimeUnit.MINUTES);
     }
 
     public RabbitTemplate.ConfirmCallback confirmCallback = (correlationData, ack, cause) -> {

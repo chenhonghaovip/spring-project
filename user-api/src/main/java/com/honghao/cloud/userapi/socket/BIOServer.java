@@ -20,7 +20,7 @@ public class BIOServer {
         // 创建socket服务,打开并监听9010端口
         ServerSocket serverSocket = new ServerSocket(9010);
         while (true){
-            // 获取一个套接字（阻塞） -- 直到获取到一个连接之后（第一次阻塞）
+            // 获取一个套接字,接受客户端连接（阻塞） -- 直到获取到一个连接之后（第一次阻塞）
             final Socket socket = serverSocket.accept();
             threadPoolExecutor.execute(()-> business(socket));
         }
