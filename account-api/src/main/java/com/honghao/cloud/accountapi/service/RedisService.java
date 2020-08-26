@@ -78,6 +78,13 @@ public interface RedisService {
     BaseResponse redisGeo(String userId);
 
     /**
+     * redis获取服务器信息
+     * @param userId userId
+     * @return BaseResponse
+     */
+    BaseResponse redisInfo(String userId);
+
+    /**
      * redis模拟实现微博热搜排行榜（点击）
      * @param key 请求参数
      * @return BaseResponse

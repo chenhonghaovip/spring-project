@@ -1,5 +1,7 @@
 package com.honghao.cloud.accountapi.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.accountapi.common.dict.Dict;
 import com.honghao.cloud.accountapi.common.enums.ErrorCodeEnum;
 import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
@@ -13,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.springframework.data.geo.Point;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 
@@ -270,6 +274,24 @@ public class RedisServiceImpl implements RedisService {
         redisTemplate.opsForGeo().add("1234",map);
         redisTemplate.opsForGeo().remove("1234","1","2");
         return BaseResponse.success();
+    }
+
+    @Override
+    public BaseResponse redisInfo(String userId) {
+        RedisConnectionFactory factory = redisTemplate.getConnectionFactory();
+        RedisConnection conn = null;
+        try {
+            conn = RedisConnectionUtils.getConnection(factory);
+            Long incr = conn.incr(userId.getBytes());
+            Map redisInfo = conn.info();
+            JSONObject json = new JSONObject();
+            json.put("incr",incr);
+            json.put("processId",redisInfo.get("process_id"));
+            System.out.println(JSON.toJSONString(json));
+            return BaseResponse.successData(JSON.toJSONString(json));
+        } finally {
+            RedisConnectionUtils.releaseConnection(conn, factory);
+        }
     }
 
     @Override

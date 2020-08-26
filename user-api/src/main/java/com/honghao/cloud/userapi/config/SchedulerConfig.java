@@ -1,6 +1,5 @@
 package com.honghao.cloud.userapi.config;
 
-import com.honghao.cloud.basic.common.base.factory.QuartzFactory;
 import org.quartz.Scheduler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

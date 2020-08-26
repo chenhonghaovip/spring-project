@@ -3,11 +3,15 @@ package com.honghao.cloud.accountapi.controller;
 import com.honghao.cloud.accountapi.dto.request.LikePointVO;
 import com.honghao.cloud.accountapi.service.RedisService;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * redis测试
@@ -15,10 +19,12 @@ import javax.annotation.Resource;
  * @author chenhonghao
  * @date 2020-07-24 09:41
  */
+@Slf4j
 @Api(value = "redis测试使用" ,tags = "redis测试使用")
 @RestController
 @RequestMapping("/redisController")
 public class RedisController {
+    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(100,500,"123");
     @Resource
     private RedisService redisService;
 
@@ -132,6 +138,29 @@ public class RedisController {
     public BaseResponse redisGeo(@RequestBody String userId){
         return redisService.redisGeo(userId);
     }
+
+    /**
+     * redis获取服务器信息
+     * @param userId userId
+     * @return BaseResponse
+     */
+    @PostMapping("/redisInfo")
+    @ApiOperation(value = "redis获取服务器信息", notes = "redis获取服务器信息")
+    public BaseResponse redisInfo(@RequestBody String userId){
+        CyclicBarrier cyclicBarrier = new CyclicBarrier(100);
+        for (int i = 0; i < 100; i++) {
+            threadPoolExecutor.execute((()->{
+                try {
+                    cyclicBarrier.await();
+                    redisService.redisInfo(userId);
+                } catch (Exception e) {
+                    log.error(e.getMessage());
+                }
+            }));
+        }
+        return BaseResponse.success();
+    }
+
 
     /**
      * redis模拟实现微博热搜排行榜（点击）

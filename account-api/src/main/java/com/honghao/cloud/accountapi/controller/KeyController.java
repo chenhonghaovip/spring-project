@@ -95,6 +95,6 @@ public class KeyController {
 
     public static void main(String[] args) {
         int sec = 12345;
-        System.out.println(String.format("%04d", sec));;
+        System.out.println(String.format("%04d", sec));
     }
 }

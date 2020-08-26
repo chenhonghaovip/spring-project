@@ -143,7 +143,12 @@
             <artifactId>basic-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
+        <!-- 定时任务框架 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

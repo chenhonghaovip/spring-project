@@ -1,7 +1,8 @@
-package com.honghao.cloud.basic.common.base.factory;
+package com.honghao.cloud.userapi.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
+import org.quartz.impl.StdSchedulerFactory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,7 +17,26 @@ import java.util.concurrent.ConcurrentHashMap;
 public class QuartzFactory {
     private static ConcurrentHashMap<String, JobDetail> jobDetaiMap = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<String, Trigger> triggerMap = new ConcurrentHashMap<>();
+
+    private static SchedulerFactory schedulerFactory = new StdSchedulerFactory();
+    private static volatile Scheduler scheduler;
+
     private QuartzFactory() {
+    }
+    public static Scheduler getInstance(){
+        if (scheduler==null){
+            synchronized (QuartzFactory.class){
+                if (scheduler==null){
+                    try {
+                        scheduler = schedulerFactory.getScheduler();
+                        scheduler.start();
+                    } catch (SchedulerException e) {
+                        log.error(e.getMessage());
+                    }
+                }
+            }
+        }
+        return scheduler;
     }
 
     /**
