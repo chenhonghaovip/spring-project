@@ -32,6 +32,11 @@ public class AsyncController {
 
     private static final Long TIMEOUTVALUE = 100000L;
 
+    /**
+     * 利用callable做异步操作
+     * 会释放请求线程，等结果运算完成，再利用其他线程响应请求，返回结果
+     * @return BaseResponse
+     */
     @GetMapping("/callable")
     public Callable<BaseResponse> callable(){
         log.info("接受任务");
@@ -44,6 +49,12 @@ public class AsyncController {
         return callable;
     }
 
+    /**
+     * 利用DeferredResult做异步操作
+     * 会释放请求线程，等结果运算完成，再利用其他线程响应请求，返回结果
+     * @param userId userId
+     * @return BaseResponse
+     */
     @GetMapping("/deferredResult")
     public DeferredResult<BaseResponse<String>> deferredResult(@RequestParam("userId") String userId){
         DeferredResult<BaseResponse<String>> deferredResult = new DeferredResult<>(TIMEOUTVALUE,BaseResponse.error(ErrorCodeEnum.NO_CHANGE_IN_DATA));
