@@ -33,12 +33,15 @@ public class AsyncController {
     private static final Long TIMEOUTVALUE = 100000L;
 
     @GetMapping("/callable")
-    public BaseResponse callable(){
-        Callable<String> callable = () -> {
+    public Callable<BaseResponse> callable(){
+        log.info("接受任务");
+        Callable<BaseResponse> callable = () -> {
             Thread.sleep(30000);
-            return "success";
+            log.info("完成任务");
+            return BaseResponse.success();
         };
-        return BaseResponse.success();
+        log.info("任务接收完成");
+        return callable;
     }
 
     @GetMapping("/deferredResult")
