@@ -127,4 +127,11 @@ public interface RedisService {
      * @return BaseResponse
      */
     BaseResponse pubAndSub(String userId);
+
+    /**
+     * redis并发抢购
+     * @param userId userId
+     * @return BaseResponse
+     */
+    BaseResponse redisConcurrent(String userId);
 }

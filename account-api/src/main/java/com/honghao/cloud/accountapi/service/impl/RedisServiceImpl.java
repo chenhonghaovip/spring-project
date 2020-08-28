@@ -8,6 +8,7 @@ import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
 import com.honghao.cloud.accountapi.domain.mapper.ShopInfoMapper;
 import com.honghao.cloud.accountapi.dto.request.LikePointVO;
 import com.honghao.cloud.accountapi.service.RedisService;
+import com.honghao.cloud.basic.common.base.base.BaseAssert;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.basic.common.base.bean.CacheTemplate;
 import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
@@ -40,6 +41,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @Slf4j
 @Service
 public class RedisServiceImpl implements RedisService {
+    private static volatile boolean flag = true;
     private static List<ShopInfo> ids = new ArrayList<>();
     private ConcurrentHashMap<String, ReentrantLock> concurrentHashMap = new ConcurrentHashMap<>();
     private static final ScheduledThreadPoolExecutor SCHEDULED_THREAD_POOL_EXECUTOR = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1);
@@ -160,6 +162,7 @@ public class RedisServiceImpl implements RedisService {
         String clientId = UUID.randomUUID().toString();
         try {
             Boolean aBoolean = redisTemplate.opsForValue().setIfAbsent(userId, clientId, 10, TimeUnit.SECONDS);
+            BaseAssert.notNull(aBoolean,"");
             if (!aBoolean){
                 return BaseResponse.error(ErrorCodeEnum.API_GATEWAY_ERROR);
             }
@@ -265,7 +268,7 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public BaseResponse redisGeo(String userId) {
-        Map<Object, Point> map = new HashMap<>();
+        Map<Object, Point> map = new HashMap<>(16);
         for (int i = 0; i < 10; i++) {
             map.put(String.valueOf(i),new Point(123,1.34));
         }
@@ -279,11 +282,15 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public BaseResponse redisInfo(String userId) {
         RedisConnectionFactory factory = redisTemplate.getConnectionFactory();
+        BaseAssert.notNull(factory,"");
         RedisConnection conn = null;
+
         try {
             conn = RedisConnectionUtils.getConnection(factory);
             Long incr = conn.incr(userId.getBytes());
             Map redisInfo = conn.info();
+            BaseAssert.notNull(redisInfo,"");
+
             JSONObject json = new JSONObject();
             json.put("incr",incr);
             json.put("processId",redisInfo.get("process_id"));
@@ -346,12 +353,29 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public BaseResponse pubAndSub(String userId) {
-        boolean aBoolean = redisTemplate.opsForValue().setBit(userId, 123L, true);
-        if (aBoolean){
+        Boolean aBoolean = redisTemplate.opsForValue().setBit(userId, 123L, true);
+        if (aBoolean!=null && aBoolean){
             return BaseResponse.error();
         }else {
             return BaseResponse.success();
         }
+    }
+
+    @Override
+    public BaseResponse redisConcurrent(String userId) {
+        if (flag){
+            Long decrement = redisTemplate.opsForValue().increment(userId);
+            if(decrement!=null && decrement<=100){
+                System.out.println("123");
+                return BaseResponse.success();
+            }else {
+//                System.out.println("error");
+                flag = false;
+                return BaseResponse.error();
+            }
+        }
+        System.out.println("skip");
+        return BaseResponse.error();
     }
 
     private void refreshDay(Long time){

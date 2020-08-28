@@ -4,6 +4,7 @@ import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
 import com.honghao.cloud.accountapi.service.RabbitService;
 import com.honghao.cloud.accountapi.template.RabbitTemplateService;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ import javax.annotation.Resource;
 @Slf4j
 @RestController
 @RequestMapping("/rabbitMqController")
+@Api(value = "Rabbit测试使用" ,tags = "Rabbit测试使用")
 public class RabbitController {
     @Resource
     private RabbitService rabbitService;
