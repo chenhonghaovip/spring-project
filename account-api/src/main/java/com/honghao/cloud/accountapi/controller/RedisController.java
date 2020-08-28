@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @RestController
 @RequestMapping("/redisController")
 public class RedisController {
-    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(100,500,"123");
+    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(1000,10000,"123");
     @Resource
     private RedisService redisService;
 
@@ -147,8 +147,8 @@ public class RedisController {
     @PostMapping("/redisInfo")
     @ApiOperation(value = "redis获取服务器信息", notes = "redis获取服务器信息")
     public BaseResponse redisInfo(@RequestBody String userId){
-        CyclicBarrier cyclicBarrier = new CyclicBarrier(100);
-        for (int i = 0; i < 100; i++) {
+        CyclicBarrier cyclicBarrier = new CyclicBarrier(1000);
+        for (int i = 0; i < 1000; i++) {
             threadPoolExecutor.execute((()->{
                 try {
                     cyclicBarrier.await();

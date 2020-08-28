@@ -77,6 +77,11 @@ public enum ErrorCodeEnum implements BaseErrorInfoInterface {
      * 数据不存在
      */
     DATA_DOES_NOT_EXIST("100006", "数据不存在"),
+
+    /**
+     * 数据无变化
+     */
+    NO_CHANGE_IN_DATA("100007", "数据无变化"),
     ;
     private String code;
     private String message;
