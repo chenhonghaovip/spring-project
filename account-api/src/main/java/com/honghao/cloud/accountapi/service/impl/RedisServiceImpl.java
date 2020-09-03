@@ -224,12 +224,24 @@ public class RedisServiceImpl implements RedisService {
         redisTemplate.delete(key);
         ShopInfo shopInfo = new ShopInfo();
         ShopInfo shopInfo1 = new ShopInfo();
-        redisTemplate.opsForSet().add(key,shopInfo,shopInfo1);
+        Long add = redisTemplate.opsForSet().add(key, shopInfo, shopInfo1);
+        Boolean aBoolean = redisTemplate.opsForValue().setBit(key, 123L, true);
+        System.out.println(add);
         return BaseResponse.successData(redisTemplate.opsForSet().members(key));
     }
 
     @Override
     public BaseResponse redisSortedSet(String userId) {
+        final String key1 = "order:time:out";
+        long l = System.currentTimeMillis()/1000 + 60;
+        for (int i = 0; i < 1000; i++) {
+            redisTemplate.opsForZSet().add(key1,i,l);
+        }
+        Set<ZSetOperations.TypedTuple<Object>> set1 = redisTemplate.opsForZSet().rangeWithScores(key1, 0, 1);
+        for (ZSetOperations.TypedTuple<Object> tuple : set1) {
+            redisTemplate.opsForZSet().remove(key1,tuple.getValue());
+        }
+
         String key = "zSet"+userId;
         ShopInfo third = ids.get(3);
         redisTemplate.delete(key);
