@@ -96,6 +96,14 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- 使用Apache HttpClient作为feign底层的http连接 -->
+        <!-- https://mvnrepository.com/artifact/io.github.openfeign/feign-httpclient -->
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-httpclient</artifactId>
+            <version>10.2.3</version>
+        </dependency>
+
     </dependencies>
 
     <build>

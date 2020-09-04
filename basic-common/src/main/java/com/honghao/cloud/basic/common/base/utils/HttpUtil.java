@@ -1,6 +1,7 @@
-package com.honghao.cloud.accountapi.utils;
+package com.honghao.cloud.basic.common.base.utils;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -35,7 +36,7 @@ public class HttpUtil {
 	
 	private static Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
-	
+
 	public static String httpPost(String url, String enity) {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost post = new HttpPost(url);
@@ -52,13 +53,13 @@ public class HttpUtil {
 		return null;
 	}
 
-	public static JSONObject doPost(String url, String json, int seconds){
+	public static BaseResponse doPost(String url, String json, int seconds){
 		seconds = seconds*1000;
 		CloseableHttpClient client = HttpClients.createDefault();
 		HttpPost post = new HttpPost(url);
 		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(seconds).setConnectionRequestTimeout(seconds).setSocketTimeout(seconds).build();
 		post.setConfig(requestConfig);
-		JSONObject response = null;
+        BaseResponse response = BaseResponse.error();
 		try {
 			StringEntity s = new StringEntity(json,"UTF-8");
 			s.setContentType("application/json");
@@ -66,7 +67,7 @@ public class HttpUtil {
 			HttpResponse res = client.execute(post);
 			if(res.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
 				String result = EntityUtils.toString(res.getEntity());
-				response = JSONObject.parseObject(result);
+				response = JSON.parseObject(result,BaseResponse.class);
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);

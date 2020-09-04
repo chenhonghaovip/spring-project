@@ -2,9 +2,6 @@ package com.honghao.cloud.message.domain.entity;
 
 import java.util.Date;
 
-/**
- * @author CHH
- */
 public class MsgInfo {
     private Long msgId;
 
@@ -12,21 +9,17 @@ public class MsgInfo {
 
     private Integer status;
 
-    private String topic;
+    private String appId;
+
+    private String url;
 
     private Integer retryTime;
+
+    private String topic;
 
     private Integer delay;
 
     private Date createTime;
-
-    public Integer getRetryTime() {
-        return retryTime;
-    }
-
-    public void setRetryTime(Integer retryTime) {
-        this.retryTime = retryTime;
-    }
 
     public Long getMsgId() {
         return msgId;
@@ -50,6 +43,30 @@ public class MsgInfo {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId == null ? null : appId.trim();
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url == null ? null : url.trim();
+    }
+
+    public Integer getRetryTime() {
+        return retryTime;
+    }
+
+    public void setRetryTime(Integer retryTime) {
+        this.retryTime = retryTime;
     }
 
     public String getTopic() {

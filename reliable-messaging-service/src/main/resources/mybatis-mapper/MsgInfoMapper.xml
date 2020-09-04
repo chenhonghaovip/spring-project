@@ -5,13 +5,15 @@
     <id column="msg_id" jdbcType="BIGINT" property="msgId" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="status" jdbcType="TINYINT" property="status" />
-    <result column="retry_time" jdbcType="TINYINT" property="retryTime" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="retry_time" jdbcType="INTEGER" property="retryTime" />
     <result column="topic" jdbcType="VARCHAR" property="topic" />
     <result column="delay" jdbcType="INTEGER" property="delay" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    msg_id, content, status,retry_time, topic, delay
+    msg_id, content, status, app_id, url, retry_time, topic, delay, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -25,9 +27,11 @@
   </delete>
   <insert id="insert" parameterType="com.honghao.cloud.message.domain.entity.MsgInfo">
     insert into msg_info (msg_id, content, status, 
+      app_id, url, retry_time, 
       topic, delay, create_time
       )
     values (#{msgId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
+      #{appId,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{retryTime,jdbcType=INTEGER}, 
       #{topic,jdbcType=VARCHAR}, #{delay,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -42,6 +46,15 @@
       </if>
       <if test="status != null">
         status,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="retryTime != null">
+        retry_time,
       </if>
       <if test="topic != null">
         topic,
@@ -63,6 +76,15 @@
       <if test="status != null">
         #{status,jdbcType=TINYINT},
       </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="retryTime != null">
+        #{retryTime,jdbcType=INTEGER},
+      </if>
       <if test="topic != null">
         #{topic,jdbcType=VARCHAR},
       </if>
@@ -83,6 +105,15 @@
       <if test="status != null">
         status = #{status,jdbcType=TINYINT},
       </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="retryTime != null">
+        retry_time = #{retryTime,jdbcType=INTEGER},
+      </if>
       <if test="topic != null">
         topic = #{topic,jdbcType=VARCHAR},
       </if>
@@ -99,6 +130,9 @@
     update msg_info
     set content = #{content,jdbcType=VARCHAR},
       status = #{status,jdbcType=TINYINT},
+      app_id = #{appId,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      retry_time = #{retryTime,jdbcType=INTEGER},
       topic = #{topic,jdbcType=VARCHAR},
       delay = #{delay,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP}
@@ -112,8 +146,8 @@
         where status in (0,1,2)
     </select>
 
-    <update id="updateBatch" >
-        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+    <update id="updateBatch">
+        <foreach close="" collection="list" index="index" item="item" open="" separator=";">
             UPDATE msg_info
             SET create_time = now(),
             status =#{item.status},
