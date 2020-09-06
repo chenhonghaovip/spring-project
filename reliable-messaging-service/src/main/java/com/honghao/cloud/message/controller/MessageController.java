@@ -1,6 +1,7 @@
 package com.honghao.cloud.message.controller;
 
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.utils.SnowFlakeShortUrl;
 import com.honghao.cloud.message.component.MessageSender;
 import com.honghao.cloud.message.config.RabbitConfig;
 import com.honghao.cloud.message.domain.entity.MsgInfo;
@@ -21,6 +22,7 @@ import java.util.Date;
 @RestController
 @RequestMapping("/messageController")
 public class MessageController {
+    private static SnowFlakeShortUrl snowFlake = new SnowFlakeShortUrl(2, 3);
     @Resource
     private MsgInfoMapper msgInfoMapper;
     @Resource
@@ -28,11 +30,13 @@ public class MessageController {
 
     @PostMapping("/message")
     public BaseResponse saveMessage(@RequestBody MsgInfoDTO msgInfoDTO){
+        long id = snowFlake.nextId();
         MsgInfo msgInfo = new MsgInfo();
         BeanUtils.copyProperties(msgInfoDTO,msgInfo);
+        msgInfo.setMsgId(id);
         msgInfo.setCreateTime(new Date());
         msgInfoMapper.insertSelective(msgInfo);
-        return BaseResponse.success();
+        return BaseResponse.successData(id);
     }
 
     @PutMapping("/message")

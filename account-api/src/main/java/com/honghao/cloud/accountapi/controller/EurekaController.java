@@ -8,7 +8,7 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClient;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,9 +35,9 @@ public class EurekaController {
     private DiscoveryClient discoveryClient;
 
 
-    @GetMapping("/test")
+    @PostMapping("/test")
     public BaseResponse test(){
-        List<ServiceInstance> instances1 = discoveryClient.getInstances("user-api");
+        List<ServiceInstance> instances1 = discoveryClient.getInstances("account-api");
         ServiceInstance choose = loadBalancerClient.choose("user-api");
         List<ServiceInstance> instances = applicationContext.getBean(EurekaDiscoveryClient.class).getInstances("user-api");
         return BaseResponse.successData(instances1);

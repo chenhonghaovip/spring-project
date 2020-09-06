@@ -1,6 +1,7 @@
 package com.honghao.cloud.message.domain.mapper;
 
 import com.honghao.cloud.message.domain.entity.MsgInfo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -48,9 +49,10 @@ public interface MsgInfoMapper {
     /**
      * 更新全部
      * @param record record
+     * @param msgStatus 消息状态
      * @return int
      */
-    int updateBatch(List<MsgInfo> record);
+    int updateBatch(@Param("list") List<Long> record,@Param("msgStatus") int msgStatus);
 
     /**
      * 查询改状态下的所有消息数据

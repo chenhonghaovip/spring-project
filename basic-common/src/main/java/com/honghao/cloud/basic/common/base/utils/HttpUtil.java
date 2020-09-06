@@ -53,13 +53,13 @@ public class HttpUtil {
 		return null;
 	}
 
-	public static BaseResponse doPost(String url, String json, int seconds){
+	public static BaseResponse<List<String>> doPost(String url, String json, int seconds){
 		seconds = seconds*1000;
 		CloseableHttpClient client = HttpClients.createDefault();
 		HttpPost post = new HttpPost(url);
 		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(seconds).setConnectionRequestTimeout(seconds).setSocketTimeout(seconds).build();
 		post.setConfig(requestConfig);
-        BaseResponse response = BaseResponse.error();
+        BaseResponse<List<String>> response = BaseResponse.error();
 		try {
 			StringEntity s = new StringEntity(json,"UTF-8");
 			s.setContentType("application/json");

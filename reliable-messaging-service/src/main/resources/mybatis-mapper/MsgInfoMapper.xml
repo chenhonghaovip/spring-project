@@ -7,13 +7,14 @@
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="app_id" jdbcType="VARCHAR" property="appId" />
     <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="business_id" jdbcType="VARCHAR" property="businessId" />
     <result column="retry_time" jdbcType="INTEGER" property="retryTime" />
     <result column="topic" jdbcType="VARCHAR" property="topic" />
     <result column="delay" jdbcType="INTEGER" property="delay" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    msg_id, content, status, app_id, url, retry_time, topic, delay, create_time
+    msg_id, content, status, app_id, url,business_id, retry_time, topic, delay, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -147,14 +148,13 @@
     </select>
 
     <update id="updateBatch">
-        <foreach close="" collection="list" index="index" item="item" open="" separator=";">
-            UPDATE msg_info
-            SET create_time = now(),
-            status =#{item.status},
-            retry_time =#{item.retryTime},
-            WHERE
-            msg_id=#{item.msgId}
-        </foreach>
+      UPDATE msg_info
+      SET
+      status =#{item.status}
+      WHERE msg_id in
+      <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+        #{item}
+      </foreach>
 
     </update>
 </mapper>

@@ -2,6 +2,9 @@ package com.honghao.cloud.message.domain.entity;
 
 import java.util.Date;
 
+/**
+ * @author chenhonghao
+ */
 public class MsgInfo {
     private Long msgId;
 
@@ -13,6 +16,17 @@ public class MsgInfo {
 
     private String url;
 
+    /**
+     * 消费者服务名
+     */
+    private String consumerAppId;
+    /**
+     * 消费者回调查询路径
+     */
+    private String consumerUrl;
+
+    private String businessId;
+
     private Integer retryTime;
 
     private String topic;
@@ -20,6 +34,30 @@ public class MsgInfo {
     private Integer delay;
 
     private Date createTime;
+
+    public String getConsumerAppId() {
+        return consumerAppId;
+    }
+
+    public void setConsumerAppId(String consumerAppId) {
+        this.consumerAppId = consumerAppId;
+    }
+
+    public String getConsumerUrl() {
+        return consumerUrl;
+    }
+
+    public void setConsumerUrl(String consumerUrl) {
+        this.consumerUrl = consumerUrl;
+    }
+
+    public String getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
+    }
 
     public Long getMsgId() {
         return msgId;
