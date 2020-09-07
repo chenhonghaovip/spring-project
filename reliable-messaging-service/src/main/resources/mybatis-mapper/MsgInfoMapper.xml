@@ -7,14 +7,15 @@
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="app_id" jdbcType="VARCHAR" property="appId" />
     <result column="url" jdbcType="VARCHAR" property="url" />
-    <result column="business_id" jdbcType="VARCHAR" property="businessId" />
+    <result column="consumer_app_Id" jdbcType="VARCHAR" property="consumerAppId" />
+    <result column="consumer_url" jdbcType="VARCHAR" property="consumerUrl" />
     <result column="retry_time" jdbcType="INTEGER" property="retryTime" />
     <result column="topic" jdbcType="VARCHAR" property="topic" />
     <result column="delay" jdbcType="INTEGER" property="delay" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    msg_id, content, status, app_id, url,business_id, retry_time, topic, delay, create_time
+    msg_id, content, status, app_id, url,consumer_app_Id,consumer_url, retry_time, topic, delay, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -26,13 +27,21 @@
     delete from msg_info
     where msg_id = #{msgId,jdbcType=BIGINT}
   </delete>
+
+    <delete id="deleteBatch" >
+        delete from msg_info
+    where msg_id in
+     <foreach collection="list" item="item" open="(" close=")" separator=",">
+         #{item}
+     </foreach>
+    </delete>
   <insert id="insert" parameterType="com.honghao.cloud.message.domain.entity.MsgInfo">
     insert into msg_info (msg_id, content, status, 
-      app_id, url, retry_time, 
+      app_id, url,consumer_app_Id,consumer_url, retry_time,
       topic, delay, create_time
       )
     values (#{msgId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
-      #{appId,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{retryTime,jdbcType=INTEGER}, 
+      #{appId,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{consumerAppId,jdbcType=VARCHAR}, #{consumerUrl,jdbcType=VARCHAR}, #{retryTime,jdbcType=INTEGER},
       #{topic,jdbcType=VARCHAR}, #{delay,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -54,6 +63,12 @@
       <if test="url != null">
         url,
       </if>
+        <if test="consumerAppId != null">
+            consumer_app_Id,
+        </if>
+        <if test="consumerUrl != null">
+            consumer_url,
+        </if>
       <if test="retryTime != null">
         retry_time,
       </if>
@@ -82,6 +97,12 @@
       </if>
       <if test="url != null">
         #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="consumerAppId != null">
+        #{consumerAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="consumerUrl != null">
+        #{consumerUrl,jdbcType=VARCHAR},
       </if>
       <if test="retryTime != null">
         #{retryTime,jdbcType=INTEGER},
@@ -144,15 +165,15 @@
         select
         <include refid="Base_Column_List" />
         from msg_info
-        where status in (0,1,2)
+        where status in (0,1)
     </select>
 
     <update id="updateBatch">
       UPDATE msg_info
       SET
-      status =#{item.status}
+      status = #{msgStatus}
       WHERE msg_id in
-      <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      <foreach close=")" collection="list" item="item" open="(" separator=",">
         #{item}
       </foreach>
 

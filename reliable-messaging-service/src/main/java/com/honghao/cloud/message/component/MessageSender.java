@@ -13,7 +13,6 @@ import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
@@ -37,7 +36,6 @@ public class MessageSender {
 	@Resource
 	private RabbitTemplate rabbitTemplate;
 
-	@PostConstruct
 	public void init(){
 	    scheduledThreadPoolExecutor.scheduleAtFixedRate(()->{
 

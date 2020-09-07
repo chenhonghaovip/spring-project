@@ -1,6 +1,8 @@
 package com.honghao.cloud.basic.common.base.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -53,13 +55,12 @@ public class HttpUtil {
 		return null;
 	}
 
-	public static BaseResponse<List<String>> doPost(String url, String json, int seconds){
+	public static BaseResponse<List<Long>> doPost(String url, String json, int seconds){
 		seconds = seconds*1000;
 		CloseableHttpClient client = HttpClients.createDefault();
 		HttpPost post = new HttpPost(url);
 		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(seconds).setConnectionRequestTimeout(seconds).setSocketTimeout(seconds).build();
 		post.setConfig(requestConfig);
-        BaseResponse<List<String>> response = BaseResponse.error();
 		try {
 			StringEntity s = new StringEntity(json,"UTF-8");
 			s.setContentType("application/json");
@@ -67,12 +68,13 @@ public class HttpUtil {
 			HttpResponse res = client.execute(post);
 			if(res.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
 				String result = EntityUtils.toString(res.getEntity());
-				response = JSON.parseObject(result,BaseResponse.class);
+				JSONObject object = JSON.parseObject(result);
+				return new BaseResponse<>(object.getBoolean("result"), object.getInteger("code"), JSONArray.parseArray(object.getString("data"), Long.class), object.getString("remark"));
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		return response;
+		return BaseResponse.error();
 	}
 
 	public static String doPost(String url,int seconds) {

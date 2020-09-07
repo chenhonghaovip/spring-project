@@ -9,5 +9,10 @@ import com.honghao.cloud.basic.common.base.base.BaseResponse;
  */
 public interface RabbitService {
 
+    /**
+     * 保存商品信息
+     * @param shopInfo shopInfo
+     * @return BaseResponse
+     */
     BaseResponse saveShop(ShopInfo shopInfo);
 }

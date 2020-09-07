@@ -35,6 +35,12 @@ public class MessageFallbackFactory implements FallbackFactory<MessageClient> {
             public BaseResponse delete(MsgInfoDTO msgInfoDTO) {
                 return null;
             }
+
+            @Override
+            public BaseResponse complete(MsgInfoDTO msgInfoDTO) {
+                System.out.println(cause.getMessage());
+                return BaseResponse.error();
+            }
         };
     }
 }

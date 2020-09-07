@@ -1,5 +1,11 @@
 package com.honghao.cloud.userapi.dto.request;
 
+import lombok.Data;
+
+/**
+ * @author CHH
+ */
+@Data
 public class MsgInfoDTO {
     private Long msgId;
 
@@ -10,6 +16,51 @@ public class MsgInfoDTO {
     private String topic;
 
     private Integer delay;
+
+    private String appId;
+
+    private String url;
+
+    /**
+     * 消费者服务名
+     */
+    private String consumerAppId;
+    /**
+     * 消费者回调查询路径
+     */
+    private String consumerUrl;
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getConsumerAppId() {
+        return consumerAppId;
+    }
+
+    public void setConsumerAppId(String consumerAppId) {
+        this.consumerAppId = consumerAppId;
+    }
+
+    public String getConsumerUrl() {
+        return consumerUrl;
+    }
+
+    public void setConsumerUrl(String consumerUrl) {
+        this.consumerUrl = consumerUrl;
+    }
 
     public Long getMsgId() {
         return msgId;

@@ -25,8 +25,6 @@ public class MsgInfo {
      */
     private String consumerUrl;
 
-    private String businessId;
-
     private Integer retryTime;
 
     private String topic;
@@ -49,14 +47,6 @@ public class MsgInfo {
 
     public void setConsumerUrl(String consumerUrl) {
         this.consumerUrl = consumerUrl;
-    }
-
-    public String getBusinessId() {
-        return businessId;
-    }
-
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
     }
 
     public Long getMsgId() {

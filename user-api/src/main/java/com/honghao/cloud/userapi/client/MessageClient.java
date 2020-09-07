@@ -37,10 +37,18 @@ public interface MessageClient {
     BaseResponse updateStatus(@RequestBody MsgInfoDTO msgInfoDTO);
 
     /**
-     * 修改消息状态
+     * 删除消息
      * @param msgInfoDTO msgInfoDTO
      * @return BaseResponse
      */
     @DeleteMapping("/messageController/message")
     BaseResponse delete(@RequestBody MsgInfoDTO msgInfoDTO);
+
+    /**
+     * 消息处理完成
+     * @param msgInfoDTO msgInfoDTO
+     * @return BaseResponse
+     */
+    @PutMapping("/messageController/complete")
+    BaseResponse complete(@RequestBody MsgInfoDTO msgInfoDTO);
 }

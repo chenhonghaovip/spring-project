@@ -12,6 +12,13 @@ public interface MsgInfoMapper {
      * @return int
      */
     int deleteByPrimaryKey(Long msgId);
+
+    /**
+     * 删除数据
+     * @param msgIds 主键
+     * @return int
+     */
+    int deleteBatch(List<Long> msgIds);
     /**
      * 全部插入
      * @param record record

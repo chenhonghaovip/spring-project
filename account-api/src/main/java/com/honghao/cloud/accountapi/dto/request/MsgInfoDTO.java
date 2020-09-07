@@ -1,7 +1,12 @@
 package com.honghao.cloud.accountapi.dto.request;
 
 import lombok.Builder;
+import lombok.Data;
 
+/**
+ * @author CHH
+ */
+@Data
 @Builder
 public class MsgInfoDTO {
     private Long msgId;
@@ -14,43 +19,19 @@ public class MsgInfoDTO {
 
     private Integer delay;
 
-    public Long getMsgId() {
-        return msgId;
-    }
 
-    public void setMsgId(Long msgId) {
-        this.msgId = msgId;
-    }
+    private String appId;
 
-    public String getContent() {
-        return content;
-    }
+    private String url;
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+    /**
+     * 消费者服务名
+     */
+    private String consumerAppId;
+    /**
+     * 消费者回调查询路径
+     */
+    private String consumerUrl;
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
-
-    public Integer getDelay() {
-        return delay;
-    }
-
-    public void setDelay(Integer delay) {
-        this.delay = delay;
-    }
+    private String businessId;
 }

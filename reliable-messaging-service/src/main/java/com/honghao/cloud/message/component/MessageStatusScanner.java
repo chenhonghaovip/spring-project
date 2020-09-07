@@ -1,6 +1,5 @@
 package com.honghao.cloud.message.component;
 
-import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import com.honghao.cloud.basic.common.base.utils.HttpUtil;
@@ -13,7 +12,9 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
  */
 @Component
 public class MessageStatusScanner {
-    private static final ScheduledThreadPoolExecutor SCHEDULED_THREAD_POOL_EXECUTOR = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1);
+    private static final ScheduledThreadPoolExecutor SCHEDULED_THREAD_POOL_EXECUTOR = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1,"timeScanner");
     private static final ThreadPoolExecutor THREAD_POOL_EXECUTOR = ThreadPoolFactory.buildThreadPoolExecutor(5,25,1000,"messageDeal");
     @Resource
     private MsgInfoMapper msgInfoMapper;
@@ -50,39 +51,41 @@ public class MessageStatusScanner {
             Map<Integer, List<MsgInfo>> map = list.stream().collect(Collectors.groupingBy(MsgInfo::getStatus));
 
             // 消息状态为0的需要向发起方发起查询
-            map.get(MsgStatusEnum.TO_BE_CONFIRMED.getCode()).forEach(each->{
-                Map<String, List<MsgInfo>> temp = list.stream().collect(Collectors.groupingBy(m -> m.getAppId() + m.getUrl()));
+            THREAD_POOL_EXECUTOR.execute(()-> {
+                List<MsgInfo> infos = map.get(MsgStatusEnum.TO_BE_CONFIRMED.getCode());
+                if (Objects.nonNull(infos)){
+                    infos.forEach(each->{
+                        // 通过对业务方AppId + url 进行分类，以方便进行批次查询
+                        Map<String, List<MsgInfo>> temp = list.stream().collect(Collectors.groupingBy(m -> m.getAppId() + m.getUrl()));
 
-                for (Map.Entry<String, List<MsgInfo>> entry : temp.entrySet()) {
-                    MsgInfo msgInfo = entry.getValue().get(0);
-                    String appId = msgInfo.getAppId();
-                    String url = msgInfo.getUrl();
-                    // 封装同一个接口的请求参数
-                    List<MsgInfo> retry = retry(entry.getValue(), appId, url, MsgStatusEnum.TO_BE_SENT.getCode());
-                    retry.forEach(k->messageSender.publicQueueProcessing(k,k.getTopic()));
+                        for (Map.Entry<String, List<MsgInfo>> entry : temp.entrySet()) {
+                            MsgInfo msgInfo = entry.getValue().get(0);
+                            String appId = msgInfo.getAppId();
+                            String url = msgInfo.getUrl();
+                            // 封装同一个接口的请求参数
+                            retry(entry.getValue(),appId,url,MsgStatusEnum.HAS_BEEN_SENT.getCode());
+                        }
+                    });
                 }
             });
 
-            // 消息状态为1的需要重新发送消息队列
-            map.get(MsgStatusEnum.TO_BE_SENT.getCode())
-                    .forEach(each->messageSender.publicQueueProcessing(each,each.getTopic()));
-
-            // 消息状态为2的需要向业务消费方查询
-            map.get(MsgStatusEnum.HAS_BEEN_SENT.getCode()).forEach(each->{
-                Map<String, List<MsgInfo>> temp = list.stream().collect(Collectors.groupingBy(m -> m.getAppId() + m.getUrl()));
-
-                for (Map.Entry<String, List<MsgInfo>> entry : temp.entrySet()) {
-                    MsgInfo msgInfo = entry.getValue().get(0);
-                    String appId = msgInfo.getConsumerAppId();
-                    String url = msgInfo.getConsumerUrl();
-                    // 封装同一个接口的请求参数
-                    retry(entry.getValue(),appId,url,MsgStatusEnum.COMPLETED.getCode());
+            // 消息状态为1的需要向业务消费方查询
+            THREAD_POOL_EXECUTOR.execute(()-> {
+                List<MsgInfo> infos = map.get(MsgStatusEnum.HAS_BEEN_SENT.getCode());
+                if (Objects.nonNull(infos)){
+                   infos.forEach(each->{
+                        // 通过对消费方AppId + url 进行分类，以方便进行批次查询
+                        Map<String, List<MsgInfo>> temp = list.stream().collect(Collectors.groupingBy(m -> m.getConsumerAppId() + m.getConsumerUrl()));
+                        for (Map.Entry<String, List<MsgInfo>> entry : temp.entrySet()) {
+                            MsgInfo msgInfo = entry.getValue().get(0);
+                            String appId = msgInfo.getConsumerAppId();
+                            String url = msgInfo.getConsumerUrl();
+                            // 封装同一个接口的请求参数
+                            retry(entry.getValue(),appId,url,MsgStatusEnum.COMPLETED.getCode());
+                        }
+                    });
                 }
             });
-
-
-            // 通过对AppId + url 进行分类，以方便进行批次查询
-
         }
     }
 
@@ -90,35 +93,43 @@ public class MessageStatusScanner {
      * 通过切换ip请求的方式做重试处理
      * @param entry collect
      */
-    private List<MsgInfo> retry(List<MsgInfo> entry,String appId,String url,int msgStatus){
-        List<String> collect = entry.stream().map(MsgInfo::getBusinessId).collect(Collectors.toList());
+    private void retry(List<MsgInfo> entry,String appId,String url,int msgStatus){
+        // 获取业务方给予的业务id,通过此id向生产者和消费者进行查询操作
+        List<Long> collect = entry.stream().map(MsgInfo::getMsgId).collect(Collectors.toList());
+
         // 获取注册中心的回调app服务的ip地址集合
         List<ServiceInstance> instances = discoveryClient.getInstances(appId);
         for (ServiceInstance instance : instances) {
             url = instance.getUri() + url;
-            JSONObject json = new JSONObject();
-            json.put("keys",collect);
 
             // 只把处理完成的消息的id返回给我
-            BaseResponse<List<String>> result = HttpUtil.doPost(url, json.toJSONString(), 2);
-            List<String> data = result.getData();
+            BaseResponse<List<Long>> result = HttpUtil.doPost(url, collect.toString(), 2);
+            List<Long> data = result.getData();
 
             if (result.isResult() && Objects.nonNull(data)){
-                List<MsgInfo> successList = entry.stream().filter(each -> data.contains(each.getBusinessId())).collect(Collectors.toList());
-                // do something 修改数据库中消息的状态
-                List<Long> msgIds = successList.stream().map(MsgInfo::getMsgId).collect(Collectors.toList());
 
-                msgInfoMapper.updateBatch(msgIds,msgStatus);
-                return successList;
+                msgInfoMapper.updateBatch(data,msgStatus);
+                List<MsgInfo> list1 = entry.stream().filter(l -> data.contains(l.getMsgId())).collect(Collectors.toList());
+                collect.removeAll(data);
+
+                // 当修改状态为1时，说明时向业务发起方查询
+                if (msgStatus == 1){
+                    // do something 修改数据库中消息的状态
+                    list1.forEach(k->messageSender.publicQueueProcessing(k,k.getTopic()));
+                    // 失败的删除
+
+                    if (CollectionUtils.isNotEmpty(collect)){
+                        msgInfoMapper.deleteBatch(collect);
+                    }
+                    return;
+                }else {
+                    // 查询失败的消息，重新投递队列
+                    List<MsgInfo> collect1 = entry.stream().filter(k -> collect.contains(k.getMsgId())).collect(Collectors.toList());
+                    // 失败的重新投递队列
+                    collect1.forEach(k->messageSender.publicQueueProcessing(k,k.getTopic()));
+                    return;
+                }
             }
         }
-        return Collections.emptyList();
-    }
-
-    public static void main(String[] args) {
-        String url = "http://localhost:8084/eurekaController/test";
-        JSONObject json = new JSONObject();
-        json.put("keys", Arrays.asList("1","2"));
-        BaseResponse result = HttpUtil.doPost(url, json.toJSONString(), 5);
     }
 }

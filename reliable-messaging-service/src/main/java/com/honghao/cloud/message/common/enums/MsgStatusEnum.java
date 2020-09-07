@@ -17,19 +17,14 @@ public enum  MsgStatusEnum {
     TO_BE_CONFIRMED(0,"待确认"),
 
     /**
-     * 待发送
-     */
-    TO_BE_SENT(1,"待发送"),
-
-    /**
      * 已发送
      */
-    HAS_BEEN_SENT(2,"已发送"),
+    HAS_BEEN_SENT(1,"已发送"),
 
     /**
      * 已完成
      */
-    COMPLETED(3,"已完成"),
+    COMPLETED(2,"已完成"),
     ;
 
     private Integer code;
