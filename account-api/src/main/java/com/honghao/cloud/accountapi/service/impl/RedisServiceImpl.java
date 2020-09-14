@@ -15,6 +15,7 @@ import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -101,17 +102,50 @@ public class RedisServiceImpl implements RedisService {
         long start = System.currentTimeMillis();
         long middle = System.currentTimeMillis();
         System.out.println(middle-start);
+        // 删除bigHash
         Cursor<Map.Entry<Object, Object>> scan = redisTemplate.opsForHash().scan("1234567", ScanOptions.scanOptions().count(100).build());
         while (scan.hasNext()){
             Map.Entry<Object, Object> next = scan.next();
             redisTemplate.opsForHash().delete("1234567",next.getKey());
         }
+
+        System.out.println(System.currentTimeMillis()-middle);
+
+        // redis删除List类型的BigKey
+
+
+
+        // redis删除Set类型的BigKey
+        List<Object> list = new ArrayList<>();
+        Cursor<Object> scan1 = redisTemplate.opsForSet().scan("123", ScanOptions.scanOptions().count(100).build());
+        while (scan1.hasNext()){
+            Object next = scan1.next();
+            if (list.size()>=100){
+                redisTemplate.executePipelined(new SessionCallback<Object>() {
+                    @Override
+                    public Object execute(RedisOperations redisOperations) throws DataAccessException {
+                        for (Object o : list) {
+                            redisOperations.opsForSet().remove("1234",o);
+                        }
+                        return null;
+                    }
+                });
+                list.clear();
+            }else {
+                list.add(next);
+            }
+            redisTemplate.opsForSet().remove("1234",next);
+        }
+
+        // redis删除SortedSet类型的BigKey
+        Long aLong = redisTemplate.opsForZSet().removeRange("", 1, 100);
+
         try {
             scan.close();
+            scan1.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(System.currentTimeMillis()-middle);
         return BaseResponse.success();
     }
 

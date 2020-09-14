@@ -7,9 +7,12 @@ import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -27,9 +30,12 @@ public class RedisController {
     private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(1000,10000,"123");
     @Resource
     private RedisService redisService;
+    @Resource
+    private RedisTemplate<String,Object> redisTemplate;
+
 
     /**
-     * redis删除bigkey
+     * redis添加大数据
      * @param userId userId
      * @return BaseResponse
      */
@@ -227,6 +233,16 @@ public class RedisController {
     @GetMapping("/pubAndSub")
     @ApiOperation(value = "redis发布与订阅功能", notes = "redis发布与订阅功能")
     public BaseResponse pubAndSub(@RequestParam("userId") String userId){
+        LocalDate localDate = LocalDate.now();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String format = dateTimeFormatter.format(localDate);
+//        Long add = redisTemplate.opsForSet().add(format, 1);
+//        Long add1 = redisTemplate.opsForSet().add(format, 1);
+//        System.out.println(add + "--"+add1);
+
+        Boolean add = redisTemplate.opsForZSet().add(format, 1, 1);
+        Boolean add1 = redisTemplate.opsForZSet().add(format, 1, 1);
+        System.out.println(add + "--"+add1);
         return redisService.pubAndSub(userId);
     }
 }
