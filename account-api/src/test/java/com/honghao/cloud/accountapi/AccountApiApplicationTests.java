@@ -7,16 +7,11 @@ import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.core.query.IndexQuery;
-import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.StringQuery;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -29,8 +24,8 @@ public class AccountApiApplicationTests {
     private RedisService redisService;
     @Resource
     private RedisTemplate<String,Object> redisTemplate;
-    @Resource
-    private ElasticsearchTemplate elasticsearchTemplate;
+//    @Resource
+//    private ElasticsearchTemplate elasticsearchTemplate;
     @Test
     public void contextLoads() {
         // 初始化构建过去30天的数据
@@ -70,15 +65,15 @@ public class AccountApiApplicationTests {
     @Test
     public void test(){
         ShopInfo shopInfo = ShopInfo.builder().shopId("123").shopName("123").build();
-
-        IndexQuery indexQuery = new IndexQueryBuilder()
-                .withId(shopInfo.getShopId())
-                .withObject(shopInfo)
-                .build();
-
-        // 存入索引，返回文档ID
-        String documentId = elasticsearchTemplate.index(indexQuery);
-        System.out.println(documentId);
+//
+//        IndexQuery indexQuery = new IndexQueryBuilder()
+//                .withId(shopInfo.getShopId())
+//                .withObject(shopInfo)
+//                .build();
+//
+//        // 存入索引，返回文档ID
+//        String documentId = elasticsearchTemplate.index(indexQuery);
+//        System.out.println(documentId);
     }
 
     // 测试elasticsearchTemplate搜索
@@ -91,16 +86,16 @@ public class AccountApiApplicationTests {
                 "        }\n" +
                 "    }";
 
-        StringQuery query = new StringQuery(json);
-        query.addIndices("test");
-        query.addTypes("news");
-
-        List<ShopInfo> articles = elasticsearchTemplate.queryForList(query, ShopInfo.class);
-        if(articles.size() > 0) {
-            for (ShopInfo a : articles){
-                System.out.println(a);
-            }
-        }
+//        StringQuery query = new StringQuery(json);
+//        query.addIndices("test");
+//        query.addTypes("news");
+//
+//        List<ShopInfo> articles = elasticsearchTemplate.queryForList(query, ShopInfo.class);
+//        if(articles.size() > 0) {
+//            for (ShopInfo a : articles){
+//                System.out.println(a);
+//            }
+//        }
     }
 
 }
