@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 
 /**
  * 用户信息controller
@@ -30,7 +31,8 @@ public class AccountController {
     @PostMapping("/create")
     @ApiOperation(value = "创建订单",notes = "创建订单")
     public BaseResponse createUser(@RequestParam String data) {
-        return orderFacade.createOrders(data);
+//        return orderFacade.createOrders(data);
+        return BaseResponse.successData(LocalDateTime.now());
     }
 
 }

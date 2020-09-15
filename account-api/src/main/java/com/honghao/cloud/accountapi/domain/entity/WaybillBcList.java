@@ -3,6 +3,7 @@ package com.honghao.cloud.accountapi.domain.entity;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -53,7 +54,7 @@ public class WaybillBcList {
 
     private Byte isTimely;
 
-    private Date etStartTime;
+    private LocalDateTime etStartTime;
 
     private Date etArriveTime;
 
