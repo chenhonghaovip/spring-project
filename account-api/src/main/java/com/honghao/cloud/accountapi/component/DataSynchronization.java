@@ -1,56 +1,76 @@
-package com.honghao.cloud.accountapi.config;
+package com.honghao.cloud.accountapi.component;
 
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.client.CanalConnectors;
 import com.alibaba.otter.canal.protocol.CanalEntry;
-import com.alibaba.otter.canal.protocol.CanalEntry.Entry;
 import com.alibaba.otter.canal.protocol.Message;
+import com.alibaba.otter.canal.protocol.exception.CanalClientException;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.honghao.cloud.accountapi.config.DataSynchronizationConfig;
+import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
+ * canal数据同步组件
+ *
  * @author chenhonghao
- * @date 2020-09-20 21:55
+ * @date 2020-09-21 11:17
  */
-public class CanalClient {
+@Slf4j
+@Configuration
+@EnableConfigurationProperties(DataSynchronizationConfig.class)
+public class DataSynchronization {
+    private static ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1);
     private static Queue<String> SQL_QUEUE = new ConcurrentLinkedQueue<>();
+    private static CanalConnector connector;
 
-    public static void main(String[] args) {
-
-        CanalConnector connector = CanalConnectors.newSingleConnector(new InetSocketAddress(CanalConfig.CANAL_ADDRESS,
-                CanalConfig.PORT), CanalConfig.DESTINATION, "", "");
-        int batchSize = 1000;
-        try {
-            connector.connect();
-            connector.subscribe(CanalConfig.FILTER);
-            connector.rollback();
+    public DataSynchronization(DataSynchronizationConfig data) {
+        scheduledThreadPoolExecutor.scheduleAtFixedRate(()->{
             try {
-                while (true) {
-                    //尝试从master那边拉去数据batchSize条记录，有多少取多少
-                    Message message = connector.getWithoutAck(batchSize);
-                    long batchId = message.getId();
-                    int size = message.getEntries().size();
-                    if (batchId == -1 || size == 0) {
-                        Thread.sleep(1000);
-                    } else {
-                        dataHandle(message.getEntries());
-                    }
-                    connector.ack(batchId);
-
-                    //当队列里面堆积的sql大于一定数值的时候就模拟执行
-                    if (SQL_QUEUE.size() >= 10) {
-                        executeQueueSql();
-                    }
+                if (connector==null){
+                    connector = CanalConnectors.newSingleConnector(new InetSocketAddress(data.getCanalAddress(),
+                            data.getPort()), data.getDestination(), data.getUserName(), data.getPassword());
+                    connector.connect();
+                    connector.rollback();
+                    init();
                 }
-            } catch (InterruptedException | InvalidProtocolBufferException e) {
-                e.printStackTrace();
+            } catch (CanalClientException e) {
+                log.error(e.getMessage());
+                connector = null;
             }
-        } finally {
-            connector.disconnect();
+        },0,10, TimeUnit.SECONDS);
+    }
+
+    public void init(){
+        int batchSize = 1000;
+        while (true) {
+            try {
+                //尝试从master那边拉去数据batchSize条记录，有多少取多少
+                Message message = connector.getWithoutAck(batchSize);
+                long batchId = message.getId();
+                int size = message.getEntries().size();
+                if (batchId == -1 || size == 0) {
+                    Thread.sleep(1000);
+                } else {
+                    dataHandle(message.getEntries());
+                }
+                connector.ack(batchId);
+                //当队列里面堆积的sql大于一定数值的时候就模拟执行
+                executeQueueSql();
+            } catch (Exception e){
+                connector = null;
+                log.error(e.getMessage());
+                return;
+            }
         }
     }
 
@@ -71,8 +91,8 @@ public class CanalClient {
      *
      * @param entrys entrys
      */
-    private static void dataHandle(List<Entry> entrys) throws InvalidProtocolBufferException {
-        for (Entry entry : entrys) {
+    private static void dataHandle(List<CanalEntry.Entry> entrys) throws InvalidProtocolBufferException {
+        for (CanalEntry.Entry entry : entrys) {
             if (CanalEntry.EntryType.ROWDATA == entry.getEntryType()) {
                 CanalEntry.RowChange rowChange = CanalEntry.RowChange.parseFrom(entry.getStoreValue());
                 CanalEntry.EventType eventType = rowChange.getEventType();
@@ -92,7 +112,7 @@ public class CanalClient {
      *
      * @param entry entry
      */
-    private static void saveUpdateSql(Entry entry) {
+    private static void saveUpdateSql(CanalEntry.Entry entry) {
         try {
             CanalEntry.RowChange rowChange = CanalEntry.RowChange.parseFrom(entry.getStoreValue());
             List<CanalEntry.RowData> rowDatasList = rowChange.getRowDatasList();
@@ -126,7 +146,7 @@ public class CanalClient {
      *
      * @param entry entry
      */
-    private static void saveDeleteSql(Entry entry) {
+    private static void saveDeleteSql(CanalEntry.Entry entry) {
         try {
             CanalEntry.RowChange rowChange = CanalEntry.RowChange.parseFrom(entry.getStoreValue());
             List<CanalEntry.RowData> rowDatasList = rowChange.getRowDatasList();
@@ -151,7 +171,7 @@ public class CanalClient {
      * 保存插入语句
      * @param entry entry
      */
-    private static void saveInsertSql(Entry entry) {
+    private static void saveInsertSql(CanalEntry.Entry entry) {
         try {
             CanalEntry.RowChange rowChange = CanalEntry.RowChange.parseFrom(entry.getStoreValue());
             List<CanalEntry.RowData> rowDatasList = rowChange.getRowDatasList();
