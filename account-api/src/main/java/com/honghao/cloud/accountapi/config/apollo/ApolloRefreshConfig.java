@@ -39,6 +39,7 @@ public class ApolloRefreshConfig implements ApplicationContextAware {
         // 更新相应的bean的属性值，主要是存在@ConfigurationProperties注解的bean
         this.applicationContext.publishEvent(new EnvironmentChangeEvent(changeEvent.changedKeys()));
 
+        // 监听指定字段的修改，实现动态修改日志级别的功能
         if (changeEvent.changedKeys().contains(LOG_PREFIX)){
             ConfigChange change = changeEvent.getChange(LOG_PREFIX);
             String newValue = change.getNewValue();
