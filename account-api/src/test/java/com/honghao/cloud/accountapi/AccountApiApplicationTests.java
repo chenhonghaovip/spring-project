@@ -4,6 +4,10 @@ import com.honghao.cloud.accountapi.common.dict.Dict;
 import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
 import com.honghao.cloud.accountapi.service.RedisService;
 import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,8 +28,8 @@ public class AccountApiApplicationTests {
     private RedisService redisService;
     @Resource
     private RedisTemplate<String,Object> redisTemplate;
-//    @Resource
-//    private ElasticsearchTemplate elasticsearchTemplate;
+    @Resource
+    private RestHighLevelClient restHighLevelClient;
     @Test
     public void contextLoads() {
         // 初始化构建过去30天的数据
@@ -96,6 +100,14 @@ public class AccountApiApplicationTests {
 //                System.out.println(a);
 //            }
 //        }
+    }
+
+    @Test
+    public void elas() throws IOException {
+        CreateIndexRequest createIndexRequest = new CreateIndexRequest("account_api");
+        CreateIndexResponse createIndexResponse = restHighLevelClient.indices().create(createIndexRequest, RequestOptions.DEFAULT);
+        System.out.println(createIndexResponse);
+
     }
 
 }
