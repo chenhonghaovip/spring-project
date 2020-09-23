@@ -4,6 +4,7 @@ import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.client.CanalConnectors;
 import com.alibaba.otter.canal.protocol.CanalEntry;
 import com.alibaba.otter.canal.protocol.Message;
+import org.junit.Test;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -13,6 +14,34 @@ import java.util.List;
  * @date 2020-09-20 22:26
  */
 public class CanalTest {
+
+    @Test
+    public void test(){
+        int batchSize = 1000;
+        CanalConnector connector = CanalConnectors.newSingleConnector(new InetSocketAddress("127.0.0.1",
+                11111), "example", "canal", "canal");
+        connector.connect();
+        connector.rollback();
+        while (true) {
+            try {
+                //尝试从master那边拉去数据batchSize条记录，有多少取多少
+                Message message = connector.getWithoutAck(batchSize);
+                long batchId = message.getId();
+                int size = message.getEntries().size();
+                if (batchId == -1 || size == 0) {
+                    Thread.sleep(1000);
+                } else {
+                    System.out.println(111);
+                }
+                connector.ack(batchId);
+                //当队列里面堆积的sql大于一定数值的时候就模拟执行
+//                executeQueueSql();
+            } catch (Exception e){
+                System.out.println(e.getMessage());
+                return;
+            }
+        }
+    }
 
     public static void main(String[] args) throws Exception {
 //canal.ip = 192.168.56.104
