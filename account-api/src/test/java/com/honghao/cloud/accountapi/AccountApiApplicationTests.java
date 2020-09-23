@@ -1,7 +1,6 @@
 package com.honghao.cloud.accountapi;
 
 import com.honghao.cloud.accountapi.common.dict.Dict;
-import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
 import com.honghao.cloud.accountapi.service.RedisService;
 import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import org.elasticsearch.client.RequestOptions;
@@ -63,43 +62,6 @@ public class AccountApiApplicationTests {
 
 
         },0,2, TimeUnit.SECONDS);
-    }
-//    https://www.cnblogs.com/h--d/p/12498224.html
-//    https://www.cnblogs.com/lifengdi/archive/2019/09/20/11554923.html
-    @Test
-    public void test(){
-        ShopInfo shopInfo = ShopInfo.builder().shopId("123").shopName("123").build();
-//
-//        IndexQuery indexQuery = new IndexQueryBuilder()
-//                .withId(shopInfo.getShopId())
-//                .withObject(shopInfo)
-//                .build();
-//
-//        // 存入索引，返回文档ID
-//        String documentId = elasticsearchTemplate.index(indexQuery);
-//        System.out.println(documentId);
-    }
-
-    // 测试elasticsearchTemplate搜索
-    @Test
-    public void search() throws IOException {
-
-        String json = "{\n" +
-                "        \"match\" : {\n" +
-                "            \"content\" : \"Hello\"\n" +
-                "        }\n" +
-                "    }";
-
-//        StringQuery query = new StringQuery(json);
-//        query.addIndices("test");
-//        query.addTypes("news");
-//
-//        List<ShopInfo> articles = elasticsearchTemplate.queryForList(query, ShopInfo.class);
-//        if(articles.size() > 0) {
-//            for (ShopInfo a : articles){
-//                System.out.println(a);
-//            }
-//        }
     }
 
     @Test
