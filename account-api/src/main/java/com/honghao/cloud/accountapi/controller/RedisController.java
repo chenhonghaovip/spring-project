@@ -3,14 +3,18 @@ package com.honghao.cloud.accountapi.controller;
 import com.honghao.cloud.accountapi.dto.request.LikePointVO;
 import com.honghao.cloud.accountapi.service.RedisService;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * redis测试
@@ -18,12 +22,40 @@ import javax.annotation.Resource;
  * @author chenhonghao
  * @date 2020-07-24 09:41
  */
+@Slf4j
 @Api(value = "redis测试使用" ,tags = "redis测试使用")
 @RestController
 @RequestMapping("/redisController")
 public class RedisController {
+    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(1000,10000,"123");
     @Resource
     private RedisService redisService;
+    @Resource
+    private RedisTemplate<String,Object> redisTemplate;
+
+
+    /**
+     * redis添加大数据
+     * @param userId userId
+     * @return BaseResponse
+     */
+    @PostMapping("/addBigData")
+    @ApiOperation(value = "redis添加大数据", notes = "redis添加大数据")
+    public BaseResponse addBigData(@RequestBody String userId){
+        return redisService.addBigData(userId);
+    }
+
+    /**
+     * redis删除bigkey
+     * @param userId userId
+     * @return BaseResponse
+     */
+    @PostMapping("/delBigHash")
+    @ApiOperation(value = "redis删除bigkey", notes = "redis删除bigkey")
+    public BaseResponse delBigHash(@RequestBody String userId){
+        return redisService.delBigHash(userId);
+    }
+
 
     /**
      * redis缓存击穿处理
@@ -103,6 +135,40 @@ public class RedisController {
     }
 
     /**
+     * redis实现Geo
+     * @param userId userId
+     * @return BaseResponse
+     */
+    @PostMapping("/redisGeo")
+    @ApiOperation(value = "redis实现Geo", notes = "redis实现Geo")
+    public BaseResponse redisGeo(@RequestBody String userId){
+        return redisService.redisGeo(userId);
+    }
+
+    /**
+     * redis获取服务器信息
+     * @param userId userId
+     * @return BaseResponse
+     */
+    @PostMapping("/redisInfo")
+    @ApiOperation(value = "redis获取服务器信息", notes = "redis获取服务器信息")
+    public BaseResponse redisInfo(@RequestBody String userId){
+        CyclicBarrier cyclicBarrier = new CyclicBarrier(1000);
+        for (int i = 0; i < 1000; i++) {
+            threadPoolExecutor.execute((()->{
+                try {
+                    cyclicBarrier.await();
+                    redisService.redisInfo(userId);
+                } catch (Exception e) {
+                    log.error(e.getMessage());
+                }
+            }));
+        }
+        return BaseResponse.success();
+    }
+
+
+    /**
      * redis模拟实现微博热搜排行榜（点击）
      * @return BaseResponse
      */
@@ -111,6 +177,8 @@ public class RedisController {
     public BaseResponse hotSearchOnWeibo(@RequestBody String key){
         return redisService.hotSearchOnWeibo(key);
     }
+
+
 
     /**
      * 微博热搜查询
@@ -155,5 +223,26 @@ public class RedisController {
     @ApiOperation(value = "朋友圈点赞和取消点赞功能实现", notes = "朋友圈点赞和取消点赞功能实现")
     public BaseResponse isLikePoint(@RequestBody LikePointVO likePointVO){
         return redisService.isLikePoint(likePointVO);
+    }
+
+    /**
+     * redis发布与订阅功能
+     * @param userId userId
+     * @return BaseResponse
+     */
+    @GetMapping("/pubAndSub")
+    @ApiOperation(value = "redis发布与订阅功能", notes = "redis发布与订阅功能")
+    public BaseResponse pubAndSub(@RequestParam("userId") String userId){
+        LocalDate localDate = LocalDate.now();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String format = dateTimeFormatter.format(localDate);
+//        Long add = redisTemplate.opsForSet().add(format, 1);
+//        Long add1 = redisTemplate.opsForSet().add(format, 1);
+//        System.out.println(add + "--"+add1);
+
+        Boolean add = redisTemplate.opsForZSet().add(format, 1, 1);
+        Boolean add1 = redisTemplate.opsForZSet().add(format, 1, 1);
+        System.out.println(add + "--"+add1);
+        return redisService.pubAndSub(userId);
     }
 }

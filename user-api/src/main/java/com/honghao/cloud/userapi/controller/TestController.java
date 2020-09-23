@@ -1,33 +1,24 @@
 package com.honghao.cloud.userapi.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.threadpool.TtlExecutors;
-import com.google.common.base.Charsets;
-import com.google.common.hash.Funnel;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.bean.CacheTemplate;
 import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
-import com.honghao.cloud.basic.common.base.utils.BloomFilterHelper;
 import com.honghao.cloud.userapi.client.OrderClient;
-import com.honghao.cloud.userapi.component.RedisService;
 import com.honghao.cloud.userapi.domain.entity.ErrMsg;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.domain.mapper.master.ErrMsgMapper;
 import com.honghao.cloud.userapi.facade.BatchFacade;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;
-import com.honghao.cloud.userapi.utils.HttpUtil;
-import com.honghao.cloud.userapi.utils.JedisOperator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.web.bind.annotation.*;
-import redis.clients.jedis.GeoRadiusResponse;
-import redis.clients.jedis.GeoUnit;
-import redis.clients.jedis.params.geo.GeoRadiusParam;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
+import java.lang.ref.SoftReference;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -42,9 +33,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 @RestController
 @RequestMapping("/testController")
 public class TestController {
-    private BloomFilterHelper<String> orderBloomFilterHelper = new BloomFilterHelper<>((Funnel<String>) (from, into) -> into.putString(from, Charsets.UTF_8)
-            .putString(from, Charsets.UTF_8), 100 , 0.01);
-
     private ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(1000,1200,"test");
     @Resource
     private WaybillBcListFacade waybillBcListFacade;
@@ -57,68 +45,25 @@ public class TestController {
     @Resource
     private ErrMsgMapper errMsgMapper;
     @Resource
-    private JedisOperator jedisOperator;
-    @Resource
-    private RedisService redisService;
+    private CacheTemplate<ErrMsg> cacheTemplate;
 
     @PostMapping("/test/test")
     public BaseResponse test(@RequestBody WaybillBcList waybillBcList){
-
+        System.out.println(waybillBcList);
         orderClient.createUser(new JSONObject());
 
         orderClient.singleQuery("123","431");
-        List<String> strings = Arrays.asList("1","2");
-        String request = JSON.toJSONString(strings);
-        String result = HttpUtil.doPost("http://10.16.14.38:8082/order/batchQuery", request, 1);
-        System.out.println(result);
         return BaseResponse.success();
     }
 
     @GetMapping("/retryTest/retryTest")
     public BaseResponse retryTest(@RequestParam String date){
+        System.out.println(date);
         List<ErrMsg> select = errMsgMapper.select();
         select.forEach(each->{
             errMsgMapper.deleteByPrimaryKey(each.getId());
             messageSender.publicQueueProcessing(each.getMsg(), "honghao_queue");
         });
-        return BaseResponse.success();
-    }
-    /**
-     * geoHash测试
-     * @param data data
-     * @return BaseResponse
-     */
-    @PostMapping("/test003")
-    public BaseResponse test03(@RequestBody String data){
-        System.out.println(data);
-        //存放geo信息，存放到redis中为zset结构
-        jedisOperator.geoadd("test02",Double.valueOf("121.3717178602589"),Double.valueOf("31.17087293836589"),"33333");
-        jedisOperator.geoadd("test02",Double.valueOf("121.3716178602589"),Double.valueOf("31.17087293836589"),"44444");
-        jedisOperator.geoadd("test02",Double.valueOf("121.3715178602589"),Double.valueOf("31.17087293836589"),"55555");
-        jedisOperator.geoadd("test02",Double.valueOf("121.3719178602589"),Double.valueOf("31.17087293836589"),"11111");
-        jedisOperator.geoadd("test02",Double.valueOf("121.3718178602589"),Double.valueOf("31.17087293836589"),"22222");
-
-        //获取半径范围内的所有订单信息（主键值，经纬度，距离信息），并且按照顺序升序排序
-        List<GeoRadiusResponse> list1 = jedisOperator.georadius("test02", Double.valueOf("121.3719178602589"), Double.valueOf("31.17087293836589"), 1, GeoUnit.M, GeoRadiusParam.geoRadiusParam().withCoord().withDist().sortDescending());
-        for (GeoRadiusResponse geoRadiusResponse : list1) {
-            geoRadiusResponse.getMemberByString();
-            System.out.println( geoRadiusResponse.getMemberByString() + " distance:" + geoRadiusResponse.getDistance());
-        }
-
-        List<GeoRadiusResponse> result = list1.subList(0,Math.min(list1.size(),25));
-        String wId;
-        double lo,la,dist;
-        for (GeoRadiusResponse geoRadiusResponse : result) {
-            wId = geoRadiusResponse.getMemberByString();
-            lo = geoRadiusResponse.getCoordinate().getLongitude();
-            la = geoRadiusResponse.getCoordinate().getLongitude();
-            dist = geoRadiusResponse.getDistance();
-        }
-        //获取这两个key值之间的距离
-        Double dis = jedisOperator.geodist("test02","11111","22222",GeoUnit.M);
-        System.out.println(dis.doubleValue());
-
-
         return BaseResponse.success();
     }
 
@@ -172,9 +117,7 @@ public class TestController {
 
         ttl.set(3);
 
-        ttlExecutorService.submit(()->{
-            System.out.println("第二次"+Thread.currentThread().getName()+"value:"+ttl.get());
-        });
+        ttlExecutorService.submit(()-> System.out.println("第二次"+Thread.currentThread().getName()+"value:"+ttl.get()));
     }
 
     /**
@@ -184,8 +127,37 @@ public class TestController {
     @GetMapping("/getList")
     public BaseResponse getList(){
         String batchId = "2020012548548627";
-        redisService.includeByBloomFilter(orderBloomFilterHelper, "order", batchId);
-        redisService.addByBloomFilter(orderBloomFilterHelper, "order", batchId);
-        return BaseResponse.success();
+        return cacheTemplate.redisStringCache("order", batchId, () -> errMsgMapper.selectByPrimaryKey(123445L));
+    }
+
+    /**
+     * 软引用何时被收集
+     * 运行参数 -Xmx200m -XX:+PrintGC
+     * Created by ccr at 2018/7/14.
+     */
+    public static void main(String[] args) {
+        //100M的缓存数据
+        byte[] cacheData = new byte[100 * 1024 * 1024];
+        //将缓存数据用软引用持有
+        SoftReference<byte[]> cacheRef = new SoftReference<>(cacheData);
+        //将缓存数据的强引用去除
+        cacheData = null;
+        System.out.println("第一次GC前" + cacheData);
+        System.out.println("第一次GC前" + cacheRef.get());
+        //进行一次GC后查看对象的回收情况
+        System.gc();
+        //等待GC
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("第一次GC后" + cacheData);
+        System.out.println("第一次GC后" + cacheRef.get());
+
+        //在分配一个120M的对象，看看缓存对象的回收情况
+        byte[] newData = new byte[120 * 1024 * 1024];
+        System.out.println("分配后" + cacheData);
+        System.out.println("分配后" + cacheRef.get());
     }
 }

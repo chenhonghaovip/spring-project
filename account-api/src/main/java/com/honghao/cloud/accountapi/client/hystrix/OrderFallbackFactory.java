@@ -1,8 +1,7 @@
 package com.honghao.cloud.accountapi.client.hystrix;
 
 import com.honghao.cloud.accountapi.client.OrderClient;
-import com.honghao.cloud.accountapi.domain.entity.Order;
-import com.honghao.cloud.accountapi.domain.entity.WaybillBcList;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,18 +19,14 @@ public class OrderFallbackFactory implements FallbackFactory<OrderClient> {
     public OrderClient create(Throwable throwable) {
         return new OrderClient() {
             @Override
-            public void create(String param) {
+            public BaseResponse create(String param) {
                 log.info("account 服务降级");
+                return BaseResponse.error();
             }
 
             @Override
-            public WaybillBcList queryWaybillBcList(String param) {
-                return new WaybillBcList();
-            }
-
-            @Override
-            public Order queryOrder(String param) {
-                return new Order();
+            public BaseResponse queryWaybillBcList(String param) {
+                return BaseResponse.error();
             }
         };
     }

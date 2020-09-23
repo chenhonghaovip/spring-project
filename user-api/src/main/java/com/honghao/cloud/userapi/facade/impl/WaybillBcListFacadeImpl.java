@@ -1,17 +1,13 @@
 package com.honghao.cloud.userapi.facade.impl;
 
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
-import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.domain.entity.CloudDeliveryMan;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.dto.request.EventDTO;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import com.honghao.cloud.userapi.listener.event.EventDemo;
-import com.honghao.cloud.userapi.listener.rabbitmq.producer.MessageSender;
 import com.honghao.cloud.userapi.service.CloudOrderService;
 import com.honghao.cloud.userapi.service.WaybillBcListService;
-import com.honghao.cloud.userapi.task.AsyncTask;
-import com.honghao.cloud.userapi.utils.JedisOperator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -28,14 +24,6 @@ import javax.annotation.Resource;
 @Slf4j
 @Service
 public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
-    @Resource
-    private AsyncTask asyncTask;
-    @Resource
-    private OrderClient orderClient;
-    @Resource
-    private JedisOperator jedisOperator;
-    @Resource
-    private MessageSender messageSender;
     @Resource
     private CloudOrderService cloudOrderService;
     @Resource

@@ -8,6 +8,9 @@ package com.honghao.cloud.accountapi.common.dict;
  */
 public class Dict {
     /**
+     * ==================================redis的key前缀或则key===========================================================
+     */
+    /**
      * 微博 - 小时热点
      */
     public static final String WEIBO = "weibo_hour:";
@@ -36,4 +39,8 @@ public class Dict {
      * redisson锁前缀
      */
     public static final String R_LOCK = "r_lock";
+
+
+
+
 }

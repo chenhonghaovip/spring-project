@@ -1,17 +1,18 @@
 package com.honghao.cloud.accountapi.controller;
 
 
-import com.honghao.cloud.accountapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.accountapi.facade.AccountFacade;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.time.LocalDateTime;
 
 /**
  * 用户信息controller
@@ -26,25 +27,12 @@ import java.util.List;
 public class AccountController {
     @Resource
     private AccountFacade orderFacade;
-    @Resource
-    private ApplicationContext applicationContext;
 
     @PostMapping("/create")
     @ApiOperation(value = "创建订单",notes = "创建订单")
     public BaseResponse createUser(@RequestParam String data) {
-        return orderFacade.createOrders(data);
-    }
-
-
-    /**
-     * 批次查询
-     * @param list list
-     * @return List<WaybillBcList>
-     */
-    @PostMapping("/batchQuery")
-    @ApiOperation(value = "批次查询",notes = "批次查询")
-    public List<WaybillBcList> batchQuery(@RequestBody List<String> list){
-        return orderFacade.batchQuery(list);
+//        return orderFacade.createOrders(data);
+        return BaseResponse.successData(LocalDateTime.now());
     }
 
 }

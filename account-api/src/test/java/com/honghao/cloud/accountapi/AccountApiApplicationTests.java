@@ -1,8 +1,13 @@
 package com.honghao.cloud.accountapi;
 
 import com.honghao.cloud.accountapi.common.dict.Dict;
+import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
 import com.honghao.cloud.accountapi.service.RedisService;
 import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +15,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -22,6 +28,8 @@ public class AccountApiApplicationTests {
     private RedisService redisService;
     @Resource
     private RedisTemplate<String,Object> redisTemplate;
+    @Resource
+    private RestHighLevelClient restHighLevelClient;
     @Test
     public void contextLoads() {
         // 初始化构建过去30天的数据
@@ -51,12 +59,55 @@ public class AccountApiApplicationTests {
             // 刷新过去24小时的数据到日热点数据
             long hour = System.currentTimeMillis()/(1000*60*60);
 
-
-//            redisTemplate.opsForZSet().ra
             String key = Dict.WEIBO_WEEK + hour;
 
 
         },0,2, TimeUnit.SECONDS);
+    }
+//    https://www.cnblogs.com/h--d/p/12498224.html
+//    https://www.cnblogs.com/lifengdi/archive/2019/09/20/11554923.html
+    @Test
+    public void test(){
+        ShopInfo shopInfo = ShopInfo.builder().shopId("123").shopName("123").build();
+//
+//        IndexQuery indexQuery = new IndexQueryBuilder()
+//                .withId(shopInfo.getShopId())
+//                .withObject(shopInfo)
+//                .build();
+//
+//        // 存入索引，返回文档ID
+//        String documentId = elasticsearchTemplate.index(indexQuery);
+//        System.out.println(documentId);
+    }
+
+    // 测试elasticsearchTemplate搜索
+    @Test
+    public void search() throws IOException {
+
+        String json = "{\n" +
+                "        \"match\" : {\n" +
+                "            \"content\" : \"Hello\"\n" +
+                "        }\n" +
+                "    }";
+
+//        StringQuery query = new StringQuery(json);
+//        query.addIndices("test");
+//        query.addTypes("news");
+//
+//        List<ShopInfo> articles = elasticsearchTemplate.queryForList(query, ShopInfo.class);
+//        if(articles.size() > 0) {
+//            for (ShopInfo a : articles){
+//                System.out.println(a);
+//            }
+//        }
+    }
+
+    @Test
+    public void elas() throws IOException {
+        CreateIndexRequest createIndexRequest = new CreateIndexRequest("account_api");
+        CreateIndexResponse createIndexResponse = restHighLevelClient.indices().create(createIndexRequest, RequestOptions.DEFAULT);
+        System.out.println(createIndexResponse);
+
     }
 
 }

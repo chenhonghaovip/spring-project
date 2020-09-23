@@ -82,7 +82,9 @@ public class BatchFacadeImpl implements BatchFacade {
                 }
                 List<String> data1 = list1.stream().map(Request::getMovieCode).collect(Collectors.toList());
                 //批量请求
-                List<WaybillBcList> responses1 = orderClient.batchQuery(data1);
+                BaseResponse<List<WaybillBcList>> listBaseResponse = orderClient.batchQuery(data1);
+
+                List<WaybillBcList> responses1 = listBaseResponse.getData();
                 log.info("合并请求数量为：{}，参数为：{}，结果为：{}",list1.size(),data1,responses1);
                 Map<String,WaybillBcList> resultMap1 = new HashMap<>(list1.size()*2);
                 responses1.forEach(each -> resultMap1.put(each.getWId(), each));

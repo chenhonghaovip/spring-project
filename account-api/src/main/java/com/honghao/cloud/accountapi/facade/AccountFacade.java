@@ -1,10 +1,7 @@
 package com.honghao.cloud.accountapi.facade;
 
 
-import com.honghao.cloud.accountapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
-
-import java.util.List;
 
 /**
  * 订单信息操作
@@ -20,11 +17,4 @@ public interface AccountFacade {
      * @return Boolean
      */
     BaseResponse createOrders(String data);
-
-    /**
-     * 批次查询
-     * @param list list
-     * @return List<WaybillBcList>
-     */
-    List<WaybillBcList> batchQuery(List<String> list);
 }

@@ -1,28 +1,35 @@
 package com.honghao.cloud.accountapi.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.accountapi.common.dict.Dict;
 import com.honghao.cloud.accountapi.common.enums.ErrorCodeEnum;
 import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
 import com.honghao.cloud.accountapi.domain.mapper.ShopInfoMapper;
 import com.honghao.cloud.accountapi.dto.request.LikePointVO;
 import com.honghao.cloud.accountapi.service.RedisService;
+import com.honghao.cloud.basic.common.base.base.BaseAssert;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.basic.common.base.bean.CacheTemplate;
 import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.geo.Point;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -35,9 +42,11 @@ import java.util.concurrent.locks.ReentrantLock;
 @Slf4j
 @Service
 public class RedisServiceImpl implements RedisService {
+    private static volatile boolean flag = true;
     private static List<ShopInfo> ids = new ArrayList<>();
     private ConcurrentHashMap<String, ReentrantLock> concurrentHashMap = new ConcurrentHashMap<>();
     private static final ScheduledThreadPoolExecutor SCHEDULED_THREAD_POOL_EXECUTOR = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1);
+    private static final ThreadPoolExecutor POOL_EXECUTOR = ThreadPoolFactory.buildThreadPoolExecutor(1,10,"add_redis");
     @Resource
     private Redisson redisson;
     @Resource
@@ -64,6 +73,7 @@ public class RedisServiceImpl implements RedisService {
             refreshMonth(times);
 
         },0,2,TimeUnit.MINUTES);
+
     }
 
     static {
@@ -71,6 +81,72 @@ public class RedisServiceImpl implements RedisService {
             String value = String.valueOf(i);
             ids.add(ShopInfo.builder().shopName(value).shopUrl(value).shopId("20200724000000"+i).shopPrice(new BigDecimal(i)).build());
         }
+    }
+
+    @Override
+    public BaseResponse addBigData(String userId) {
+        POOL_EXECUTOR.execute(()->redisTemplate.executePipelined((RedisCallback<String>) redisConnection -> {
+            for (int i = 0; i < 2000000; i++) {
+                String s = String.valueOf(i);
+                redisConnection.hSet("123456".getBytes(),s.getBytes(),s.getBytes());
+                redisConnection.hSet("1234567".getBytes(),s.getBytes(),s.getBytes());
+            }
+            redisConnection.close();
+            return null;
+        }));
+        return BaseResponse.success();
+    }
+
+    @Override
+    public BaseResponse delBigHash(String userId) {
+        long start = System.currentTimeMillis();
+        long middle = System.currentTimeMillis();
+        System.out.println(middle-start);
+        // 删除bigHash
+        Cursor<Map.Entry<Object, Object>> scan = redisTemplate.opsForHash().scan("1234567", ScanOptions.scanOptions().count(100).build());
+        while (scan.hasNext()){
+            Map.Entry<Object, Object> next = scan.next();
+            redisTemplate.opsForHash().delete("1234567",next.getKey());
+        }
+
+        System.out.println(System.currentTimeMillis()-middle);
+
+        // redis删除List类型的BigKey
+
+
+
+        // redis删除Set类型的BigKey
+        List<Object> list = new ArrayList<>();
+        Cursor<Object> scan1 = redisTemplate.opsForSet().scan("123", ScanOptions.scanOptions().count(100).build());
+        while (scan1.hasNext()){
+            Object next = scan1.next();
+            if (list.size()>=100){
+                redisTemplate.executePipelined(new SessionCallback<Object>() {
+                    @Override
+                    public Object execute(RedisOperations redisOperations) throws DataAccessException {
+                        for (Object o : list) {
+                            redisOperations.opsForSet().remove("1234",o);
+                        }
+                        return null;
+                    }
+                });
+                list.clear();
+            }else {
+                list.add(next);
+            }
+            redisTemplate.opsForSet().remove("1234",next);
+        }
+
+        // redis删除SortedSet类型的BigKey
+        Long aLong = redisTemplate.opsForZSet().removeRange("", 1, 100);
+
+        try {
+            scan.close();
+            scan1.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return BaseResponse.success();
     }
 
     @Override
@@ -120,10 +196,10 @@ public class RedisServiceImpl implements RedisService {
         String clientId = UUID.randomUUID().toString();
         try {
             Boolean aBoolean = redisTemplate.opsForValue().setIfAbsent(userId, clientId, 10, TimeUnit.SECONDS);
+            BaseAssert.notNull(aBoolean,"");
             if (!aBoolean){
                 return BaseResponse.error(ErrorCodeEnum.API_GATEWAY_ERROR);
             }
-
             // 业务处理
         } finally {
             if (clientId.equals(redisTemplate.opsForValue().get(userId))){
@@ -182,13 +258,24 @@ public class RedisServiceImpl implements RedisService {
         redisTemplate.delete(key);
         ShopInfo shopInfo = new ShopInfo();
         ShopInfo shopInfo1 = new ShopInfo();
-
-        redisTemplate.opsForSet().add(key,shopInfo,shopInfo1);
+        Long add = redisTemplate.opsForSet().add(key, shopInfo, shopInfo1);
+        Boolean aBoolean = redisTemplate.opsForValue().setBit(key, 123L, true);
+        System.out.println(add);
         return BaseResponse.successData(redisTemplate.opsForSet().members(key));
     }
 
     @Override
     public BaseResponse redisSortedSet(String userId) {
+        final String key1 = "order:time:out";
+        long l = System.currentTimeMillis()/1000 + 60;
+        for (int i = 0; i < 1000; i++) {
+            redisTemplate.opsForZSet().add(key1,i,l);
+        }
+        Set<ZSetOperations.TypedTuple<Object>> set1 = redisTemplate.opsForZSet().rangeWithScores(key1, 0, 1);
+        for (ZSetOperations.TypedTuple<Object> tuple : set1) {
+            redisTemplate.opsForZSet().remove(key1,tuple.getValue());
+        }
+
         String key = "zSet"+userId;
         ShopInfo third = ids.get(3);
         redisTemplate.delete(key);
@@ -223,6 +310,41 @@ public class RedisServiceImpl implements RedisService {
         // 计算给定的一个有序集的并集，并存储在新的 destKey中，key相同的话会把score值相加
         redisTemplate.opsForZSet().unionAndStore("test001","test002","test003");
         return BaseResponse.success();
+    }
+
+    @Override
+    public BaseResponse redisGeo(String userId) {
+        Map<Object, Point> map = new HashMap<>(16);
+        for (int i = 0; i < 10; i++) {
+            map.put(String.valueOf(i),new Point(123,1.34));
+        }
+        Point point = new Point(123,1.34);
+        redisTemplate.opsForGeo().add("1234",point,"123");
+        redisTemplate.opsForGeo().add("1234",map);
+        redisTemplate.opsForGeo().remove("1234","1","2");
+        return BaseResponse.success();
+    }
+
+    @Override
+    public BaseResponse redisInfo(String userId) {
+        RedisConnectionFactory factory = redisTemplate.getConnectionFactory();
+        BaseAssert.notNull(factory,"");
+        RedisConnection conn = null;
+
+        try {
+            conn = RedisConnectionUtils.getConnection(factory);
+            Long incr = conn.incr(userId.getBytes());
+            Map redisInfo = conn.info();
+            BaseAssert.notNull(redisInfo,"");
+
+            JSONObject json = new JSONObject();
+            json.put("incr",incr);
+            json.put("processId",redisInfo.get("process_id"));
+            System.out.println(JSON.toJSONString(json));
+            return BaseResponse.successData(JSON.toJSONString(json));
+        } finally {
+            RedisConnectionUtils.releaseConnection(conn, factory);
+        }
     }
 
     @Override
@@ -273,6 +395,33 @@ public class RedisServiceImpl implements RedisService {
     public BaseResponse isLikePoint(LikePointVO likePointVO) {
         Boolean bit = redisTemplate.opsForValue().getBit(Dict.BIT_MAP + likePointVO.getId(), likePointVO.getUserId());
         return BaseResponse.successData(bit);
+    }
+
+    @Override
+    public BaseResponse pubAndSub(String userId) {
+        Boolean aBoolean = redisTemplate.opsForValue().setBit(userId, 123L, true);
+        if (aBoolean!=null && aBoolean){
+            return BaseResponse.error();
+        }else {
+            return BaseResponse.success();
+        }
+    }
+
+    @Override
+    public BaseResponse redisConcurrent(String userId) {
+        if (flag){
+            Long decrement = redisTemplate.opsForValue().increment(userId);
+            if(decrement!=null && decrement<=100){
+                System.out.println("123");
+                return BaseResponse.success();
+            }else {
+//                System.out.println("error");
+                flag = false;
+                return BaseResponse.error();
+            }
+        }
+        System.out.println("skip");
+        return BaseResponse.error();
     }
 
     private void refreshDay(Long time){

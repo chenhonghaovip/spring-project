@@ -2,20 +2,11 @@ package com.honghao.cloud.orderapi.config;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
-import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
 
 /**
@@ -27,91 +18,10 @@ import org.springframework.context.annotation.Primary;
 @Slf4j
 @Configuration
 public class RabbitConfig {
-    /**
-     * 用户信息推送队列
-     */
-    public static final String USER_PUSH_QUEUE = "user_push_queue";
-
-    public static final String TEST_QUEUE_1 = "test_queue_1";
-    /**
-     * 默认的线程数
-     */
-    private static final int DEFAULT_CONCURRENT = 5;
-
-    /**
-     * 每个消费者获取最大投递数量 (默认50)
-     */
-    private static final int DEFAULT_PREFETCH_COUNT = 100;
-    @Value("${spring.rabbitmq.addresses}")
-    private String address;
-
-    @Value("${spring.rabbitmq.username}")
-    private String username;
-
-    @Value("${spring.rabbitmq.password}")
-    private String password;
-
-    @Bean(name = "connectionFactory")
-    @Primary
-    public ConnectionFactory connectionFactory() {
-        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-        connectionFactory.setAddresses(address);
-        connectionFactory.setUsername(username);
-        connectionFactory.setPassword(password);
-        connectionFactory.setPublisherConfirms(true);
-        return connectionFactory;
-    }
-
-    @Bean(name = "rabbitTemplate")
-    @Primary
-    public RabbitTemplate rabbitTemplate(@Qualifier("connectionFactory") ConnectionFactory connectionFactory) {
-        return new RabbitTemplate(connectionFactory);
-    }
-
-    @Bean(name = "factory")
-    public SimpleRabbitListenerContainerFactory factory(SimpleRabbitListenerContainerFactoryConfigurer configurer,
-                                                        @Qualifier("connectionFactory") ConnectionFactory connectionFactory) {
-        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-        factory.setPrefetchCount(DEFAULT_PREFETCH_COUNT);
-        factory.setConcurrentConsumers(DEFAULT_CONCURRENT);
-        configurer.configure(factory, connectionFactory);
-        return factory;
-    }
-
     @Bean
-    public Queue USER_PUSH_QUEUE(){
-        return new Queue(USER_PUSH_QUEUE);
-    }
-
-    @Bean
-    public Queue TEST_QUEUE_1(){
-        return new Queue(TEST_QUEUE_1);
-    }
-    /**
-     * 订单状态变更
-     */
-    public static final String WAYBILL_ORDER_EXCHANGE = "waybill_order_exchange";
-
-    @Bean
-    public Queue test03(){
-        return new Queue("33333");
-    }
-    /**
-     * 创建广播交换机
-     * @return FanoutExchange
-     */
-    @Bean
-    public FanoutExchange waybillOrderExchange(){
-        return new FanoutExchange(WAYBILL_ORDER_EXCHANGE);
-    }
-
-    /**
-     * 绑定队列3到指定的广播交换机
-     * @return Binding
-     */
-    @Bean
-    public Binding test03Binding() {
-        return BindingBuilder.bind(test03())
-                .to(waybillOrderExchange());
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+        return rabbitTemplate;
     }
 }

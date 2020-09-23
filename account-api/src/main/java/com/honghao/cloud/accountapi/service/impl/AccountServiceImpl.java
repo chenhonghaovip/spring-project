@@ -2,11 +2,12 @@ package com.honghao.cloud.accountapi.service.impl;
 
 
 import com.alibaba.fastjson.JSON;
-import com.honghao.cloud.accountapi.domain.entity.Order;
-import com.honghao.cloud.accountapi.domain.mapper.OrderMapper;
+import com.honghao.cloud.accountapi.domain.entity.WaybillBcList;
+import com.honghao.cloud.accountapi.domain.mapper.WaybillBcListMapper;
 import com.honghao.cloud.accountapi.service.AccountService;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.bean.CacheTemplate;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,19 +23,18 @@ import javax.annotation.Resource;
 @Service
 public class AccountServiceImpl implements AccountService {
     @Resource
-    private OrderMapper orderMapper;
+    private WaybillBcListMapper waybillBcListMapper;
     @Resource
-    private StringRedisTemplate stringRedisTemplate;
+    private CacheTemplate<WaybillBcList> cacheTemplate;
 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createOrders(String data) {
-        stringRedisTemplate.opsForValue().set("123","123");
-        Order order = JSON.parseObject(data,Order.class);
-        order.setBatchId("111111");
-        orderMapper.updateByPrimaryKeySelective(order);
+        BaseResponse response = cacheTemplate.redisStringCache("order", data, () -> waybillBcListMapper.selectByPrimaryKey(data));
+        if (response.isResult()){
+            WaybillBcList order = (WaybillBcList) response.getData();
+            System.out.println(JSON.toJSONString(order));
+        }
     }
-
-
 }

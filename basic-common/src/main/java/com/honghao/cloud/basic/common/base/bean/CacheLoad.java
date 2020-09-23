@@ -6,5 +6,9 @@ package com.honghao.cloud.basic.common.base.bean;
  */
 @FunctionalInterface
 public interface CacheLoad<T> {
+    /**
+     * 运行方法，返回T类型结果
+     * @return T
+     */
    T run();
 }

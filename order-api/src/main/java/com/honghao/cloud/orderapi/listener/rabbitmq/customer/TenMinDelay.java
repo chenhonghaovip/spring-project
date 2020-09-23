@@ -1,11 +1,8 @@
 package com.honghao.cloud.orderapi.listener.rabbitmq.customer;
 
-import com.honghao.cloud.orderapi.config.RabbitConfig;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.RabbitHandler;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -15,13 +12,11 @@ import java.io.IOException;
  */
 @Slf4j
 @Component
-@RabbitListener(queues = RabbitConfig.USER_PUSH_QUEUE, containerFactory = "factory")
 public class TenMinDelay {
 	/**
 	 * 消费队列信息
 	 * @param str json字符串
 	 */
-	@RabbitHandler
 	public void process(String str, Channel channel, Message message) throws IOException {
 		try {
 			log.info("发送短信,{}",str);

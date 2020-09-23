@@ -40,8 +40,8 @@ public class BaseResponse<T> implements Serializable {
         return new BaseResponse<>(false, Integer.valueOf(code), null, remark);
     }
 
-    public static BaseResponse error() {
-        return new BaseResponse<>(false, -1, null, "请求失败");
+    public static <T> BaseResponse<T> error() {
+        return new BaseResponse<T>(false, -1, null, "请求失败");
     }
 
     public static BaseResponse error(BaseErrorInfoInterface data) {

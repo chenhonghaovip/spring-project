@@ -1,25 +1,16 @@
 package com.honghao.cloud.accountapi.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
-/**
- * @author CHH
- * @date 2019-7-18
- */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 public class WaybillBcList {
-    private String wId;
-
     private String batchId;
+
+    private String serialNumber;
 
     private String userId;
 
@@ -61,39 +52,41 @@ public class WaybillBcList {
 
     private BigDecimal receiveLatitude;
 
-    private Integer isTimely;
+    private Byte isTimely;
 
-    private Date etStartTime;
+    private LocalDateTime etStartTime;
 
     private Date etArriveTime;
 
     private BigDecimal cargoWeight;
 
+    private BigDecimal cargoAmount;
+
     private String cargoType;
 
-    private Integer orderStatus;
+    private Byte orderStatus;
 
-    private Integer orderPayment;
+    private Byte orderPayment;
 
-    private Integer orderPayStatus;
+    private Byte orderPayStatus;
 
     private BigDecimal deliveryFee;
 
     private BigDecimal totalPrices;
 
+    private BigDecimal expectPrices;
+
     private String orderRemark;
 
-    private Integer orderSource;
+    private Byte orderSource;
 
     private Integer orderType;
 
-    private Integer singleWay;
+    private Byte singleWay;
 
-    private Integer deliveryMode;
+    private Byte deliveryMode;
 
     private Date orderTime;
-
-    private Date createDate;
 
     private Date createTime;
 
@@ -101,5 +94,12 @@ public class WaybillBcList {
 
     private Date updateTime;
 
-    private Integer deleteFlag;
+    private Byte deleteFlag;
+
+    private Byte isOverdistance;
+
+    private Byte isOvertime;
+    private String wId;
+
+    private Date createDate;
 }

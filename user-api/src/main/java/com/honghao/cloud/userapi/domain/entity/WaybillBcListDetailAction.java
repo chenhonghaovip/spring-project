@@ -27,6 +27,8 @@ public class WaybillBcListDetailAction {
 
     private Integer kappAction;
 
+    private Integer preKappAction;
+
     private Integer isSingle;
 
     private Date sSingleTime;

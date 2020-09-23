@@ -8,7 +8,18 @@ import com.honghao.cloud.basic.common.base.base.BaseResponse;
  * @date 2020-07-23 21:31
  */
 public interface RedisService {
-
+    /**
+     * redis添加大量数据
+     * @param userId userId
+     * @return BaseResponse
+     */
+    BaseResponse addBigData(String userId);
+    /**
+     * redis删除bigkey
+     * @param userId userId
+     * @return BaseResponse
+     */
+    BaseResponse delBigHash(String userId);
     /**
      * redis缓存击穿处理
      * @param userId userId
@@ -58,6 +69,21 @@ public interface RedisService {
      */
     BaseResponse redisSortedSet(String userId);
 
+
+    /**
+     * redis实现ZSet
+     * @param userId userId
+     * @return BaseResponse
+     */
+    BaseResponse redisGeo(String userId);
+
+    /**
+     * redis获取服务器信息
+     * @param userId userId
+     * @return BaseResponse
+     */
+    BaseResponse redisInfo(String userId);
+
     /**
      * redis模拟实现微博热搜排行榜（点击）
      * @param key 请求参数
@@ -94,4 +120,18 @@ public interface RedisService {
      * @return BaseResponse
      */
     BaseResponse isLikePoint(LikePointVO likePointVO);
+
+    /**
+     * redis发布与订阅功能
+     * @param userId userId
+     * @return BaseResponse
+     */
+    BaseResponse pubAndSub(String userId);
+
+    /**
+     * redis并发抢购
+     * @param userId userId
+     * @return BaseResponse
+     */
+    BaseResponse redisConcurrent(String userId);
 }
