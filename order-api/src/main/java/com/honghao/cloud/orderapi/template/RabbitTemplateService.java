@@ -2,15 +2,14 @@ package com.honghao.cloud.orderapi.template;
 
 import com.alibaba.fastjson.JSON;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
-import com.honghao.cloud.basic.common.base.utils.SnowFlakeShortUrl;
 import com.honghao.cloud.orderapi.client.MessageClient;
+import com.honghao.cloud.orderapi.dto.common.BatchMsgInfoDTO;
 import com.honghao.cloud.orderapi.dto.common.MsgInfoDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.EnvironmentAware;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author chenhonghao
@@ -18,15 +17,11 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
-public class RabbitTemplateService implements EnvironmentAware {
-    private static SnowFlakeShortUrl snowFlake = new SnowFlakeShortUrl(2, 3);
-    private Environment environment;
+public class RabbitTemplateService {
     @Resource
     private MessageClient messageClient;
 
-    public <T> BaseResponse sendMessage(T t,String queue,RabbitLoad rabbitLoad){
-        MsgInfoDTO msgInfoDTO = MsgInfoDTO.builder().businessId(String.valueOf(snowFlake.nextId())).content(JSON.toJSONString(t))
-                .status(0).topic(queue).appId(environment.getProperty("spring.application.name")).url("/order/batchQuery").build();
+    public BaseResponse sendMessage(MsgInfoDTO msgInfoDTO,RabbitLoad rabbitLoad){
 
         BaseResponse baseResponse = BaseResponse.error();
         try {
@@ -54,8 +49,34 @@ public class RabbitTemplateService implements EnvironmentAware {
         return baseResponse;
     }
 
-    @Override
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
+    public BaseResponse batchMessage(BatchMsgInfoDTO batchMsgInfoDTO, RabbitLoad rabbitLoad){
+        BaseResponse baseResponse = BaseResponse.error();
+        try {
+            baseResponse = messageClient.batchSaveMessage(batchMsgInfoDTO);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return baseResponse;
+        }
+
+        List<Long> list;
+        if (baseResponse.isResult()){
+            try {
+                Object data = baseResponse.getData();
+                list = JSON.parseArray(JSON.toJSONString(data), Long.class);
+                baseResponse = rabbitLoad.run();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return BaseResponse.error(e.getMessage());
+            }
+
+            if (baseResponse.isResult()){
+                if (true){
+                    throw new RuntimeException("111");
+                }
+                batchMsgInfoDTO.setMsgIds(list);
+                messageClient.batchSend(batchMsgInfoDTO);
+            }
+        }
+        return baseResponse;
     }
 }

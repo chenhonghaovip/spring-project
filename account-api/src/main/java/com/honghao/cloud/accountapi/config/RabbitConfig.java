@@ -40,6 +40,8 @@ public class RabbitConfig {
 
     public static final String CREATE_ORDER = "create_order";
 
+
+    public static final String CREATE_ORDER_1 = "create_order_1";
     /**
      * 创建订单消费队列
      * @return Queue
@@ -47,6 +49,14 @@ public class RabbitConfig {
     @Bean
     public Queue createOrder() {
         return new Queue(RabbitConfig.CREATE_ORDER);
+    }
+  /**
+     * 创建订单消费队列
+     * @return Queue
+     */
+    @Bean
+    public Queue createOrder1() {
+        return new Queue(RabbitConfig.CREATE_ORDER_1);
     }
 
 }

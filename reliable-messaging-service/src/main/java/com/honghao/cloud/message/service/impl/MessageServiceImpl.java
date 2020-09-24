@@ -7,6 +7,7 @@ import com.honghao.cloud.message.common.enums.MsgStatusEnum;
 import com.honghao.cloud.message.component.MessageSender;
 import com.honghao.cloud.message.domain.entity.MsgInfo;
 import com.honghao.cloud.message.domain.mapper.MsgInfoMapper;
+import com.honghao.cloud.message.dto.BatchMsgInfoDTO;
 import com.honghao.cloud.message.dto.MsgInfoDTO;
 import com.honghao.cloud.message.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 消息服务
@@ -45,21 +49,47 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public BaseResponse send(MsgInfoDTO msgInfoDTO) {
-        MsgInfo msgInfo = new MsgInfo();
-        BeanUtils.copyProperties(msgInfoDTO,msgInfo);
+        MsgInfo msgInfo = msgInfoMapper.selectByPrimaryKey(msgInfoDTO.getMsgId());
         msgInfo.setStatus(MsgStatusEnum.HAS_BEEN_SENT.getCode());
-        msgInfoMapper.updateByPrimaryKeySelective(msgInfo);
+        msgInfoMapper.updateBatch(Collections.singletonList(msgInfoDTO.getMsgId()),MsgStatusEnum.HAS_BEEN_SENT.getCode());
         // 发送到消息队列
         messageSender.publicQueueProcessing(JSON.toJSONString(msgInfo),msgInfoDTO.getTopic());
         return BaseResponse.success();
     }
 
     @Override
+    public BaseResponse batchSaveMessage(BatchMsgInfoDTO batchMsgInfoDTO) {
+        LocalDateTime now = LocalDateTime.now();
+
+        List<MsgInfo> list = new ArrayList<>();
+        List<Long> ids = new ArrayList<>();
+        batchMsgInfoDTO.getMsgList().forEach(each->{
+            long id = snowFlake.nextId();
+            ids.add(id);
+            MsgInfo msgInfo = new MsgInfo();
+            BeanUtils.copyProperties(each,msgInfo);
+            msgInfo.setMsgId(id);
+            msgInfo.setStatus(MsgStatusEnum.TO_BE_CONFIRMED.getCode());
+            msgInfo.setCreateTime(now);
+            list.add(msgInfo);
+        });
+        msgInfoMapper.batchInsertSelective(list);
+        return BaseResponse.successData(ids);
+    }
+
+    @Override
+    public BaseResponse batchSend(BatchMsgInfoDTO batchMsgInfoDTO) {
+        List<MsgInfo> list = msgInfoMapper.selectBatch(batchMsgInfoDTO.getMsgIds());
+        // 发送到消息队列
+        list.forEach(each-> messageSender.publicQueueProcessing(JSON.toJSONString(each),each.getTopic()));
+        // 批次更新消息记录
+        msgInfoMapper.updateBatch(batchMsgInfoDTO.getMsgIds(),MsgStatusEnum.HAS_BEEN_SENT.getCode());
+        return BaseResponse.success();
+    }
+
+    @Override
     public BaseResponse complete(MsgInfoDTO msgInfoDTO) {
-        MsgInfo msgInfo = new MsgInfo();
-        BeanUtils.copyProperties(msgInfoDTO,msgInfo);
-        msgInfo.setStatus(MsgStatusEnum.COMPLETED.getCode());
-        msgInfoMapper.updateByPrimaryKeySelective(msgInfo);
+        msgInfoMapper.updateBatch(Collections.singletonList(msgInfoDTO.getMsgId()),MsgStatusEnum.COMPLETED.getCode());
         return BaseResponse.success();
     }
 

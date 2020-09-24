@@ -21,7 +21,7 @@ public class MsgRequest {
     /**
      * 订单id和消息id集合
      */
-    private List<MsgDTO> list;
+    private List<MsgInfoDTO> list;
 
     @Data
     @Builder

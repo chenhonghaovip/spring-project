@@ -21,6 +21,14 @@ public interface OrderFacade {
     BaseResponse createOrders(String data);
 
     /**
+     * 创建批量订单
+     * @param data data
+     * @return Boolean
+     */
+    BaseResponse createBatchOrder(String data);
+
+
+    /**
      * 批次查询
      * @param list list
      * @return List<WaybillBcList>

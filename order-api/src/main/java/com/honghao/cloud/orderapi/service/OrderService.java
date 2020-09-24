@@ -19,6 +19,12 @@ public interface OrderService {
      */
     BaseResponse createOrders(Order data);
 
+    /**
+     * 插入用户数据
+     * @param data data
+     * @return BaseResponse
+     */
+    BaseResponse createBatchOrders(List<Order> data);
 
     /**
      * 插入用户数据

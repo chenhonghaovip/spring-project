@@ -29,6 +29,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public BaseResponse createBatchOrders(List<Order> data) {
+        orderMapper.batchInsert(data);
+        return BaseResponse.success();
+    }
+
+    @Override
     public List<String> batchQuery(List<String> wIds) {
         return orderMapper.batchQuery(wIds);
     }

@@ -29,8 +29,15 @@ public class OrderController {
 
     @PostMapping("/create")
     @ApiOperation(value = "创建订单",notes = "创建订单")
-    public BaseResponse createUser(@RequestParam String data) {
+    public BaseResponse createOrder(@RequestParam String data) {
         return orderFacade.createOrders(data);
+    }
+
+
+    @PostMapping("/createBatchOrder")
+    @ApiOperation(value = "创建订单",notes = "创建订单")
+    public BaseResponse createBatchOrder(@RequestParam String data) {
+        return orderFacade.createBatchOrder(data);
     }
 
 

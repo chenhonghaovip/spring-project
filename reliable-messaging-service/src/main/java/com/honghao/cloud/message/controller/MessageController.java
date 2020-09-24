@@ -2,6 +2,7 @@ package com.honghao.cloud.message.controller;
 
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.message.domain.entity.MsgInfo;
+import com.honghao.cloud.message.dto.BatchMsgInfoDTO;
 import com.honghao.cloud.message.dto.MsgInfoDTO;
 import com.honghao.cloud.message.service.MessageService;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,26 @@ public class MessageController {
     @PutMapping("/message")
     public BaseResponse send(@RequestBody MsgInfoDTO msgInfoDTO){
         return messageService.send(msgInfoDTO);
+    }
+
+    /**
+     * 批量预发布消息
+     * @param batchMsgInfoDTO batchMsgInfoDTO
+     * @return BaseResponse
+     */
+    @PostMapping("/batchMessage")
+    public BaseResponse batchSaveMessage(@RequestBody BatchMsgInfoDTO batchMsgInfoDTO){
+        return messageService.batchSaveMessage(batchMsgInfoDTO);
+    }
+
+    /**
+     * 批量发送消息到队列
+     * @param batchMsgInfoDTO batchMsgInfoDTO
+     * @return BaseResponse
+     */
+    @PutMapping("/batchMessage")
+    public BaseResponse batchSend(@RequestBody BatchMsgInfoDTO batchMsgInfoDTO){
+        return messageService.batchSend(batchMsgInfoDTO);
     }
 
     /**

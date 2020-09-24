@@ -2,6 +2,7 @@ package com.honghao.cloud.message.service;
 
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.message.domain.entity.MsgInfo;
+import com.honghao.cloud.message.dto.BatchMsgInfoDTO;
 import com.honghao.cloud.message.dto.MsgInfoDTO;
 
 /**
@@ -25,6 +26,21 @@ public interface MessageService {
      * @return BaseResponse
      */
     BaseResponse send(MsgInfoDTO msgInfoDTO);
+
+
+    /**
+     * 批量预发布消息
+     * @param batchMsgInfoDTO batchMsgInfoDTO
+     * @return BaseResponse
+     */
+    BaseResponse batchSaveMessage(BatchMsgInfoDTO batchMsgInfoDTO);
+
+    /**
+     * 批量发送消息到队列
+     * @param batchMsgInfoDTO batchMsgInfoDTO
+     * @return BaseResponse
+     */
+    BaseResponse batchSend(BatchMsgInfoDTO batchMsgInfoDTO);
 
     /**
      * 消息处理完成

@@ -33,11 +33,25 @@ public interface MsgInfoMapper {
     int insertSelective(MsgInfo record);
 
     /**
+     * 批次选择插入
+     * @param list list
+     * @return int
+     */
+    int batchInsertSelective(@Param("list") List<MsgInfo> list);
+
+    /**
      * 主键查询
      * @param msgId 主键
      * @return MsgInfo
      */
     MsgInfo selectByPrimaryKey(Long msgId);
+
+    /**
+     * 主键查询
+     * @param list 主键
+     * @return MsgInfo
+     */
+    List<MsgInfo> selectBatch(@Param("list") List<Long> list);
 
     /**
      * 根据数据更新

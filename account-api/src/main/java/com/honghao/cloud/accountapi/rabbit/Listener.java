@@ -51,4 +51,19 @@ public class Listener {
             log.error("订单异步双写elasticsearch操作异常:{}",e.getMessage());
         }
     }
+
+    @RabbitListener(queues = RabbitConfig.CREATE_ORDER_1)
+    public void process1(String data) {
+        try {
+            MsgInfoDTO msgInfoDTO = JSON.parseObject(data, MsgInfoDTO.class);
+            BaseResponse complete = messageClient.complete(msgInfoDTO);
+            if (!complete.isResult()){
+                log.error(complete.getRemark());
+            }else {
+                log.info("do something，接受信息成功");
+            }
+        }catch (Exception e){
+            log.error("do something操作异常:{}",e.getMessage());
+        }
+    }
 }

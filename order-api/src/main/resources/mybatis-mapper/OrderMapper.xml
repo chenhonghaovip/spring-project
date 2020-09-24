@@ -67,46 +67,6 @@
     from order_info
     where w_id = #{wId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from order_info
-    where w_id = #{wId,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.honghao.cloud.orderapi.domain.entity.Order">
-    insert into order_info (w_id, batch_id, serial_number,
-      user_id, ship_id, send_name, 
-      send_phone, send_province, send_city, 
-      send_county, send_adcode, send_address, 
-      send_longitude, send_latitude, receive_name, 
-      receive_phone, receive_province, receive_county, 
-      receive_city, receive_adcode, receive_address, 
-      receive_longitude, receive_latitude, is_timely, 
-      et_start_time, et_arrive_time, cargo_weight, 
-      cargo_amount, cargo_type, order_status, 
-      order_payment, order_pay_status, delivery_fee, 
-      total_prices, expect_prices, order_remark, 
-      order_source, order_type, single_way, 
-      delivery_mode, order_time, create_date, 
-      create_time, update_by, update_time, 
-      delete_flag, is_overdistance, is_overtime
-      )
-    values (#{wId,jdbcType=VARCHAR}, #{batchId,jdbcType=VARCHAR}, #{serialNumber,jdbcType=VARCHAR}, 
-      #{userId,jdbcType=VARCHAR}, #{shipId,jdbcType=VARCHAR}, #{sendName,jdbcType=VARCHAR}, 
-      #{sendPhone,jdbcType=VARCHAR}, #{sendProvince,jdbcType=VARCHAR}, #{sendCity,jdbcType=VARCHAR}, 
-      #{sendCounty,jdbcType=VARCHAR}, #{sendAdcode,jdbcType=VARCHAR}, #{sendAddress,jdbcType=VARCHAR}, 
-      #{sendLongitude,jdbcType=DOUBLE}, #{sendLatitude,jdbcType=DOUBLE}, #{receiveName,jdbcType=VARCHAR}, 
-      #{receivePhone,jdbcType=VARCHAR}, #{receiveProvince,jdbcType=VARCHAR}, #{receiveCounty,jdbcType=VARCHAR}, 
-      #{receiveCity,jdbcType=VARCHAR}, #{receiveAdcode,jdbcType=VARCHAR}, #{receiveAddress,jdbcType=VARCHAR}, 
-      #{receiveLongitude,jdbcType=DOUBLE}, #{receiveLatitude,jdbcType=DOUBLE}, #{isTimely,jdbcType=TINYINT}, 
-      #{etStartTime,jdbcType=TIMESTAMP}, #{etArriveTime,jdbcType=TIMESTAMP}, #{cargoWeight,jdbcType=DOUBLE}, 
-      #{cargoAmount,jdbcType=DECIMAL}, #{cargoType,jdbcType=VARCHAR}, #{orderStatus,jdbcType=TINYINT}, 
-      #{orderPayment,jdbcType=TINYINT}, #{orderPayStatus,jdbcType=TINYINT}, #{deliveryFee,jdbcType=DECIMAL}, 
-      #{totalPrices,jdbcType=DECIMAL}, #{expectPrices,jdbcType=DECIMAL}, #{orderRemark,jdbcType=VARCHAR}, 
-      #{orderSource,jdbcType=TINYINT}, #{orderType,jdbcType=TINYINT}, #{singleWay,jdbcType=TINYINT}, 
-      #{deliveryMode,jdbcType=TINYINT}, #{orderTime,jdbcType=TIMESTAMP}, #{createDate,jdbcType=DATE}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{deleteFlag,jdbcType=TINYINT}, #{isOverdistance,jdbcType=TINYINT}, #{isOvertime,jdbcType=TINYINT}
-      )
-  </insert>
   <insert id="insertSelective" parameterType="com.honghao.cloud.orderapi.domain.entity.Order">
     insert into order_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -549,57 +509,6 @@
     </set>
     where w_id = #{wId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.orderapi.domain.entity.Order">
-    update order_info
-    set batch_id = #{batchId,jdbcType=VARCHAR},
-      serial_number = #{serialNumber,jdbcType=VARCHAR},
-      user_id = #{userId,jdbcType=VARCHAR},
-      ship_id = #{shipId,jdbcType=VARCHAR},
-      send_name = #{sendName,jdbcType=VARCHAR},
-      send_phone = #{sendPhone,jdbcType=VARCHAR},
-      send_province = #{sendProvince,jdbcType=VARCHAR},
-      send_city = #{sendCity,jdbcType=VARCHAR},
-      send_county = #{sendCounty,jdbcType=VARCHAR},
-      send_adcode = #{sendAdcode,jdbcType=VARCHAR},
-      send_address = #{sendAddress,jdbcType=VARCHAR},
-      send_longitude = #{sendLongitude,jdbcType=DOUBLE},
-      send_latitude = #{sendLatitude,jdbcType=DOUBLE},
-      receive_name = #{receiveName,jdbcType=VARCHAR},
-      receive_phone = #{receivePhone,jdbcType=VARCHAR},
-      receive_province = #{receiveProvince,jdbcType=VARCHAR},
-      receive_county = #{receiveCounty,jdbcType=VARCHAR},
-      receive_city = #{receiveCity,jdbcType=VARCHAR},
-      receive_adcode = #{receiveAdcode,jdbcType=VARCHAR},
-      receive_address = #{receiveAddress,jdbcType=VARCHAR},
-      receive_longitude = #{receiveLongitude,jdbcType=DOUBLE},
-      receive_latitude = #{receiveLatitude,jdbcType=DOUBLE},
-      is_timely = #{isTimely,jdbcType=TINYINT},
-      et_start_time = #{etStartTime,jdbcType=TIMESTAMP},
-      et_arrive_time = #{etArriveTime,jdbcType=TIMESTAMP},
-      cargo_weight = #{cargoWeight,jdbcType=DOUBLE},
-      cargo_amount = #{cargoAmount,jdbcType=DECIMAL},
-      cargo_type = #{cargoType,jdbcType=VARCHAR},
-      order_status = #{orderStatus,jdbcType=TINYINT},
-      order_payment = #{orderPayment,jdbcType=TINYINT},
-      order_pay_status = #{orderPayStatus,jdbcType=TINYINT},
-      delivery_fee = #{deliveryFee,jdbcType=DECIMAL},
-      total_prices = #{totalPrices,jdbcType=DECIMAL},
-      expect_prices = #{expectPrices,jdbcType=DECIMAL},
-      order_remark = #{orderRemark,jdbcType=VARCHAR},
-      order_source = #{orderSource,jdbcType=TINYINT},
-      order_type = #{orderType,jdbcType=TINYINT},
-      single_way = #{singleWay,jdbcType=TINYINT},
-      delivery_mode = #{deliveryMode,jdbcType=TINYINT},
-      order_time = #{orderTime,jdbcType=TIMESTAMP},
-      create_date = #{createDate,jdbcType=DATE},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_by = #{updateBy,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      delete_flag = #{deleteFlag,jdbcType=TINYINT},
-      is_overdistance = #{isOverdistance,jdbcType=TINYINT},
-      is_overtime = #{isOvertime,jdbcType=TINYINT}
-    where w_id = #{wId,jdbcType=VARCHAR}
-  </update>
 
     <select id="batchQuery" resultType="string">
         select w_id from order_info where w_id in
@@ -607,4 +516,301 @@
             #{item}
         </foreach>
     </select>
+    <insert id="batchInsert" parameterType="com.honghao.cloud.orderapi.domain.entity.Order">
+        <foreach collection="list" item="item" separator=";">
+            insert into order_info
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.wId != null">
+                    w_id,
+                </if>
+                <if test="item.batchId != null">
+                    batch_id,
+                </if>
+                <if test="item.serialNumber != null">
+                    serial_number,
+                </if>
+                <if test="item.userId != null">
+                    user_id,
+                </if>
+                <if test="item.shipId != null">
+                    ship_id,
+                </if>
+                <if test="item.sendName != null">
+                    send_name,
+                </if>
+                <if test="item.sendPhone != null">
+                    send_phone,
+                </if>
+                <if test="item.sendProvince != null">
+                    send_province,
+                </if>
+                <if test="item.sendCity != null">
+                    send_city,
+                </if>
+                <if test="item.sendCounty != null">
+                    send_county,
+                </if>
+                <if test="item.sendAdcode != null">
+                    send_adcode,
+                </if>
+                <if test="item.sendAddress != null">
+                    send_address,
+                </if>
+                <if test="item.sendLongitude != null">
+                    send_longitude,
+                </if>
+                <if test="item.sendLatitude != null">
+                    send_latitude,
+                </if>
+                <if test="item.receiveName != null">
+                    receive_name,
+                </if>
+                <if test="item.receivePhone != null">
+                    receive_phone,
+                </if>
+                <if test="item.receiveProvince != null">
+                    receive_province,
+                </if>
+                <if test="item.receiveCounty != null">
+                    receive_county,
+                </if>
+                <if test="item.receiveCity != null">
+                    receive_city,
+                </if>
+                <if test="item.receiveAdcode != null">
+                    receive_adcode,
+                </if>
+                <if test="item.receiveAddress != null">
+                    receive_address,
+                </if>
+                <if test="item.receiveLongitude != null">
+                    receive_longitude,
+                </if>
+                <if test="item.receiveLatitude != null">
+                    receive_latitude,
+                </if>
+                <if test="item.isTimely != null">
+                    is_timely,
+                </if>
+                <if test="item.etStartTime != null">
+                    et_start_time,
+                </if>
+                <if test="item.etArriveTime != null">
+                    et_arrive_time,
+                </if>
+                <if test="item.cargoWeight != null">
+                    cargo_weight,
+                </if>
+                <if test="item.cargoAmount != null">
+                    cargo_amount,
+                </if>
+                <if test="item.cargoType != null">
+                    cargo_type,
+                </if>
+                <if test="item.orderStatus != null">
+                    order_status,
+                </if>
+                <if test="item.orderPayment != null">
+                    order_payment,
+                </if>
+                <if test="item.orderPayStatus != null">
+                    order_pay_status,
+                </if>
+                <if test="item.deliveryFee != null">
+                    delivery_fee,
+                </if>
+                <if test="item.totalPrices != null">
+                    total_prices,
+                </if>
+                <if test="item.expectPrices != null">
+                    expect_prices,
+                </if>
+                <if test="item.orderRemark != null">
+                    order_remark,
+                </if>
+                <if test="item.orderSource != null">
+                    order_source,
+                </if>
+                <if test="item.orderType != null">
+                    order_type,
+                </if>
+                <if test="item.singleWay != null">
+                    single_way,
+                </if>
+                <if test="item.deliveryMode != null">
+                    delivery_mode,
+                </if>
+                <if test="item.orderTime != null">
+                    order_time,
+                </if>
+                <if test="item.createDate != null">
+                    create_date,
+                </if>
+                <if test="item.createTime != null">
+                    create_time,
+                </if>
+                <if test="item.updateBy != null">
+                    update_by,
+                </if>
+                <if test="item.updateTime != null">
+                    update_time,
+                </if>
+                <if test="item.deleteFlag != null">
+                    delete_flag,
+                </if>
+                <if test="item.isOverdistance != null">
+                    is_overdistance,
+                </if>
+                <if test="item.isOvertime != null">
+                    is_overtime,
+                </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="item.wId != null">
+                    #{item.wId,jdbcType=VARCHAR},
+                </if>
+                <if test="item.batchId != null">
+                    #{item.batchId,jdbcType=VARCHAR},
+                </if>
+                <if test="item.serialNumber != null">
+                    #{item.serialNumber,jdbcType=VARCHAR},
+                </if>
+                <if test="item.userId != null">
+                    #{item.userId,jdbcType=VARCHAR},
+                </if>
+                <if test="item.shipId != null">
+                    #{item.shipId,jdbcType=VARCHAR},
+                </if>
+                <if test="item.sendName != null">
+                    #{item.sendName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.sendPhone != null">
+                    #{item.sendPhone,jdbcType=VARCHAR},
+                </if>
+                <if test="item.sendProvince != null">
+                    #{item.sendProvince,jdbcType=VARCHAR},
+                </if>
+                <if test="item.sendCity != null">
+                    #{item.sendCity,jdbcType=VARCHAR},
+                </if>
+                <if test="item.sendCounty != null">
+                    #{item.sendCounty,jdbcType=VARCHAR},
+                </if>
+                <if test="item.sendAdcode != null">
+                    #{item.sendAdcode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.sendAddress != null">
+                    #{item.sendAddress,jdbcType=VARCHAR},
+                </if>
+                <if test="item.sendLongitude != null">
+                    #{item.sendLongitude,jdbcType=DOUBLE},
+                </if>
+                <if test="item.sendLatitude != null">
+                    #{item.sendLatitude,jdbcType=DOUBLE},
+                </if>
+                <if test="item.receiveName != null">
+                    #{item.receiveName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.receivePhone != null">
+                    #{item.receivePhone,jdbcType=VARCHAR},
+                </if>
+                <if test="item.receiveProvince != null">
+                    #{item.receiveProvince,jdbcType=VARCHAR},
+                </if>
+                <if test="item.receiveCounty != null">
+                    #{item.receiveCounty,jdbcType=VARCHAR},
+                </if>
+                <if test="item.receiveCity != null">
+                    #{item.receiveCity,jdbcType=VARCHAR},
+                </if>
+                <if test="item.receiveAdcode != null">
+                    #{item.receiveAdcode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.receiveAddress != null">
+                    #{item.receiveAddress,jdbcType=VARCHAR},
+                </if>
+                <if test="item.receiveLongitude != null">
+                    #{item.receiveLongitude,jdbcType=DOUBLE},
+                </if>
+                <if test="item.receiveLatitude != null">
+                    #{item.receiveLatitude,jdbcType=DOUBLE},
+                </if>
+                <if test="item.isTimely != null">
+                    #{item.isTimely,jdbcType=TINYINT},
+                </if>
+                <if test="item.etStartTime != null">
+                    #{item.etStartTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.etArriveTime != null">
+                    #{item.etArriveTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.cargoWeight != null">
+                    #{item.cargoWeight,jdbcType=DOUBLE},
+                </if>
+                <if test="item.cargoAmount != null">
+                    #{item.cargoAmount,jdbcType=DECIMAL},
+                </if>
+                <if test="item.cargoType != null">
+                    #{item.cargoType,jdbcType=VARCHAR},
+                </if>
+                <if test="item.orderStatus != null">
+                    #{item.orderStatus,jdbcType=TINYINT},
+                </if>
+                <if test="item.orderPayment != null">
+                    #{item.orderPayment,jdbcType=TINYINT},
+                </if>
+                <if test="item.orderPayStatus != null">
+                    #{item.orderPayStatus,jdbcType=TINYINT},
+                </if>
+                <if test="item.deliveryFee != null">
+                    #{item.deliveryFee,jdbcType=DECIMAL},
+                </if>
+                <if test="item.totalPrices != null">
+                    #{item.totalPrices,jdbcType=DECIMAL},
+                </if>
+                <if test="item.expectPrices != null">
+                    #{item.expectPrices,jdbcType=DECIMAL},
+                </if>
+                <if test="item.orderRemark != null">
+                    #{item.orderRemark,jdbcType=VARCHAR},
+                </if>
+                <if test="item.orderSource != null">
+                    #{item.orderSource,jdbcType=TINYINT},
+                </if>
+                <if test="item.orderType != null">
+                    #{item.orderType,jdbcType=TINYINT},
+                </if>
+                <if test="item.singleWay != null">
+                    #{item.singleWay,jdbcType=TINYINT},
+                </if>
+                <if test="item.deliveryMode != null">
+                    #{item.deliveryMode,jdbcType=TINYINT},
+                </if>
+                <if test="item.orderTime != null">
+                    #{item.orderTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.createDate != null">
+                    #{item.createDate,jdbcType=DATE},
+                </if>
+                <if test="item.createTime != null">
+                    #{item.createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.updateBy != null">
+                    #{item.updateBy,jdbcType=VARCHAR},
+                </if>
+                <if test="item.updateTime != null">
+                    #{item.updateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.deleteFlag != null">
+                    #{item.deleteFlag,jdbcType=TINYINT},
+                </if>
+                <if test="item.isOverdistance != null">
+                    #{item.isOverdistance,jdbcType=TINYINT},
+                </if>
+                <if test="item.isOvertime != null">
+                    #{item.isOvertime,jdbcType=TINYINT},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
 </mapper>

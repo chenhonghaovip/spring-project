@@ -27,4 +27,7 @@ public class RabbitConfig {
 
 
     public static final String CREATE_ORDER = "create_order";
+
+
+    public static final String CREATE_ORDER_1 = "create_order_1";
 }

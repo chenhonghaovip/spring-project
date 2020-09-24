@@ -2,10 +2,13 @@ package com.honghao.cloud.orderapi.client.hystrix;
 
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.orderapi.client.MessageClient;
+import com.honghao.cloud.orderapi.dto.common.BatchMsgInfoDTO;
 import com.honghao.cloud.orderapi.dto.common.MsgInfoDTO;
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * 熔断降级配置
@@ -33,6 +36,16 @@ public class MessageFallbackFactory implements FallbackFactory<MessageClient> {
 
             @Override
             public BaseResponse delete(MsgInfoDTO msgInfoDTO) {
+                return null;
+            }
+
+            @Override
+            public BaseResponse<List<Long>> batchSaveMessage(BatchMsgInfoDTO batchMsgInfoDTO) {
+                return null;
+            }
+
+            @Override
+            public BaseResponse batchSend(BatchMsgInfoDTO batchMsgInfoDTO) {
                 return null;
             }
         };
