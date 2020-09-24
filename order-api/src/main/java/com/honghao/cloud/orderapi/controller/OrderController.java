@@ -35,22 +35,24 @@ public class OrderController {
 
 
     /**
-     * 批次查询
+     * 批次查询 - 通过查询订单是否生成返回消息id
      * @param data list
      * @return List<WaybillBcList>
      */
     @PostMapping("/batchQuery")
+    @ApiOperation(value = "批次查询",notes = "批次查询")
     public BaseResponse batchQuery(@RequestBody String data){
         List<MsgDTO> list = JSON.parseArray(data, MsgDTO.class);
         return BaseResponse.successData(orderFacade.batchQuery(list));
     }
 
     /**
-     * 批次查询
+     * 单次查询
      * @param wId wId
      * @return List<WaybillBcList>
      */
     @GetMapping("/singleQuery")
+    @ApiOperation(value = "单次查询",notes = "单次查询")
     public BaseResponse<WaybillBcList> singleQuery(@RequestParam("wId") String wId,@RequestParam("batchId") String batchId){
         return BaseResponse.successData(new WaybillBcList());
     }

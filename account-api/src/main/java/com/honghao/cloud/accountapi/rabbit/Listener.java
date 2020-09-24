@@ -47,7 +47,7 @@ public class Listener {
                 log.info("订单异步双写elasticsearch成功，接受信息成功");
             }
         }catch (Exception e){
-            log.info("消息队列发送操作异常:{}",e.getMessage());
+            log.info("订单异步双写elasticsearch操作异常:{}",e.getMessage());
         }
     }
 }

@@ -71,7 +71,7 @@ public class SnowFlakeShortUrl {
     /**
      * 产生下一个ID
      *
-     * @return
+     * @return long
      */
     public synchronized long nextId() {
         long currTimeStamp = getNewTimeStamp();

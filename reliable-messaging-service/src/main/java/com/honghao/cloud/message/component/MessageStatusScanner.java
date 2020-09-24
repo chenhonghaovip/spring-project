@@ -40,7 +40,7 @@ public class MessageStatusScanner {
     private DiscoveryClient discoveryClient;
 
     public MessageStatusScanner() {
-        SCHEDULED_THREAD_POOL_EXECUTOR.scheduleAtFixedRate(this::messageStatusScanner,10,60, TimeUnit.SECONDS);
+        SCHEDULED_THREAD_POOL_EXECUTOR.scheduleAtFixedRate(this::messageStatusScanner,10,10, TimeUnit.SECONDS);
     }
 
     /**
