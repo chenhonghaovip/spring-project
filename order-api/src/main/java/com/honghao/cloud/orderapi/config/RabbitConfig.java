@@ -24,4 +24,7 @@ public class RabbitConfig {
         rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
         return rabbitTemplate;
     }
+
+
+    public static final String CREATE_ORDER = "create_order";
 }

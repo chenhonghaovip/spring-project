@@ -1,8 +1,8 @@
-package com.honghao.cloud.accountapi.client;
+package com.honghao.cloud.orderapi.client;
 
-import com.honghao.cloud.accountapi.client.hystrix.MessageFallbackFactory;
-import com.honghao.cloud.accountapi.dto.request.MsgInfoDTO;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.orderapi.client.hystrix.MessageFallbackFactory;
+import com.honghao.cloud.orderapi.dto.common.MsgInfoDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,12 +43,4 @@ public interface MessageClient {
      */
     @DeleteMapping("/messageController/message")
     BaseResponse delete(@RequestBody MsgInfoDTO msgInfoDTO);
-
-    /**
-     * 消息处理完成
-     * @param msgInfoDTO msgInfoDTO
-     * @return BaseResponse
-     */
-    @PutMapping("/messageController/complete")
-    BaseResponse complete(@RequestBody MsgInfoDTO msgInfoDTO);
 }

@@ -16,15 +16,6 @@ public class MsgInfo {
 
     private String url;
 
-    /**
-     * 消费者服务名
-     */
-    private String consumerAppId;
-    /**
-     * 消费者回调查询路径
-     */
-    private String consumerUrl;
-
     private Integer retryTime;
 
     private String topic;
@@ -33,20 +24,14 @@ public class MsgInfo {
 
     private Date createTime;
 
-    public String getConsumerAppId() {
-        return consumerAppId;
+    private String businessId;
+
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setConsumerAppId(String consumerAppId) {
-        this.consumerAppId = consumerAppId;
-    }
-
-    public String getConsumerUrl() {
-        return consumerUrl;
-    }
-
-    public void setConsumerUrl(String consumerUrl) {
-        this.consumerUrl = consumerUrl;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public Long getMsgId() {

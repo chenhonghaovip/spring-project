@@ -1,6 +1,6 @@
 package com.honghao.cloud.orderapi.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.orderapi.domain.entity.Order;
 import com.honghao.cloud.orderapi.domain.mapper.OrderMapper;
 import com.honghao.cloud.orderapi.service.OrderService;
@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 订单服务实现类
@@ -22,8 +23,14 @@ public class OrderServiceImpl implements OrderService {
     private OrderMapper orderMapper;
 
     @Override
-    public void createOrders(String data) {
-        Order order = JSON.parseObject(data,Order.class);
-        orderMapper.insert(order);
+    public BaseResponse createOrders(Order data) {
+        orderMapper.insertSelective(data);
+        return BaseResponse.success();
     }
+
+    @Override
+    public List<String> batchQuery(List<String> wIds) {
+        return orderMapper.batchQuery(wIds);
+    }
+
 }

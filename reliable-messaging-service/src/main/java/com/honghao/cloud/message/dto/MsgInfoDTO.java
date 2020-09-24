@@ -15,18 +15,19 @@ public class MsgInfoDTO {
 
     private String url;
 
-    /**
-     * 消费者服务名
-     */
-    private String consumerAppId;
-    /**
-     * 消费者回调查询路径
-     */
-    private String consumerUrl;
-
     private String topic;
 
     private Integer delay;
+
+    private String businessId;
+
+    public String getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
+    }
 
     public String getAppId() {
         return appId;
@@ -42,22 +43,6 @@ public class MsgInfoDTO {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public String getConsumerAppId() {
-        return consumerAppId;
-    }
-
-    public void setConsumerAppId(String consumerAppId) {
-        this.consumerAppId = consumerAppId;
-    }
-
-    public String getConsumerUrl() {
-        return consumerUrl;
-    }
-
-    public void setConsumerUrl(String consumerUrl) {
-        this.consumerUrl = consumerUrl;
     }
 
     public Long getMsgId() {

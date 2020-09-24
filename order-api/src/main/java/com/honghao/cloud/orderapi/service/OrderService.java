@@ -1,5 +1,10 @@
 package com.honghao.cloud.orderapi.service;
 
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.orderapi.domain.entity.Order;
+
+import java.util.List;
+
 /**
  * 订单服务接口
  *
@@ -9,6 +14,16 @@ package com.honghao.cloud.orderapi.service;
 public interface OrderService {
     /**
      * 插入用户数据
+     * @param data data
+     * @return BaseResponse
      */
-    void createOrders(String data);
+    BaseResponse createOrders(Order data);
+
+
+    /**
+     * 插入用户数据
+     * @param wIds data
+     * @return BaseResponse
+     */
+    List<String> batchQuery(List<String> wIds);
 }

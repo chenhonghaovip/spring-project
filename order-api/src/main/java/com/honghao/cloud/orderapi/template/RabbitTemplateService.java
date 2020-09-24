@@ -1,10 +1,10 @@
-package com.honghao.cloud.accountapi.template;
+package com.honghao.cloud.orderapi.template;
 
 import com.alibaba.fastjson.JSON;
-import com.honghao.cloud.accountapi.client.MessageClient;
-import com.honghao.cloud.accountapi.dto.request.MsgInfoDTO;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.basic.common.base.utils.SnowFlakeShortUrl;
+import com.honghao.cloud.orderapi.client.MessageClient;
+import com.honghao.cloud.orderapi.dto.common.MsgInfoDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
@@ -26,7 +26,7 @@ public class RabbitTemplateService implements EnvironmentAware {
 
     public <T> BaseResponse sendMessage(T t,String queue,RabbitLoad rabbitLoad){
         MsgInfoDTO msgInfoDTO = MsgInfoDTO.builder().businessId(String.valueOf(snowFlake.nextId())).content(JSON.toJSONString(t))
-                .status(0).topic(queue).appId(environment.getProperty("spring.application.name")).url("/rabbitMqController/query").build();
+                .status(0).topic(queue).appId(environment.getProperty("spring.application.name")).url("/order/batchQuery").build();
 
         BaseResponse baseResponse = BaseResponse.error();
         try {

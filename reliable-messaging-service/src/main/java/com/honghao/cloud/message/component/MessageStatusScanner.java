@@ -1,11 +1,13 @@
 package com.honghao.cloud.message.component;
 
+import com.alibaba.fastjson.JSON;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import com.honghao.cloud.basic.common.base.utils.HttpUtil;
 import com.honghao.cloud.message.common.enums.MsgStatusEnum;
 import com.honghao.cloud.message.domain.entity.MsgInfo;
 import com.honghao.cloud.message.domain.mapper.MsgInfoMapper;
+import com.honghao.cloud.message.dto.MsgDTO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -69,20 +71,13 @@ public class MessageStatusScanner {
                 }
             });
 
-            // 消息状态为1的需要向业务消费方查询
+            // 消息状态为1的直接重新发送到消息队列，由消费方实现幂等性处理
             THREAD_POOL_EXECUTOR.execute(()-> {
                 List<MsgInfo> infos = map.get(MsgStatusEnum.HAS_BEEN_SENT.getCode());
                 if (Objects.nonNull(infos)){
                    infos.forEach(each->{
                         // 通过对消费方AppId + url 进行分类，以方便进行批次查询
-                        Map<String, List<MsgInfo>> temp = list.stream().collect(Collectors.groupingBy(m -> m.getConsumerAppId() + m.getConsumerUrl()));
-                        for (Map.Entry<String, List<MsgInfo>> entry : temp.entrySet()) {
-                            MsgInfo msgInfo = entry.getValue().get(0);
-                            String appId = msgInfo.getConsumerAppId();
-                            String url = msgInfo.getConsumerUrl();
-                            // 封装同一个接口的请求参数
-                            retry(entry.getValue(),appId,url,MsgStatusEnum.COMPLETED.getCode());
-                        }
+                       messageSender.publicQueueProcessing(JSON.toJSONString(each),each.getTopic());
                     });
                 }
             });
@@ -95,7 +90,8 @@ public class MessageStatusScanner {
      */
     private void retry(List<MsgInfo> entry,String appId,String url,int msgStatus){
         // 获取业务方给予的业务id,通过此id向生产者和消费者进行查询操作
-        List<Long> collect = entry.stream().map(MsgInfo::getMsgId).collect(Collectors.toList());
+
+        List<MsgDTO> collect = entry.stream().map(each -> MsgDTO.builder().businessId(each.getBusinessId()).msgId(each.getMsgId()).build()).collect(Collectors.toList());
 
         // 获取注册中心的回调app服务的ip地址集合
         List<ServiceInstance> instances = discoveryClient.getInstances(appId);
@@ -103,32 +99,26 @@ public class MessageStatusScanner {
             url = instance.getUri() + url;
 
             // 只把处理完成的消息的id返回给我
-            BaseResponse<List<Long>> result = HttpUtil.doPost(url, collect.toString(), 2);
+            BaseResponse<List<Long>> result = HttpUtil.doPost(url, JSON.toJSONString(collect), 2);
             List<Long> data = result.getData();
 
             if (result.isResult() && Objects.nonNull(data)){
-
-                msgInfoMapper.updateBatch(data,msgStatus);
-                List<MsgInfo> list1 = entry.stream().filter(l -> data.contains(l.getMsgId())).collect(Collectors.toList());
-                collect.removeAll(data);
-
-                // 当修改状态为1时，说明时向业务发起方查询
-                if (msgStatus == 1){
-                    // do something 修改数据库中消息的状态
-                    list1.forEach(k->messageSender.publicQueueProcessing(k,k.getTopic()));
-                    // 失败的删除
-
-                    if (CollectionUtils.isNotEmpty(collect)){
-                        msgInfoMapper.deleteBatch(collect);
-                    }
-                    return;
-                }else {
-                    // 查询失败的消息，重新投递队列
-                    List<MsgInfo> collect1 = entry.stream().filter(k -> collect.contains(k.getMsgId())).collect(Collectors.toList());
-                    // 失败的重新投递队列
-                    collect1.forEach(k->messageSender.publicQueueProcessing(k,k.getTopic()));
-                    return;
+                // 把处理完成的消息修改为已发送，并且发送消息到队列中
+                if (CollectionUtils.isNotEmpty(data)){
+                    msgInfoMapper.updateBatch(data,msgStatus);
                 }
+
+                // 过滤所有成功的消息，发送队列
+                List<MsgInfo> sendList = entry.stream().filter(l -> data.contains(l.getMsgId())).collect(Collectors.toList());
+                sendList.forEach(k->messageSender.publicQueueProcessing(k,k.getTopic()));
+
+                // 处理失败的删除对应的消息
+                entry.removeAll(sendList);
+                if (CollectionUtils.isNotEmpty(entry)){
+                    List<Long> msgIds = entry.stream().map(MsgInfo::getMsgId).collect(Collectors.toList());
+                    msgInfoMapper.deleteBatch(msgIds);
+                }
+                return;
             }
         }
     }

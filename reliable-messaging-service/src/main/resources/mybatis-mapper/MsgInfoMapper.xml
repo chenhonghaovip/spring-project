@@ -3,19 +3,18 @@
 <mapper namespace="com.honghao.cloud.message.domain.mapper.MsgInfoMapper">
   <resultMap id="BaseResultMap" type="com.honghao.cloud.message.domain.entity.MsgInfo">
     <id column="msg_id" jdbcType="BIGINT" property="msgId" />
+    <result column="business_id" jdbcType="VARCHAR" property="businessId" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="app_id" jdbcType="VARCHAR" property="appId" />
     <result column="url" jdbcType="VARCHAR" property="url" />
-    <result column="consumer_app_Id" jdbcType="VARCHAR" property="consumerAppId" />
-    <result column="consumer_url" jdbcType="VARCHAR" property="consumerUrl" />
     <result column="retry_time" jdbcType="INTEGER" property="retryTime" />
     <result column="topic" jdbcType="VARCHAR" property="topic" />
     <result column="delay" jdbcType="INTEGER" property="delay" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    msg_id, content, status, app_id, url,consumer_app_Id,consumer_url, retry_time, topic, delay, create_time
+    msg_id, business_id,content, status, app_id, url, retry_time, topic, delay, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -37,11 +36,11 @@
     </delete>
   <insert id="insert" parameterType="com.honghao.cloud.message.domain.entity.MsgInfo">
     insert into msg_info (msg_id, content, status, 
-      app_id, url,consumer_app_Id,consumer_url, retry_time,
+      app_id, url, retry_time,
       topic, delay, create_time
       )
     values (#{msgId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
-      #{appId,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{consumerAppId,jdbcType=VARCHAR}, #{consumerUrl,jdbcType=VARCHAR}, #{retryTime,jdbcType=INTEGER},
+      #{appId,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{retryTime,jdbcType=INTEGER},
       #{topic,jdbcType=VARCHAR}, #{delay,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -51,7 +50,10 @@
       <if test="msgId != null">
         msg_id,
       </if>
-      <if test="content != null">
+      <if test="businessId != null">
+          business_id,
+      </if>
+       <if test="content != null">
         content,
       </if>
       <if test="status != null">
@@ -63,12 +65,6 @@
       <if test="url != null">
         url,
       </if>
-        <if test="consumerAppId != null">
-            consumer_app_Id,
-        </if>
-        <if test="consumerUrl != null">
-            consumer_url,
-        </if>
       <if test="retryTime != null">
         retry_time,
       </if>
@@ -86,7 +82,10 @@
       <if test="msgId != null">
         #{msgId,jdbcType=BIGINT},
       </if>
-      <if test="content != null">
+      <if test="businessId != null">
+        #{businessId,jdbcType=VARCHAR},
+      </if>
+        <if test="content != null">
         #{content,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
@@ -97,12 +96,6 @@
       </if>
       <if test="url != null">
         #{url,jdbcType=VARCHAR},
-      </if>
-      <if test="consumerAppId != null">
-        #{consumerAppId,jdbcType=VARCHAR},
-      </if>
-      <if test="consumerUrl != null">
-        #{consumerUrl,jdbcType=VARCHAR},
       </if>
       <if test="retryTime != null">
         #{retryTime,jdbcType=INTEGER},

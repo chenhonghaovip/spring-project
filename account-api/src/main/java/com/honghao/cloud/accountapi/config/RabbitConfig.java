@@ -2,6 +2,7 @@ package com.honghao.cloud.accountapi.config;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -35,4 +36,17 @@ public class RabbitConfig {
         factory.setMessageConverter(new Jackson2JsonMessageConverter());
         return factory;
     }
+
+
+    public static final String CREATE_ORDER = "create_order";
+
+    /**
+     * 创建订单消费队列
+     * @return Queue
+     */
+    @Bean
+    public Queue createOrder() {
+        return new Queue(RabbitConfig.CREATE_ORDER);
+    }
+
 }

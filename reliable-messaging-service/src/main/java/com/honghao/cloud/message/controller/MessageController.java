@@ -1,10 +1,10 @@
 package com.honghao.cloud.message.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.basic.common.base.utils.SnowFlakeShortUrl;
 import com.honghao.cloud.message.common.enums.MsgStatusEnum;
 import com.honghao.cloud.message.component.MessageSender;
-import com.honghao.cloud.message.config.RabbitConfig;
 import com.honghao.cloud.message.domain.entity.MsgInfo;
 import com.honghao.cloud.message.domain.mapper.MsgInfoMapper;
 import com.honghao.cloud.message.dto.MsgInfoDTO;
@@ -58,7 +58,7 @@ public class MessageController {
         msgInfo.setStatus(MsgStatusEnum.HAS_BEEN_SENT.getCode());
         msgInfoMapper.updateByPrimaryKeySelective(msgInfo);
         // 发送到消息队列
-        messageSender.publicQueueProcessing(msgInfo,RabbitConfig.TEST);
+        messageSender.publicQueueProcessing(JSON.toJSONString(msgInfo),msgInfoDTO.getTopic());
         return BaseResponse.success();
     }
 

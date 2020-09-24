@@ -251,7 +251,7 @@ public class ElasticsearchController {
         List<WaybillBcList> lists = JSONArray.parseArray(s, WaybillBcList.class);
         BulkRequest bulkRequest = new BulkRequest();
 
-        lists.forEach(each->bulkRequest.add(new IndexRequest(index).source(JSON.toJSONString(each),XContentType.JSON)));
+        lists.forEach(each->bulkRequest.add(new IndexRequest(index).id(each.getWId()).source(JSON.toJSONString(each),XContentType.JSON)));
 
         try {
             BulkResponse bulk = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
@@ -260,6 +260,5 @@ public class ElasticsearchController {
             log.error(e.getMessage());
             return BaseResponse.error(e.getMessage());
         }
-
     }
 }

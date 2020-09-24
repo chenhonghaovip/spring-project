@@ -1,8 +1,8 @@
-package com.honghao.cloud.accountapi.client.hystrix;
+package com.honghao.cloud.orderapi.client.hystrix;
 
-import com.honghao.cloud.accountapi.client.MessageClient;
-import com.honghao.cloud.accountapi.dto.request.MsgInfoDTO;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.orderapi.client.MessageClient;
+import com.honghao.cloud.orderapi.dto.common.MsgInfoDTO;
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -33,11 +33,6 @@ public class MessageFallbackFactory implements FallbackFactory<MessageClient> {
 
             @Override
             public BaseResponse delete(MsgInfoDTO msgInfoDTO) {
-                return null;
-            }
-
-            @Override
-            public BaseResponse complete(MsgInfoDTO msgInfoDTO) {
                 return null;
             }
         };

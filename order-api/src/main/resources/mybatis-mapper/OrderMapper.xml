@@ -64,15 +64,15 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from order
+    from order_info
     where w_id = #{wId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from order
+    delete from order_info
     where w_id = #{wId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.honghao.cloud.orderapi.domain.entity.Order">
-    insert into order (w_id, batch_id, serial_number, 
+    insert into order_info (w_id, batch_id, serial_number,
       user_id, ship_id, send_name, 
       send_phone, send_province, send_city, 
       send_county, send_adcode, send_address, 
@@ -108,7 +108,7 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="com.honghao.cloud.orderapi.domain.entity.Order">
-    insert into order
+    insert into order_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="wId != null">
         w_id,
@@ -403,7 +403,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.honghao.cloud.orderapi.domain.entity.Order">
-    update order
+    update order_info
     <set>
       <if test="batchId != null">
         batch_id = #{batchId,jdbcType=VARCHAR},
@@ -550,7 +550,7 @@
     where w_id = #{wId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.orderapi.domain.entity.Order">
-    update order
+    update order_info
     set batch_id = #{batchId,jdbcType=VARCHAR},
       serial_number = #{serialNumber,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=VARCHAR},
@@ -600,4 +600,11 @@
       is_overtime = #{isOvertime,jdbcType=TINYINT}
     where w_id = #{wId,jdbcType=VARCHAR}
   </update>
+
+    <select id="batchQuery" resultType="string">
+        select w_id from order_info where w_id in
+        <foreach collection="list" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </select>
 </mapper>

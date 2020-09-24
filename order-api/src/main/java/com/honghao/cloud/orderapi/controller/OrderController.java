@@ -1,7 +1,9 @@
 package com.honghao.cloud.orderapi.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.orderapi.domain.entity.WaybillBcList;
+import com.honghao.cloud.orderapi.dto.request.MsgDTO;
 import com.honghao.cloud.orderapi.facade.OrderFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,19 +29,20 @@ public class OrderController {
 
     @PostMapping("/create")
     @ApiOperation(value = "创建订单",notes = "创建订单")
-    public BaseResponse<String> createUser(@RequestParam String data) {
+    public BaseResponse createUser(@RequestParam String data) {
         return orderFacade.createOrders(data);
     }
 
 
     /**
      * 批次查询
-     * @param list list
+     * @param data list
      * @return List<WaybillBcList>
      */
     @PostMapping("/batchQuery")
-    public List<WaybillBcList> batchQuery(@RequestBody List<String> list){
-        return orderFacade.batchQuery(list);
+    public BaseResponse batchQuery(@RequestBody String data){
+        List<MsgDTO> list = JSON.parseArray(data, MsgDTO.class);
+        return BaseResponse.successData(orderFacade.batchQuery(list));
     }
 
     /**
