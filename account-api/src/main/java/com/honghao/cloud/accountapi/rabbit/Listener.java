@@ -43,11 +43,12 @@ public class Listener {
                 BaseResponse complete = messageClient.complete(msgInfoDTO);
                 if (!complete.isResult()){
                     log.error(complete.getRemark());
+                }else {
+                    log.info("订单异步双写elasticsearch成功，接受信息成功");
                 }
-                log.info("订单异步双写elasticsearch成功，接受信息成功");
             }
         }catch (Exception e){
-            log.info("订单异步双写elasticsearch操作异常:{}",e.getMessage());
+            log.error("订单异步双写elasticsearch操作异常:{}",e.getMessage());
         }
     }
 }

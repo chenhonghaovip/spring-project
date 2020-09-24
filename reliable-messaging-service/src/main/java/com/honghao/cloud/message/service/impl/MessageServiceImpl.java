@@ -14,7 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 消息服务
@@ -38,7 +38,7 @@ public class MessageServiceImpl implements MessageService {
         BeanUtils.copyProperties(msgInfoDTO,msgInfo);
         msgInfo.setMsgId(id);
         msgInfo.setStatus(MsgStatusEnum.TO_BE_CONFIRMED.getCode());
-        msgInfo.setCreateTime(new Date());
+        msgInfo.setCreateTime(LocalDateTime.now());
         msgInfoMapper.insertSelective(msgInfo);
         return BaseResponse.successData(id);
     }

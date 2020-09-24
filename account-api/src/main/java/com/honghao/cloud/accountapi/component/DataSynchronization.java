@@ -44,7 +44,7 @@ public class DataSynchronization {
                     init();
                 }
             } catch (CanalClientException e) {
-                log.error(e.getMessage());
+//                log.error(e.getMessage());
                 connector = null;
             }
         },0,10, TimeUnit.SECONDS);

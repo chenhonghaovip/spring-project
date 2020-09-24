@@ -62,6 +62,13 @@ public interface MsgInfoMapper {
     int updateBatch(@Param("list") List<Long> record,@Param("msgStatus") int msgStatus);
 
     /**
+     * 更新全部
+     * @param record record
+     * @return int
+     */
+    int updateRetryTimes(@Param("list") List<Long> record);
+
+    /**
      * 查询改状态下的所有消息数据
      * @return List<MsgInfo>
      */

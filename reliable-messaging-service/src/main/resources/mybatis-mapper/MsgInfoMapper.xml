@@ -169,6 +169,15 @@
       <foreach close=")" collection="list" item="item" open="(" separator=",">
         #{item}
       </foreach>
+    </update>
 
+    <update id="updateRetryTimes">
+        UPDATE msg_info
+        SET
+        retry_time = retry_time + 1
+        WHERE msg_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
     </update>
 </mapper>

@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author chenhonghao
@@ -33,5 +33,5 @@ public class MsgInfo {
 
     private Integer delay;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 }
