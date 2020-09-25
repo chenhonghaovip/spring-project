@@ -70,9 +70,6 @@ public class RabbitTemplateService {
             }
 
             if (baseResponse.isResult()){
-                if (true){
-                    throw new RuntimeException("111");
-                }
                 batchMsgInfoDTO.setMsgIds(list);
                 messageClient.batchSend(batchMsgInfoDTO);
             }

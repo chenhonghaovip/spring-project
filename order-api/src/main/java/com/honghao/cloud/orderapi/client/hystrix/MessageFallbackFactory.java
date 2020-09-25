@@ -26,6 +26,7 @@ public class MessageFallbackFactory implements FallbackFactory<MessageClient> {
 
             @Override
             public BaseResponse saveMessage(MsgInfoDTO msgInfoDTO) {
+                log.error(cause.getMessage());
                 return BaseResponse.error();
             }
 

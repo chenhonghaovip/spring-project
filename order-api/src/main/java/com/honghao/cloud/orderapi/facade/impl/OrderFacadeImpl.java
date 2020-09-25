@@ -44,14 +44,14 @@ public class OrderFacadeImpl implements OrderFacade {
     public BaseResponse createOrders(String data) {
         String s = HttpUtil.doPost("http://127.0.0.1:8102/client/deliveryController/getInfo", 10);
         List<Order> lists = JSONArray.parseArray(s, Order.class);
-        Order order = lists.get(0);
+        lists.forEach(each->{
+            MsgInfoDTO msgInfoDTO = MsgInfoDTO.builder().businessId(each.getwId()).content(JSON.toJSONString(each))
+                    .status(0).topic(RabbitConfig.CREATE_ORDER).appId(Dict.SERVICE_NAME).url("/order/batchQuery").build();
 
-        MsgInfoDTO msgInfoDTO = MsgInfoDTO.builder().businessId(order.getwId()).content(JSON.toJSONString(order))
-                .status(0).topic(RabbitConfig.CREATE_ORDER).appId(Dict.SERVICE_NAME).url("/order/batchQuery").build();
-
-//        return rabbitTemplateService.sendMessage(msgInfoDTO, () -> orderService.createOrders(order));
-        lists.forEach(each-> threadPoolExecutor.execute(()-> rabbitTemplateService.sendMessage(msgInfoDTO, () -> orderService.createOrders(order))));
-        return BaseResponse.success();
+           threadPoolExecutor.execute(()-> rabbitTemplateService.sendMessage(msgInfoDTO, () -> orderService.createOrders(each)));
+        });
+         return BaseResponse.success();
+//      return rabbitTemplateService.sendMessage(msgInfoDTO, () -> orderService.createOrders(order));
     }
 
     @Override

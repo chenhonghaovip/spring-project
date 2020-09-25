@@ -49,21 +49,17 @@ public class OrderController {
     @PostMapping("/batchQuery")
     @ApiOperation(value = "批次查询",notes = "批次查询")
     public BaseResponse batchQuery(@RequestBody String data){
-//        if (true){
-//            throw new RuntimeException("111");
-//        }
         List<MsgDTO> list = JSON.parseArray(data, MsgDTO.class);
         return BaseResponse.successData(orderFacade.batchQuery(list));
     }
 
     /**
      * 单次查询
-     * @param wId wId
      * @return List<WaybillBcList>
      */
     @GetMapping("/singleQuery")
     @ApiOperation(value = "单次查询",notes = "单次查询")
-    public BaseResponse<WaybillBcList> singleQuery(@RequestParam("wId") String wId,@RequestParam("batchId") String batchId){
+    public BaseResponse<WaybillBcList> singleQuery(){
         return BaseResponse.successData(new WaybillBcList());
     }
 }
