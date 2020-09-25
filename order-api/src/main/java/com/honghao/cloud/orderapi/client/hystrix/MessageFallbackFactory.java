@@ -36,17 +36,17 @@ public class MessageFallbackFactory implements FallbackFactory<MessageClient> {
 
             @Override
             public BaseResponse delete(MsgInfoDTO msgInfoDTO) {
-                return null;
+                return BaseResponse.error();
             }
 
             @Override
             public BaseResponse<List<Long>> batchSaveMessage(BatchMsgInfoDTO batchMsgInfoDTO) {
-                return null;
+                return BaseResponse.error();
             }
 
             @Override
             public BaseResponse batchSend(BatchMsgInfoDTO batchMsgInfoDTO) {
-                return null;
+                return BaseResponse.error();
             }
         };
     }

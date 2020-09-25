@@ -133,7 +133,7 @@ public class MessageStatusScanner {
 
                 // 选择所有成功的消息，发送队列消费
                 List<MsgInfo> sendList = entry.stream().filter(l -> data.contains(l.getMsgId())).collect(Collectors.toList());
-                sendList.forEach(k->messageSender.publicQueueProcessing(k,k.getTopic()));
+                sendList.forEach(k->messageSender.publicQueueProcessing(JSON.toJSONString(k),k.getTopic()));
 
                 // 处理失败的删除对应的消息
                 entry.removeAll(sendList);

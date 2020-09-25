@@ -49,6 +49,9 @@ public class OrderController {
     @PostMapping("/batchQuery")
     @ApiOperation(value = "批次查询",notes = "批次查询")
     public BaseResponse batchQuery(@RequestBody String data){
+//        if (true){
+//            throw new RuntimeException("111");
+//        }
         List<MsgDTO> list = JSON.parseArray(data, MsgDTO.class);
         return BaseResponse.successData(orderFacade.batchQuery(list));
     }

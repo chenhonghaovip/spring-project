@@ -49,8 +49,9 @@ public class OrderFacadeImpl implements OrderFacade {
         MsgInfoDTO msgInfoDTO = MsgInfoDTO.builder().businessId(order.getwId()).content(JSON.toJSONString(order))
                 .status(0).topic(RabbitConfig.CREATE_ORDER).appId(Dict.SERVICE_NAME).url("/order/batchQuery").build();
 
-        return rabbitTemplateService.sendMessage(msgInfoDTO, () -> orderService.createOrders(order));
-//        lists.forEach(each-> threadPoolExecutor.execute(()-> rabbitTemplateService.sendMessage(each, RabbitConfig.CREATE_ORDER, () -> orderService.createOrders(each))));
+//        return rabbitTemplateService.sendMessage(msgInfoDTO, () -> orderService.createOrders(order));
+        lists.forEach(each-> threadPoolExecutor.execute(()-> rabbitTemplateService.sendMessage(msgInfoDTO, () -> orderService.createOrders(order))));
+        return BaseResponse.success();
     }
 
     @Override
