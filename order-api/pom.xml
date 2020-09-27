@@ -88,11 +88,20 @@
             <artifactId>apollo-client</artifactId>
             <version>1.1.0</version>
         </dependency>
+
         <!-- 自定义工具类 -->
         <dependency>
             <groupId>com.honghao.cloud</groupId>
             <artifactId>basic-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 使用Apache HttpClient作为feign底层的http连接 -->
+        <!-- https://mvnrepository.com/artifact/io.github.openfeign/feign-httpclient -->
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-httpclient</artifactId>
+            <version>10.2.3</version>
         </dependency>
     </dependencies>
 
