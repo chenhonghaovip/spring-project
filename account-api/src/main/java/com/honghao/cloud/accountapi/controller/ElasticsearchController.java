@@ -30,17 +30,22 @@ import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchAllQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 搜索引擎控制中心
@@ -219,12 +224,7 @@ public class ElasticsearchController {
     @GetMapping("/search")
     @ApiOperation(value = "复杂查询模式" ,notes = "复杂查询模式")
     public BaseResponse search(){
-        // 构建搜索请求
-        SearchRequest searchRequest = new SearchRequest("order_info");
-
-        // 构建搜索条件
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-
+        String index =  "order_info";
         // 查询全部
         MatchAllQueryBuilder matchAllQueryBuilder = QueryBuilders.matchAllQuery();
         System.out.println(matchAllQueryBuilder);
@@ -232,16 +232,7 @@ public class ElasticsearchController {
         // 精确匹配
         TermQueryBuilder termQuery = QueryBuilders.termQuery("receiveAdcode",  "310112");
 
-        searchSourceBuilder.query(termQuery);
-        searchSourceBuilder.timeout(new TimeValue(5, TimeUnit.SECONDS));
-        searchRequest.source(searchSourceBuilder);
-        try {
-            SearchResponse search = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
-            return BaseResponse.successData(search.getHits());
-        } catch (IOException e) {
-            log.error(e.getMessage());
-            return BaseResponse.error(e.getMessage());
-        }
+        return commonSearch(index,new BoolQueryBuilder().filter(termQuery));
     }
 
     @PostMapping("/init")
@@ -256,6 +247,40 @@ public class ElasticsearchController {
         try {
             BulkResponse bulk = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
             return BaseResponse.successData(!bulk.hasFailures());
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            return BaseResponse.error(e.getMessage());
+        }
+    }
+
+    @GetMapping("/queryOrder")
+    public BaseResponse orderInfo(){
+        String index = "create_order";
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+        boolQueryBuilder.filter(QueryBuilders.termQuery("receiveAdcode",  "340202"))
+                .filter(QueryBuilders.termQuery("wId","2020052500000408"));
+        return commonSearch(index,boolQueryBuilder);
+    }
+
+    /**
+     * 公共服务部分
+     * @param index 查询索引
+     * @param boolQueryBuilder 查询条件
+     * @return BaseResponse
+     */
+    private BaseResponse commonSearch(String index , BoolQueryBuilder boolQueryBuilder){
+        // 构建搜索请求
+        SearchRequest searchRequest = new SearchRequest(index);
+        // 构建搜索条件
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(boolQueryBuilder);
+        searchSourceBuilder.timeout(new TimeValue(5, TimeUnit.SECONDS));
+        searchRequest.source(searchSourceBuilder);
+
+        try {
+            SearchResponse search = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+            List<Map<String, Object>> collect = Arrays.stream(search.getHits().getHits()).map(SearchHit::getSourceAsMap).collect(Collectors.toList());
+            return BaseResponse.successData(collect);
         } catch (IOException e) {
             log.error(e.getMessage());
             return BaseResponse.error(e.getMessage());
