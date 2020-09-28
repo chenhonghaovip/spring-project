@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -35,7 +34,7 @@ public class AccountController {
 
     @PostMapping("/create")
     @ApiOperation(value = "创建订单",notes = "创建订单")
-    public BaseResponse createUser(@RequestParam String data) {
+    public BaseResponse createUser() {
         return BaseResponse.successData(LocalDateTime.now());
     }
 
