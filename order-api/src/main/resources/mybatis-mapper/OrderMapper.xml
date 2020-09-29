@@ -59,7 +59,7 @@
     cargo_weight, cargo_amount, cargo_type, order_status, order_payment, order_pay_status, 
     delivery_fee, total_prices, expect_prices, order_remark, order_source, order_type, 
     single_way, delivery_mode, order_time, create_date, create_time, update_by, update_time, 
-    delete_flag, is_overdistance, is_overtime
+    delete_flag, is_overdistance, is_overtime,version
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -813,4 +813,8 @@
             </trim>
         </foreach>
     </insert>
+
+    <update id="update">
+        update order_info set version = version + 1,order_status = 2 where version = #{version} and w_id = #{wId}
+    </update>
 </mapper>

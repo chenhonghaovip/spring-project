@@ -2,7 +2,6 @@ package com.honghao.cloud.accountapi.controller;
 
 
 import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
-import com.honghao.cloud.accountapi.facade.AccountFacade;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
 import io.swagger.annotations.Api;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.concurrent.*;
 
@@ -29,8 +27,6 @@ import java.util.concurrent.*;
 @Api(value = "用户接口服务",tags = "账户服务")
 public class AccountController {
     private static ThreadPoolExecutor executor = ThreadPoolFactory.buildThreadPoolExecutor(1,1,"httpHystrix",new SynchronousQueue<>(),new ThreadPoolExecutor.AbortPolicy());
-    @Resource
-    private AccountFacade orderFacade;
 
     @PostMapping("/create")
     @ApiOperation(value = "创建订单",notes = "创建订单")
@@ -54,7 +50,7 @@ public class AccountController {
         try {
             o = submit.get();
         } catch (InterruptedException | ExecutionException e) {
-            return BaseResponse.error(e.getMessage());
+            return BaseResponse.error();
         }
         return BaseResponse.successData(o);
     }
@@ -67,16 +63,20 @@ public class AccountController {
         CountDownLatch countDownLatch = new CountDownLatch(10);
         for (int i = 0; i < 10; i++) {
             new Thread(() -> {
-                System.out.println(hystrixThread());
-                countDownLatch.countDown();
+                try {
+                    System.out.println(hystrixThread());
+                } finally {
+                    countDownLatch.countDown();
+                }
             }).start();
-
         }
+
         try {
             countDownLatch.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.println("over");
     }
 
 

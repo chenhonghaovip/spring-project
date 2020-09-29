@@ -34,4 +34,11 @@ public interface OrderFacade {
      * @return List<WaybillBcList>
      */
     List<Long> batchQuery(List<MsgDTO> list);
+
+    /**
+     * 乐观锁更新重试测试
+     * @param  wId wId
+     * @return BaseResponse
+     */
+    BaseResponse update(String wId);
 }

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 
 /**
  * 用户信息controller
@@ -61,5 +63,28 @@ public class OrderController {
     @ApiOperation(value = "单次查询",notes = "单次查询")
     public BaseResponse<WaybillBcList> singleQuery(){
         return BaseResponse.successData(new WaybillBcList());
+    }
+
+    /**
+     * 单次查询
+     * @return List<WaybillBcList>
+     */
+    @GetMapping("/update")
+    @ApiOperation(value = "乐观更新操作",notes = "乐观更新操作")
+    public BaseResponse update(){
+        CyclicBarrier cyclicBarrier = new CyclicBarrier(2);
+        for (int i = 0; i < 2; i++) {
+            new Thread(()->{
+                try {
+                    cyclicBarrier.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (BrokenBarrierException e) {
+                    e.printStackTrace();
+                }
+                orderFacade.update("2020051100053289");
+            }).start();
+        }
+        return BaseResponse.success();
     }
 }

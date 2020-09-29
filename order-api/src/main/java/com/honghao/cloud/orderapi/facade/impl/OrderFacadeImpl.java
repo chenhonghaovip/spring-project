@@ -83,4 +83,9 @@ public class OrderFacadeImpl implements OrderFacade {
         List<String> wIds = orderService.batchQuery(collect);
         return list.stream().filter(each->wIds.contains(each.getBusinessId())).map(MsgDTO::getMsgId).collect(Collectors.toList());
     }
+
+    @Override
+    public BaseResponse update(String wId) {
+        return orderService.update(wId);
+    }
 }
