@@ -1,18 +1,13 @@
 package com.honghao.cloud.message.controller;
 
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
-import com.honghao.cloud.basic.common.base.utils.SnowFlakeShortUrl;
-import com.honghao.cloud.message.common.enums.MsgStatusEnum;
-import com.honghao.cloud.message.component.MessageSender;
-import com.honghao.cloud.message.config.RabbitConfig;
 import com.honghao.cloud.message.domain.entity.MsgInfo;
-import com.honghao.cloud.message.domain.mapper.MsgInfoMapper;
+import com.honghao.cloud.message.dto.BatchMsgInfoDTO;
 import com.honghao.cloud.message.dto.MsgInfoDTO;
-import org.springframework.beans.BeanUtils;
+import com.honghao.cloud.message.service.MessageService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Date;
 
 /**
  * 消息控制中心
@@ -23,11 +18,8 @@ import java.util.Date;
 @RestController
 @RequestMapping("/messageController")
 public class MessageController {
-    private static SnowFlakeShortUrl snowFlake = new SnowFlakeShortUrl(2, 3);
     @Resource
-    private MsgInfoMapper msgInfoMapper;
-    @Resource
-    private MessageSender messageSender;
+    private MessageService messageService;
 
     /**
      * 预发布消息
@@ -36,14 +28,7 @@ public class MessageController {
      */
     @PostMapping("/message")
     public BaseResponse saveMessage(@RequestBody MsgInfoDTO msgInfoDTO){
-        long id = snowFlake.nextId();
-        MsgInfo msgInfo = new MsgInfo();
-        BeanUtils.copyProperties(msgInfoDTO,msgInfo);
-        msgInfo.setMsgId(id);
-        msgInfo.setStatus(MsgStatusEnum.TO_BE_CONFIRMED.getCode());
-        msgInfo.setCreateTime(new Date());
-        msgInfoMapper.insertSelective(msgInfo);
-        return BaseResponse.successData(id);
+        return messageService.saveMessage(msgInfoDTO);
     }
 
     /**
@@ -53,13 +38,27 @@ public class MessageController {
      */
     @PutMapping("/message")
     public BaseResponse send(@RequestBody MsgInfoDTO msgInfoDTO){
-        MsgInfo msgInfo = new MsgInfo();
-        BeanUtils.copyProperties(msgInfoDTO,msgInfo);
-        msgInfo.setStatus(MsgStatusEnum.HAS_BEEN_SENT.getCode());
-        msgInfoMapper.updateByPrimaryKeySelective(msgInfo);
-        // 发送到消息队列
-        messageSender.publicQueueProcessing(msgInfo,RabbitConfig.TEST);
-        return BaseResponse.success();
+        return messageService.send(msgInfoDTO);
+    }
+
+    /**
+     * 批量预发布消息
+     * @param batchMsgInfoDTO batchMsgInfoDTO
+     * @return BaseResponse
+     */
+    @PostMapping("/batchMessage")
+    public BaseResponse batchSaveMessage(@RequestBody BatchMsgInfoDTO batchMsgInfoDTO){
+        return messageService.batchSaveMessage(batchMsgInfoDTO);
+    }
+
+    /**
+     * 批量发送消息到队列
+     * @param batchMsgInfoDTO batchMsgInfoDTO
+     * @return BaseResponse
+     */
+    @PutMapping("/batchMessage")
+    public BaseResponse batchSend(@RequestBody BatchMsgInfoDTO batchMsgInfoDTO){
+        return messageService.batchSend(batchMsgInfoDTO);
     }
 
     /**
@@ -69,11 +68,7 @@ public class MessageController {
      */
     @PutMapping("/complete")
     public BaseResponse complete(@RequestBody MsgInfoDTO msgInfoDTO){
-        MsgInfo msgInfo = new MsgInfo();
-        BeanUtils.copyProperties(msgInfoDTO,msgInfo);
-        msgInfo.setStatus(MsgStatusEnum.COMPLETED.getCode());
-        msgInfoMapper.updateByPrimaryKeySelective(msgInfo);
-        return BaseResponse.success();
+        return messageService.complete(msgInfoDTO);
     }
 
     /**
@@ -83,6 +78,6 @@ public class MessageController {
      */
     @GetMapping("/message")
     public BaseResponse<MsgInfo> selectMessage(@RequestParam("messageId") long messageId){
-        return BaseResponse.successData(msgInfoMapper.selectByPrimaryKey(messageId));
+        return messageService.selectMessage(messageId);
     }
 }

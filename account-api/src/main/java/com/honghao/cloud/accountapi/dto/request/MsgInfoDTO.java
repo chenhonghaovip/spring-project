@@ -1,13 +1,17 @@
 package com.honghao.cloud.accountapi.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author CHH
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class MsgInfoDTO {
     private Long msgId;
 
@@ -19,19 +23,9 @@ public class MsgInfoDTO {
 
     private Integer delay;
 
-
     private String appId;
 
     private String url;
-
-    /**
-     * 消费者服务名
-     */
-    private String consumerAppId;
-    /**
-     * 消费者回调查询路径
-     */
-    private String consumerUrl;
 
     private String businessId;
 }

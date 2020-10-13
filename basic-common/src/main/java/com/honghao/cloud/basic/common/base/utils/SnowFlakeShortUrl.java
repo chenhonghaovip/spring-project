@@ -8,6 +8,8 @@ package com.honghao.cloud.basic.common.base.utils;
  */
 public class SnowFlakeShortUrl {
 
+    private static final SnowFlakeShortUrl SHORT_URL = new SnowFlakeShortUrl(2, 3);
+
     /**
      * 起始的时间戳
      */
@@ -68,10 +70,14 @@ public class SnowFlakeShortUrl {
         this.machineId = machineId;
     }
 
+    public static String getNextId(){
+        return String.valueOf(SHORT_URL.nextId());
+    }
+
     /**
      * 产生下一个ID
      *
-     * @return
+     * @return long
      */
     public synchronized long nextId() {
         long currTimeStamp = getNewTimeStamp();

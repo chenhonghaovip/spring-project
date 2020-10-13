@@ -3,19 +3,18 @@
 <mapper namespace="com.honghao.cloud.message.domain.mapper.MsgInfoMapper">
   <resultMap id="BaseResultMap" type="com.honghao.cloud.message.domain.entity.MsgInfo">
     <id column="msg_id" jdbcType="BIGINT" property="msgId" />
+    <result column="business_id" jdbcType="VARCHAR" property="businessId" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="app_id" jdbcType="VARCHAR" property="appId" />
     <result column="url" jdbcType="VARCHAR" property="url" />
-    <result column="consumer_app_Id" jdbcType="VARCHAR" property="consumerAppId" />
-    <result column="consumer_url" jdbcType="VARCHAR" property="consumerUrl" />
     <result column="retry_time" jdbcType="INTEGER" property="retryTime" />
     <result column="topic" jdbcType="VARCHAR" property="topic" />
     <result column="delay" jdbcType="INTEGER" property="delay" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    msg_id, content, status, app_id, url,consumer_app_Id,consumer_url, retry_time, topic, delay, create_time
+    msg_id, business_id,content, status, app_id, url, retry_time, topic, delay, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -23,6 +22,14 @@
     from msg_info
     where msg_id = #{msgId,jdbcType=BIGINT}
   </select>
+
+    <select id="selectBatch" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"></include> from msg_info
+        WHERE msg_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from msg_info
     where msg_id = #{msgId,jdbcType=BIGINT}
@@ -37,11 +44,11 @@
     </delete>
   <insert id="insert" parameterType="com.honghao.cloud.message.domain.entity.MsgInfo">
     insert into msg_info (msg_id, content, status, 
-      app_id, url,consumer_app_Id,consumer_url, retry_time,
+      app_id, url, retry_time,
       topic, delay, create_time
       )
     values (#{msgId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
-      #{appId,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{consumerAppId,jdbcType=VARCHAR}, #{consumerUrl,jdbcType=VARCHAR}, #{retryTime,jdbcType=INTEGER},
+      #{appId,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{retryTime,jdbcType=INTEGER},
       #{topic,jdbcType=VARCHAR}, #{delay,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -51,7 +58,10 @@
       <if test="msgId != null">
         msg_id,
       </if>
-      <if test="content != null">
+      <if test="businessId != null">
+          business_id,
+      </if>
+       <if test="content != null">
         content,
       </if>
       <if test="status != null">
@@ -63,12 +73,6 @@
       <if test="url != null">
         url,
       </if>
-        <if test="consumerAppId != null">
-            consumer_app_Id,
-        </if>
-        <if test="consumerUrl != null">
-            consumer_url,
-        </if>
       <if test="retryTime != null">
         retry_time,
       </if>
@@ -86,7 +90,10 @@
       <if test="msgId != null">
         #{msgId,jdbcType=BIGINT},
       </if>
-      <if test="content != null">
+      <if test="businessId != null">
+        #{businessId,jdbcType=VARCHAR},
+      </if>
+        <if test="content != null">
         #{content,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
@@ -97,12 +104,6 @@
       </if>
       <if test="url != null">
         #{url,jdbcType=VARCHAR},
-      </if>
-      <if test="consumerAppId != null">
-        #{consumerAppId,jdbcType=VARCHAR},
-      </if>
-      <if test="consumerUrl != null">
-        #{consumerUrl,jdbcType=VARCHAR},
       </if>
       <if test="retryTime != null">
         #{retryTime,jdbcType=INTEGER},
@@ -176,6 +177,85 @@
       <foreach close=")" collection="list" item="item" open="(" separator=",">
         #{item}
       </foreach>
-
     </update>
+
+    <update id="updateRetryTimes">
+        UPDATE msg_info
+        SET
+        retry_time = retry_time + 1
+        WHERE msg_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+    <insert id="batchInsertSelective" parameterType="com.honghao.cloud.message.domain.entity.MsgInfo">
+        <foreach collection="list" item="item" separator=";">
+            insert into msg_info
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.msgId != null">
+                    msg_id,
+                </if>
+                <if test="item.businessId != null">
+                    business_id,
+                </if>
+                <if test="item.content != null">
+                    content,
+                </if>
+                <if test="item.status != null">
+                    status,
+                </if>
+                <if test="item.appId != null">
+                    app_id,
+                </if>
+                <if test="item.url != null">
+                    url,
+                </if>
+                <if test="item.retryTime != null">
+                    retry_time,
+                </if>
+                <if test="item.topic != null">
+                    topic,
+                </if>
+                <if test="item.delay != null">
+                    delay,
+                </if>
+                <if test="item.createTime != null">
+                    create_time,
+                </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="item.msgId != null">
+                    #{item.msgId,jdbcType=BIGINT},
+                </if>
+                <if test="item.businessId != null">
+                    #{item.businessId,jdbcType=VARCHAR},
+                </if>
+                <if test="item.content != null">
+                    #{item.content,jdbcType=VARCHAR},
+                </if>
+                <if test="item.status != null">
+                    #{item.status,jdbcType=TINYINT},
+                </if>
+                <if test="item.appId != null">
+                    #{item.appId,jdbcType=VARCHAR},
+                </if>
+                <if test="item.url != null">
+                    #{item.url,jdbcType=VARCHAR},
+                </if>
+                <if test="item.retryTime != null">
+                    #{item.retryTime,jdbcType=INTEGER},
+                </if>
+                <if test="item.topic != null">
+                    #{item.topic,jdbcType=VARCHAR},
+                </if>
+                <if test="item.delay != null">
+                    #{item.delay,jdbcType=INTEGER},
+                </if>
+                <if test="item.createTime != null">
+                    #{item.createTime,jdbcType=TIMESTAMP},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
 </mapper>

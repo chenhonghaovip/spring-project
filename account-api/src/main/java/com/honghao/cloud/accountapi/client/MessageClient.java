@@ -43,4 +43,12 @@ public interface MessageClient {
      */
     @DeleteMapping("/messageController/message")
     BaseResponse delete(@RequestBody MsgInfoDTO msgInfoDTO);
+
+    /**
+     * 消息处理完成
+     * @param msgInfoDTO msgInfoDTO
+     * @return BaseResponse
+     */
+    @PutMapping("/messageController/complete")
+    BaseResponse complete(@RequestBody MsgInfoDTO msgInfoDTO);
 }

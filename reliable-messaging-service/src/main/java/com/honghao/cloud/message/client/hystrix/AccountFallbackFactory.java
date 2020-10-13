@@ -22,7 +22,7 @@ public class AccountFallbackFactory implements FallbackFactory<AccountClient> {
 
             @Override
             public BaseResponse businessStatus(long msgInfoDTO) {
-                return null;
+                return BaseResponse.error();
             }
         };
     }

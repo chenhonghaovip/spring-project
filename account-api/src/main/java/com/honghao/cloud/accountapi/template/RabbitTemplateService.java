@@ -26,8 +26,7 @@ public class RabbitTemplateService implements EnvironmentAware {
 
     public <T> BaseResponse sendMessage(T t,String queue,RabbitLoad rabbitLoad){
         MsgInfoDTO msgInfoDTO = MsgInfoDTO.builder().businessId(String.valueOf(snowFlake.nextId())).content(JSON.toJSONString(t))
-                .status(0).topic(queue).appId(environment.getProperty("spring.application.name")).url("/rabbitMqController/query")
-                .consumerAppId("user-api").consumerUrl("/rabbitMqController/query").build();
+                .status(0).topic(queue).appId(environment.getProperty("spring.application.name")).url("/rabbitMqController/query").build();
 
         BaseResponse baseResponse = BaseResponse.error();
         try {

@@ -1,7 +1,7 @@
 package com.honghao.cloud.orderapi.facade;
 
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
-import com.honghao.cloud.orderapi.domain.entity.WaybillBcList;
+import com.honghao.cloud.orderapi.dto.request.MsgDTO;
 
 import java.util.List;
 
@@ -21,9 +21,24 @@ public interface OrderFacade {
     BaseResponse createOrders(String data);
 
     /**
+     * 创建批量订单
+     * @param data data
+     * @return Boolean
+     */
+    BaseResponse createBatchOrder(String data);
+
+
+    /**
      * 批次查询
      * @param list list
      * @return List<WaybillBcList>
      */
-    List<WaybillBcList> batchQuery(List<String> list);
+    List<Long> batchQuery(List<MsgDTO> list);
+
+    /**
+     * 乐观锁更新重试测试
+     * @param  wId wId
+     * @return BaseResponse
+     */
+    BaseResponse update(String wId);
 }
