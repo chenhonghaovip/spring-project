@@ -1,7 +1,7 @@
 package com.honghao.cloud.userapi.tactics;
 
 import com.alibaba.fastjson.JSONObject;
-import com.honghao.cloud.userapi.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

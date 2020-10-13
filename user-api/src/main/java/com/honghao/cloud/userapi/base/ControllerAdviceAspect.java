@@ -1,6 +1,7 @@
 package com.honghao.cloud.userapi.base;
 
 import com.alibaba.fastjson.JSON;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.userapi.common.enums.ErrorCodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.ConversionNotSupportedException;
