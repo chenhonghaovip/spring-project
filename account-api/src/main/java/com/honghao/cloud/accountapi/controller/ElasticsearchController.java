@@ -9,6 +9,7 @@ import com.honghao.cloud.basic.common.base.utils.HttpUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -28,6 +29,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.client.indices.GetIndexResponse;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -69,6 +71,7 @@ public class ElasticsearchController {
     @ApiOperation(value = "创建索引" ,notes = "创建索引")
     public BaseResponse create(@RequestParam("index") String index){
         CreateIndexRequest createIndexRequest = new CreateIndexRequest(index);
+        createIndexRequest.alias(new Alias("honghao"));
         CreateIndexResponse createIndexResponse = null;
         try {
             createIndexResponse = restHighLevelClient.indices().create(createIndexRequest, RequestOptions.DEFAULT);
@@ -76,6 +79,23 @@ public class ElasticsearchController {
             e.printStackTrace();
         }
         return BaseResponse.successData(createIndexResponse);
+    }
+
+    /**
+     * 通过别名获取索引,判断索引是否存在
+     * @return BaseResponse
+     */
+    @GetMapping("/getAliasIndex")
+    @ApiOperation(value = "通过别名获取索引,判断索引是否存在" ,notes = "通过别名获取索引,判断索引是否存在")
+    public BaseResponse getAliasIndex(@RequestParam("alias") String alias){
+        GetIndexRequest getIndexRequest = new GetIndexRequest(alias);
+
+        try {
+            GetIndexResponse getIndexResponse = restHighLevelClient.indices().get(getIndexRequest, RequestOptions.DEFAULT);
+            return BaseResponse.success();
+        } catch (IOException e) {
+            return BaseResponse.error(e.getMessage());
+        }
     }
 
     /**
@@ -119,8 +139,8 @@ public class ElasticsearchController {
     @ApiOperation(value = "创建文档" ,notes = "创建文档")
     public BaseResponse createDocument(@RequestBody ShopInfo shopInfo){
         // 创建请求
-        IndexRequest indexRequest = new IndexRequest("test");
-        indexRequest.id("1");
+        IndexRequest indexRequest = new IndexRequest("222");
+        indexRequest.id("2");
 
         // 将对象放入到请求中
         indexRequest.source(JSON.toJSONString(shopInfo), XContentType.JSON);
@@ -140,8 +160,8 @@ public class ElasticsearchController {
      */
     @GetMapping("/getDocument")
     @ApiOperation(value = "获取文档" ,notes = "获取文档")
-    public BaseResponse getDocument(){
-        GetRequest getRequest = new GetRequest("test","1");
+    public BaseResponse getDocument(@RequestParam("index") String index,@RequestParam("id") String id){
+        GetRequest getRequest = new GetRequest(index,id);
         try {
             GetResponse documentFields = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
             return BaseResponse.successData(documentFields);
@@ -173,8 +193,8 @@ public class ElasticsearchController {
      */
     @DeleteMapping("/deleteDocument")
     @ApiOperation(value = "删除文档" ,notes = "删除文档")
-    public BaseResponse deleteDocument(){
-        DeleteRequest deleteRequest = new DeleteRequest("test","1");
+    public BaseResponse deleteDocument(@RequestParam("index") String index,@RequestParam("id") String id){
+        DeleteRequest deleteRequest = new DeleteRequest(index,id);
         try {
             DeleteResponse delete = restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);
             return BaseResponse.successData(delete);
@@ -223,19 +243,23 @@ public class ElasticsearchController {
      */
     @GetMapping("/search")
     @ApiOperation(value = "复杂查询模式" ,notes = "复杂查询模式")
-    public BaseResponse search(){
-        String index =  "order_info";
+    public BaseResponse search(@RequestParam("index") String index){
         // 查询全部
         MatchAllQueryBuilder matchAllQueryBuilder = QueryBuilders.matchAllQuery();
         System.out.println(matchAllQueryBuilder);
 
         // 精确匹配
-        TermQueryBuilder termQuery = QueryBuilders.termQuery("receiveAdcode",  "310112");
+        TermQueryBuilder termQuery = QueryBuilders.termQuery("shopName",  "string");
 
         return commonSearch(index,new BoolQueryBuilder().filter(termQuery));
     }
 
+    /**
+     *
+     * @return BaseResponse
+     */
     @PostMapping("/init")
+    @ApiOperation(value = "批次插入文档" ,notes = "批次插入文档")
     public BaseResponse init(){
         String index = "order_info";
         String s = HttpUtil.doPost("http://127.0.0.1:8102/client/deliveryController/getInfo", 10);
