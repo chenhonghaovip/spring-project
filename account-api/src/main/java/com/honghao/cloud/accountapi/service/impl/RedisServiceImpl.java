@@ -415,7 +415,7 @@ public class RedisServiceImpl implements RedisService {
                 System.out.println("123");
                 return BaseResponse.success();
             }else {
-//                System.out.println("error");
+                System.out.println("error");
                 flag = false;
                 return BaseResponse.error();
             }
