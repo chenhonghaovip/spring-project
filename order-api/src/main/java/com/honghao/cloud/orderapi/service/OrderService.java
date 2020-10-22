@@ -32,4 +32,11 @@ public interface OrderService {
      * @return BaseResponse
      */
     List<String> batchQuery(List<String> wIds);
+
+    /**
+     * 乐观锁更新重试测试
+     * @param  wId wId
+     * @return BaseResponse
+     */
+    BaseResponse update(String wId);
 }

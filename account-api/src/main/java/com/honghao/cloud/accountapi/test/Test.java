@@ -1,6 +1,9 @@
-package com.honghao.cloud.orderapi.utils;
+package com.honghao.cloud.accountapi.test;
 
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -72,13 +75,12 @@ public class Test {
     }
 
     @org.junit.Test
-    public void test1(){
-
-//        OkHttpClient client = new OkHttpClient();//创建OkHttpClient对象
-//        Request request = new Request.Builder()
-//                .url(url)//请求链接
-//                .get()// 可省略，默认GET方法
-//                .build();//创建Request对象
-//        Response response = client.newCall(request).execute();//获取Response对象
+    public void test1() throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .get()
+                .url("https:www.baidu.com")
+                .build();
+        Response execute = client.newCall(request).execute();
     }
 }

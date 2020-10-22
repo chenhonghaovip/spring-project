@@ -100,6 +100,16 @@ public class Order {
 
     private Integer isOvertime;
 
+    private Integer version;
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
     public String getwId() {
         return wId;
     }

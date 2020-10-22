@@ -45,4 +45,11 @@ public interface OrderMapper {
      * @return List<String>
      */
     int batchInsert(@Param("list") List<Order> list);
+
+    /**
+     * 乐观更新操作
+     * @param wId list
+     * @return List<String>
+     */
+    int update(@Param("wId") String wId,@Param("version") int version);
 }
