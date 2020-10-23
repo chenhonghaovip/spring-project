@@ -5,6 +5,7 @@ import com.honghao.cloud.basic.common.base.base.BaseResponse;
 import com.honghao.cloud.basic.common.base.dto.ProtocolConstants;
 import com.honghao.cloud.basic.common.base.dto.RpcMessage;
 import com.honghao.cloud.message.controller.MessageController;
+import com.honghao.cloud.message.dto.MsgInfoDTO;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
@@ -35,13 +36,21 @@ public class NettyServerHandle extends ChannelInboundHandlerAdapter {
         RpcMessage rpcMessage = JSON.parseObject(request, RpcMessage.class);
         if (Objects.nonNull(rpcMessage)){
             // 判断消息类型，进行不同的逻辑处理
-            if (ProtocolConstants.HEART_BEAT == rpcMessage.getMessageType()){
+            int messageType = rpcMessage.getMessageType();
+            Object body = rpcMessage.getBody();
+            BaseResponse result = BaseResponse.success();
+
+            MsgInfoDTO msgInfoDTO = JSON.parseObject(JSON.toJSONString(body),MsgInfoDTO.class);
+            if (ProtocolConstants.HEART_BEAT == messageType){
                 // 消息心跳处理
+                // TODO: 2020/10/23
+            }else if (ProtocolConstants.INSERT == messageType){
+                result = messageController.saveMessage(msgInfoDTO);
             }
+            rpcMessage.setBody(result);
+            // 返回响应结果
+            ctx.writeAndFlush(Unpooled.copiedBuffer(JSON.toJSONString(rpcMessage), CharsetUtil.UTF_8));
         }
-        BaseResponse result = BaseResponse.successData("123456");
-        rpcMessage.setBody(result);
-        ctx.writeAndFlush(Unpooled.copiedBuffer(JSON.toJSONString(rpcMessage), CharsetUtil.UTF_8));
     }
 
 
@@ -53,7 +62,7 @@ public class NettyServerHandle extends ChannelInboundHandlerAdapter {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         System.out.println("连接异常");
-        ctx.close();
+//        ctx.close();
     }
 
     /**

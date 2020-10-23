@@ -1,13 +1,15 @@
 package com.honghao.cloud.accountapi.controller;
 
-import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
+import com.alibaba.fastjson.JSON;
+import com.honghao.cloud.accountapi.config.RabbitConfig;
+import com.honghao.cloud.accountapi.dto.request.MsgInfoDTO;
 import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.dto.ProtocolConstants;
 import com.honghao.cloud.basic.common.base.netty.NettyUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -22,9 +24,11 @@ public class NettyController {
 
     @PostMapping("/netty")
     public BaseResponse netty(){
-        ShopInfo shopInfo = ShopInfo.builder().shopUrl("shop").shopPrice(BigDecimal.TEN).shopName("pinguo").build();
+        MsgInfoDTO msgInfoDTO = MsgInfoDTO.builder().businessId("111111").content(JSON.toJSONString("werqwrqw"))
+                .status(0).topic(RabbitConfig.CREATE_ORDER).appId("4214124").url("/order/batchQuery").build();
+
         try {
-            return NettyUtils.sendMessage(shopInfo);
+            return NettyUtils.sendMessage(msgInfoDTO, ProtocolConstants.INSERT);
         } catch (TimeoutException e) {
             throw new RuntimeException(e);
         }

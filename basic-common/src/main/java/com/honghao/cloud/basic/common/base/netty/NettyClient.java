@@ -1,5 +1,6 @@
 package com.honghao.cloud.basic.common.base.netty;
 
+import com.honghao.cloud.basic.common.base.factory.NamedThreadFactory;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -11,7 +12,12 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author chenhonghao
@@ -19,6 +25,9 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 class NettyClient {
+    protected final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1,
+            new NamedThreadFactory("timeoutChecker", 1, true));
+
     private Bootstrap bootstrap;
     private static final NettyClient NETTY_CLIENT = new NettyClient();
 
@@ -39,8 +48,10 @@ class NettyClient {
         EventLoopGroup eventExecutors = new NioEventLoopGroup();
         bootstrap.group(eventExecutors)
                 .channel(NioSocketChannel.class)
+                // 保持连接
                 .option(ChannelOption.SO_KEEPALIVE,true)
-//                .option(ChannelOption.SO_BACKLOG, 1024)
+                // 有数据立即发送
+                .option(ChannelOption.TCP_NODELAY, true)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
@@ -50,17 +61,54 @@ class NettyClient {
                                 .addLast(new NettyClientHandle());
                     }
                 });
+        NettyUtils.bootstrap = bootstrap;
         return bootstrap;
     }
 
+    /**
+     * 初始化连接处理
+     * @param nettyServerProperties nettyServerProperties
+     */
+    void connect(NettyServerProperties nettyServerProperties){
+        int port = nettyServerProperties.getPort();
+        List<String> addressList = Arrays.asList(nettyServerProperties.getIps()).stream().map(each->each+":"+port).collect(Collectors.toList());
+
+        timerExecutor.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                NettyUtils.reconnect(addressList);
+            }
+        }, 60, 10, TimeUnit.MILLISECONDS);
+
+
+//        ips.forEach(each->{
+//            String address = each + ":" + port;
+//            // 判断是否已经进行过初始化连接
+//            if (NettyUtils.hasConnection(address)){
+//                return;
+//            }
+//            ChannelFuture connect = this.bootstrap.connect(each, port);
+//
+//            try {
+//                connect.await(2, TimeUnit.SECONDS);
+//                if (connect.isCancelled()) {
+//                    throw new RuntimeException("connect cancelled, can not connect to services-server.",connect.cause());
+//                } else if (!connect.isSuccess()) {
+//                    throw new RuntimeException("connect failed, can not connect to services-server.",connect.cause());
+//                } else {
+//                    Channel channel = connect.channel();
+//                    NettyUtils.Server server = new NettyUtils.Server(address,channel);
+//                    NettyUtils.CONNECTION_LIST.add(server);
+//                }
+//            } catch (InterruptedException e) {
+//                log.error(e.getMessage());
+//            }
+//        });
+    }
+
     void connect(String host, int port){
-        String address = host + ":" + host;
-        if (NettyUtils.hasConnection(address)){
-            return;
-        }
         // 连接到远程节点，等待连接完成
         try {
-//            ChannelFuture connect = bootstrap.connect(host, port);
             ChannelFuture f = this.bootstrap.connect(host,port);
             try {
                 f.await(2, TimeUnit.SECONDS);
@@ -70,19 +118,11 @@ class NettyClient {
                     throw new RuntimeException("connect failed, can not connect to services-server.",f.cause());
                 } else {
                     NettyUtils.setConnect(f);
-//                    RpcMessage rpcMessage = RpcMessage.builder().id(1).messageType(ProtocolConstants.INSERT).build();
-//                    f.channel().writeAndFlush(Unpooled.copiedBuffer(JSON.toJSONString(rpcMessage), CharsetUtil.UTF_8));
                 }
             } catch (Exception e) {
                 throw new RuntimeException( "can not connect to services-server.",e);
             }
-
-
-//            sync = bootstrap.connect(host, port).sync();
-//            NettyUtils.setConnect(sync);
             System.out.println("客户端启动");
-            // 阻塞操作，closeFuture()开启了一个channel监控器，
-//            sync.channel().closeFuture().sync();
         } catch (Exception e) {
             e.printStackTrace();
         }

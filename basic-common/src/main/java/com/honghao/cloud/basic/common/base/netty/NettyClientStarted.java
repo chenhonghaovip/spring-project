@@ -1,6 +1,7 @@
 package com.honghao.cloud.basic.common.base.netty;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
@@ -11,11 +12,12 @@ import javax.annotation.PostConstruct;
  */
 @Configuration
 @ConditionalOnProperty(prefix = "enable", name = "message", havingValue = "true")
+@EnableConfigurationProperties(NettyServerProperties.class)
 public class NettyClientStarted {
 
     @PostConstruct
-    public void init(){
-        NettyClient.getInstance().connect("127.0.0.1",8899);
+    public void init(NettyServerProperties nettyServerProperties){
+        NettyClient.getInstance().connect(nettyServerProperties);
     }
 
     public static void main(String[] args) {
