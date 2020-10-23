@@ -1,3 +1,4 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.honghao.cloud.basic.common.base.bean.CacheTemplate
+com.honghao.cloud.basic.common.base.bean.CacheTemplate,\
+com.honghao.cloud.basic.common.base.netty.NettyClientStarted

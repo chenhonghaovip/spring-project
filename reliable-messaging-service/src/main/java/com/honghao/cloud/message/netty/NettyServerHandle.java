@@ -1,84 +1,96 @@
 package com.honghao.cloud.message.netty;
 
+import com.alibaba.fastjson.JSON;
+import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.dto.ProtocolConstants;
+import com.honghao.cloud.basic.common.base.dto.RpcMessage;
+import com.honghao.cloud.message.controller.MessageController;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.*;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.CharsetUtil;
+import io.netty.util.concurrent.GlobalEventExecutor;
 
 import java.util.Objects;
 
 /**
- * netty服务端
- *
  * @author chenhonghao
- * @date 2020-10-21 15:37
+ * @date 2020-10-22 14:00
  */
-public class NettyServerHandle extends SimpleChannelInboundHandler<Object> {
+@ChannelHandler.Sharable
+public class NettyServerHandle extends ChannelInboundHandlerAdapter {
+    public static MessageController messageController;
 
+    private static ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, Object msg) throws Exception {
-        if (Objects.isNull(msg)) {
-            return;
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        ByteBuf buf = (ByteBuf)msg;
+        String request = buf.toString(CharsetUtil.UTF_8);
+        System.out.println("接收客户端到消息为" + request);
+
+        RpcMessage rpcMessage = JSON.parseObject(request, RpcMessage.class);
+        if (Objects.nonNull(rpcMessage)){
+            // 判断消息类型，进行不同的逻辑处理
+            if (ProtocolConstants.HEART_BEAT == rpcMessage.getMessageType()){
+                // 消息插入
+                messageController.ddd();
+            }
         }
-
-        if (msg instanceof HttpRequest){
-            HttpRequest httpRequest = (HttpRequest)msg;
-            System.out.println("请求方法名"+httpRequest.method().name());
-            ByteBuf content = Unpooled.copiedBuffer("hello word", CharsetUtil.UTF_8);
-            FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK,content);
-            response.headers().set(HttpHeaderNames.CONTENT_TYPE,"text/plain");
-            response.headers().set(HttpHeaderNames.CONTENT_LENGTH,content.readableBytes());
-            channelHandlerContext.writeAndFlush(response);
-        }
+        BaseResponse result = BaseResponse.successData("123456");
+        rpcMessage.setBody(result);
+        ctx.writeAndFlush(Unpooled.copiedBuffer(JSON.toJSONString(rpcMessage), CharsetUtil.UTF_8));
     }
 
+
+    /**
+     *
+     * @param  ctx ctx
+     * @param cause cause
+     */
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channelActive");
-        super.channelActive(ctx);
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        System.out.println("连接异常");
+        ctx.close();
     }
 
+    /**
+     * 新建立连接时触发动作
+     * @param ctx ctx
+     */
     @Override
-    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channelRegistered");
-        super.channelRegistered(ctx);
+    public void handlerAdded(ChannelHandlerContext ctx) {
+        System.out.println("新建立连接时触发动作");
+        channels.add(ctx.channel());
+    }
+    /**
+     * 连接断开时触发动作
+     * @param ctx ctx
+     */
+    @Override
+    public void handlerRemoved(ChannelHandlerContext ctx) {
+        System.out.println("连接断开时触发动作");
+        channels.remove(ctx.channel());
     }
 
+    /**
+     * 检测连接活动情况，只会在通道建立时调用一次
+     * @param ctx ctx
+     */
     @Override
-    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channelUnregistered");
-        super.channelUnregistered(ctx);
+    public void channelActive(ChannelHandlerContext ctx) {
+        System.out.println("检测连接活动情况，只会在通道建立时调用一次");
     }
 
+    /**
+     * 检测连接非活动情况，只会在通道失效时调用一次
+     * @param ctx ctx
+     */
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channelInactive");
-        super.channelInactive(ctx);
-    }
-
-    @Override
-    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channelReadComplete");
-        super.channelReadComplete(ctx);
-    }
-
-    @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        System.out.println("userEventTriggered");
-        super.userEventTriggered(ctx, evt);
-    }
-
-    @Override
-    public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channelWritabilityChanged");
-        super.channelWritabilityChanged(ctx);
-    }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        System.out.println("exceptionCaught");
-        super.exceptionCaught(ctx, cause);
+    public void channelInactive(ChannelHandlerContext ctx) {
+        System.out.println("检测连接非活动情况，只会在通道失效时调用一次");
     }
 }

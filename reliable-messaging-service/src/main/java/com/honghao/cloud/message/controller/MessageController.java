@@ -80,4 +80,8 @@ public class MessageController {
     public BaseResponse<MsgInfo> selectMessage(@RequestParam("messageId") long messageId){
         return messageService.selectMessage(messageId);
     }
+
+    public void ddd(){
+        System.out.println("1234444");
+    }
 }
