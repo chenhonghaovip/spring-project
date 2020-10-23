@@ -11,6 +11,8 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author chenhonghao
  * @date 2020-10-22 11:41
@@ -57,14 +59,31 @@ class NettyClient {
             return;
         }
         // 连接到远程节点，等待连接完成
-        ChannelFuture sync;
         try {
-            sync = bootstrap.connect(host, port).sync();
-            NettyUtils.setConnect(sync);
+//            ChannelFuture connect = bootstrap.connect(host, port);
+            ChannelFuture f = this.bootstrap.connect(host,port);
+            try {
+                f.await(2, TimeUnit.SECONDS);
+                if (f.isCancelled()) {
+                    throw new RuntimeException("connect cancelled, can not connect to services-server.",f.cause());
+                } else if (!f.isSuccess()) {
+                    throw new RuntimeException("connect failed, can not connect to services-server.",f.cause());
+                } else {
+                    NettyUtils.setConnect(f);
+//                    RpcMessage rpcMessage = RpcMessage.builder().id(1).messageType(ProtocolConstants.INSERT).build();
+//                    f.channel().writeAndFlush(Unpooled.copiedBuffer(JSON.toJSONString(rpcMessage), CharsetUtil.UTF_8));
+                }
+            } catch (Exception e) {
+                throw new RuntimeException( "can not connect to services-server.",e);
+            }
+
+
+//            sync = bootstrap.connect(host, port).sync();
+//            NettyUtils.setConnect(sync);
             System.out.println("客户端启动");
             // 阻塞操作，closeFuture()开启了一个channel监控器，
 //            sync.channel().closeFuture().sync();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

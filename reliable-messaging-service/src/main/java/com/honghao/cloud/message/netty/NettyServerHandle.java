@@ -36,8 +36,7 @@ public class NettyServerHandle extends ChannelInboundHandlerAdapter {
         if (Objects.nonNull(rpcMessage)){
             // 判断消息类型，进行不同的逻辑处理
             if (ProtocolConstants.HEART_BEAT == rpcMessage.getMessageType()){
-                // 消息插入
-                messageController.ddd();
+                // 消息心跳处理
             }
         }
         BaseResponse result = BaseResponse.successData("123456");
