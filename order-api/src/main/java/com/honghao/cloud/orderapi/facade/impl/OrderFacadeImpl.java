@@ -15,11 +15,14 @@ import com.honghao.cloud.orderapi.facade.OrderFacade;
 import com.honghao.cloud.orderapi.service.OrderService;
 import com.honghao.cloud.orderapi.template.RabbitTemplateService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 
@@ -32,7 +35,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class OrderFacadeImpl implements OrderFacade {
-    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(100,200,"create_order");
+    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(1000,2000,"create_order");
 
     @Resource
     private OrderService orderService;
@@ -42,16 +45,44 @@ public class OrderFacadeImpl implements OrderFacade {
 
     @Override
     public BaseResponse createOrders(String data) {
-        String s = HttpUtil.doPost("http://127.0.0.1:8102/client/deliveryController/getInfo", 10);
-        List<Order> lists = JSONArray.parseArray(s, Order.class);
-        lists.forEach(each->{
-            MsgInfoDTO msgInfoDTO = MsgInfoDTO.builder().businessId(each.getwId()).content(JSON.toJSONString(each))
-                    .status(0).topic(RabbitConfig.CREATE_ORDER).appId(Dict.SERVICE_NAME).url("/order/batchQuery").build();
-
-           threadPoolExecutor.execute(()-> rabbitTemplateService.sendMessage(msgInfoDTO, () -> orderService.createOrders(each)));
-        });
+//        String s = HttpUtil.doPost("http://127.0.0.1:8102/client/deliveryController/getInfo", 10);
+//        List<Order> lists = JSONArray.parseArray(s, Order.class);
+//        lists.forEach(each->{
+//            MsgInfoDTO msgInfoDTO = MsgInfoDTO.builder().businessId(each.getwId()).content(JSON.toJSONString(each))
+//                    .status(0).topic(RabbitConfig.CREATE_ORDER).appId(Dict.SERVICE_NAME).url("/order/batchQuery").build();
+//
+//           threadPoolExecutor.execute(()-> rabbitTemplateService.sendMessage(msgInfoDTO, () -> orderService.createOrders(each)));
+//        });
+        test();
          return BaseResponse.success();
 //      return rabbitTemplateService.sendMessage(msgInfoDTO, () -> orderService.createOrders(order));
+    }
+
+    void test(){
+        CyclicBarrier cyclicBarrier =new CyclicBarrier(1000);
+        String s = HttpUtil.doPost("http://127.0.0.1:8102/client/deliveryController/getInfo", 10);
+        List<Order> lists = JSONArray.parseArray(s, Order.class);
+        Order each = lists.get(0);
+        for (int i = 0; i < 1000; i++) {
+
+            Order or  =new Order();
+            BeanUtils.copyProperties(each,or);
+            or.setwId(String.valueOf(i));
+            MsgInfoDTO msgInfoDTO = MsgInfoDTO.builder().businessId(or.getwId()).content(JSON.toJSONString(or))
+                    .status(0).topic(RabbitConfig.CREATE_ORDER).appId(Dict.SERVICE_NAME).url("/order/batchQuery").build();
+            threadPoolExecutor.execute(()-> {
+                try {
+                    cyclicBarrier.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (BrokenBarrierException e) {
+                    e.printStackTrace();
+                }
+                rabbitTemplateService.sendMessage(msgInfoDTO, () -> orderService.createOrders(or),1);
+            });
+        }
+
+
     }
 
     @Override
@@ -73,7 +104,8 @@ public class OrderFacadeImpl implements OrderFacade {
         batchMsgInfoDTO.setMsgList(list);
 
         final List<Order> orders = lists.subList(0, 2);
-        return rabbitTemplateService.batchMessage(batchMsgInfoDTO,()->orderService.createBatchOrders(orders));
+//        return rabbitTemplateService.batchMessage(batchMsgInfoDTO,()->orderService.createBatchOrders(orders));
+        return rabbitTemplateService.batchMessage(batchMsgInfoDTO,()->orderService.createBatchOrders(orders),1);
     }
 
     @Override

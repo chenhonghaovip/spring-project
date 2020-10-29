@@ -1,7 +1,10 @@
 package com.honghao.cloud.basic.common.base.netty;
 
+import com.honghao.cloud.basic.common.base.base.BaseDict;
 import com.honghao.cloud.basic.common.base.factory.NamedThreadFactory;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -9,6 +12,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,9 +59,27 @@ class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
+                        ByteBuf delimiter = Unpooled.wrappedBuffer(BaseDict.DELIMITER.getBytes());
                         socketChannel.pipeline()
+                                /*
+                                 * 对服务端返回的消息通过$(* *)$进行分隔，并且每次查找的最大大小为 MAX_LENGTH 字节
+                                 *
+                                 * 将delimiter设置到DelimiterBasedFrameDecoder中，经过该解码一器进行处理之后，源数据将会
+                                 * 被按照$(* *)$进行分隔，这里 MAX_LENGTH 指的是分隔的最大长度，即当读取到 MAX_LENGTH 个字节的数据之后，
+                                 * 若还是未读取到分隔符，则舍弃当前数据段，因为其很有可能是由于码流紊乱造成的
+                                 */
+                                .addLast(new DelimiterBasedFrameDecoder(BaseDict.MAX_LENGTH, delimiter))
+//
+//                                // 将分隔之后的字节数据转换为字符串
+//                                .addLast(new StringDecoder())
+
+                                // 对客户端发送的数据进行编码，这里主要是在客户端发送的数据最后添加分隔符
+                                .addLast(new DelimiterBasedFrameEncoder(BaseDict.DELIMITER))
+
                                 // 超时检测的handler,值为0时表示不启用
                                 .addLast(new IdleStateHandler(0, 0, 30))
+
+                                // 自定义数据处理
                                 .addLast(new NettyClientHandle());
                     }
                 });
@@ -78,7 +100,7 @@ class NettyClient {
             public void run() {
                 NettyUtils.reconnect(addressList);
             }
-        }, 60, 10, TimeUnit.MILLISECONDS);
+        }, 6000, 10, TimeUnit.MILLISECONDS);
 
 
 //        ips.forEach(each->{

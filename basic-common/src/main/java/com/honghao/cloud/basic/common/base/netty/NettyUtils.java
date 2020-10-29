@@ -13,7 +13,10 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.util.CharsetUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -21,7 +24,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author chenhonghao
@@ -29,25 +31,24 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @Slf4j
 public class NettyUtils {
-    public static Bootstrap bootstrap;
+    static Bootstrap bootstrap;
 
-    private AtomicLong atomicLong;
     /**
      * 用于异步获取返回结果
      */
-    public static final ConcurrentHashMap<Integer, MessageFuture> MAP = new ConcurrentHashMap<>();
+    static final ConcurrentHashMap<Integer, MessageFuture> MAP = new ConcurrentHashMap<>();
     /**
      * 用于生成id,获取返回结果时通过此参数绑定请求结果与返回结果
      */
     private static PositiveAtomicCounter positiveAtomicCounter = new PositiveAtomicCounter();
 
-    private final static ConcurrentMap<String, Channel> channels = new ConcurrentHashMap<>();
+    private final static ConcurrentMap<String, Channel> CHANNELS = new ConcurrentHashMap<>();
 
-    private final static ConcurrentMap<String, Object> channelLocks = new ConcurrentHashMap<>();
+    private final static ConcurrentMap<String, Object> CHANNEL_LOCKS = new ConcurrentHashMap<>();
 
     private static ChannelFuture connect;
 
-    public static void setConnect(ChannelFuture connect) {
+    static void setConnect(ChannelFuture connect) {
         NettyUtils.connect = connect;
     }
 
@@ -69,19 +70,19 @@ public class NettyUtils {
     }
 
    static Channel acquireChannel(String serverAddress) {
-        Channel channelToServer = channels.get(serverAddress);
+        Channel channelToServer = CHANNELS.get(serverAddress);
         if (channelIsOk(channelToServer)) {
             return channelToServer;
         }
         // 加锁操作
-       channelLocks.putIfAbsent(serverAddress,new Object());
-        synchronized (channelLocks.get(serverAddress)){
+       CHANNEL_LOCKS.putIfAbsent(serverAddress,new Object());
+        synchronized (CHANNEL_LOCKS.get(serverAddress)){
             return doConnect(serverAddress);
         }
     }
 
     private static Channel doConnect(String serverAddress) {
-        Channel channelToServer = channels.get(serverAddress);
+        Channel channelToServer = CHANNELS.get(serverAddress);
         if (channelIsOk(channelToServer)) {
             return channelToServer;
         }
@@ -98,27 +99,79 @@ public class NettyUtils {
                     throw new RuntimeException("connect failed, can not connect to services-server.",connect.cause());
                 } else {
                     channelFromPool = connect.channel();
-                    channels.put(serverAddress,channelFromPool);
+                    CHANNELS.put(serverAddress,channelFromPool);
                 }
             } catch (InterruptedException e) {
                 log.error(e.getMessage());
             }
-            channels.put(serverAddress, channelFromPool);
+            CHANNELS.put(serverAddress, channelFromPool);
         } catch (Exception exx) {
             log.error("{} register RM failed.", serverAddress);
         }
         return channelFromPool;
     }
 
+
+    static void releaseChannel(Channel channel ,String serverAddress) {
+        if (channel == null || serverAddress == null){
+            return ;
+        }
+        synchronized (CHANNEL_LOCKS.get(serverAddress)){
+            Channel channelToServer = CHANNELS.get(serverAddress);
+            if (channel.compareTo(channelToServer) == 0){
+                destroyChannel(serverAddress,channel);
+            }
+        }
+    }
+
+    private static void destroyChannel(String serverAddress, Channel channel) {
+        if (null == channel) { return; }
+        try {
+            if (channel.equals(CHANNELS.get(serverAddress))) {
+                CHANNELS.remove(serverAddress);
+                channel.close();
+            }
+        } catch (Exception exx) {
+            log.error(exx.getMessage());
+        }
+    }
+
+    /**
+     * To string address string.
+     *
+     * @param address the address
+     * @return the string
+     */
+    static String toStringAddress(SocketAddress address) {
+        if (null == address) {
+            return StringUtils.EMPTY;
+        }
+        return toStringAddress((InetSocketAddress) address);
+    }
+
+    /**
+     * To string address string.
+     *
+     * @param address the address
+     * @return the string
+     */
+    private static String toStringAddress(InetSocketAddress address) {
+        return address.getAddress().getHostAddress() + ":" + address.getPort();
+    }
+
+
     public static BaseResponse sendMessageLoad(Object object,int type) throws TimeoutException{
-        List<String> list = new ArrayList<>(channels.keySet());
+        List<String> list = new ArrayList<>(CHANNELS.keySet());
         int size = list.size();
+        int i = 0;
         if (size <= 0){
             return BaseResponse.error();
+        }else if (size > 1){
+            Random random = new Random();
+            i = random.nextInt(size - 1);
         }
-        Random random = new Random();
-        int i = random.nextInt(size - 1);
-        Channel channel = channels.get(list.get(i));
+
+        Channel channel = CHANNELS.get(list.get(i));
         return sendMessage(object,type,channel);
     }
 
@@ -129,45 +182,9 @@ public class NettyUtils {
         }else {
             return null;
         }
-//        if (connect!=null && connect.channel().isActive()){
-//            int nextId = positiveAtomicCounter.getAndIncrement();
-//            RpcMessage rpcMessage = RpcMessage.builder().id(nextId).messageType(type).body(object).build();
-//
-//            MessageFuture messageFuture = new MessageFuture();
-//            MAP.putIfAbsent(nextId,messageFuture);
-//            ChannelFuture channelFuture = connect.channel().writeAndFlush(Unpooled.copiedBuffer(JSON.toJSONString(rpcMessage), CharsetUtil.UTF_8));
-//            channelFuture.addListener((ChannelFutureListener) future -> {
-//                if (!future.isSuccess()) {
-//                    MessageFuture messageFuture1 = MAP.remove(rpcMessage.getId());
-//                    if (messageFuture1 != null) {
-//                        messageFuture1.setResultMessage(future.cause());
-//                    }
-//                    channelFuture.channel().close();
-//                }
-//            });
-//            try {
-//                Object o = messageFuture.get(1000, TimeUnit.MILLISECONDS);
-//                if (o instanceof RpcMessage){
-//                    RpcMessage result = (RpcMessage) o;
-//                    if (result.getBody() instanceof BaseResponse){
-//                        return (BaseResponse) result.getBody();
-//                    }
-//                }
-//                return null;
-//            } catch (Exception e) {
-//                log.error("wait response error:{},ip:{},request:{}", e.getMessage(), "", JSON.toJSONString(object));
-//                if (e instanceof TimeoutException) {
-//                    throw (TimeoutException) e;
-//                } else {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//        }else {
-//            return null;
-//        }
     }
 
-    public static BaseResponse sendMessage(Object object,int type,Channel channel) throws TimeoutException{
+    private static BaseResponse sendMessage(Object object, int type, Channel channel) throws TimeoutException{
         if (channel!=null && channel.isActive()){
             int nextId = positiveAtomicCounter.getAndIncrement();
             RpcMessage rpcMessage = RpcMessage.builder().id(nextId).messageType(type).body(object).build();
@@ -185,12 +202,10 @@ public class NettyUtils {
                 }
             });
             try {
-                Object o = messageFuture.get(1000, TimeUnit.MILLISECONDS);
+                Object o = messageFuture.get(10000, TimeUnit.MILLISECONDS);
                 if (o instanceof RpcMessage){
                     RpcMessage result = (RpcMessage) o;
-                    if (result.getBody() instanceof BaseResponse){
-                        return (BaseResponse) result.getBody();
-                    }
+                    return JSON.parseObject(JSON.toJSONString(result.getBody()),BaseResponse.class);
                 }
                 return null;
             } catch (Exception e) {

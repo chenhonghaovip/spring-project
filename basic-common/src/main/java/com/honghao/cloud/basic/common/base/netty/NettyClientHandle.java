@@ -58,8 +58,7 @@ public class NettyClientHandle extends SimpleChannelInboundHandler<ByteBuf> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        super.exceptionCaught(ctx, cause);
-        ctx.close();
+        NettyUtils.releaseChannel(ctx.channel(),NettyUtils.toStringAddress(ctx.channel().remoteAddress()));
     }
 
     /**
@@ -78,5 +77,6 @@ public class NettyClientHandle extends SimpleChannelInboundHandler<ByteBuf> {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         System.out.println("和服务器端连接掉线");
+        NettyUtils.releaseChannel(ctx.channel(),NettyUtils.toStringAddress(ctx.channel().remoteAddress()));
     }
 }
