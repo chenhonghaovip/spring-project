@@ -1,8 +1,8 @@
 package com.honghao.cloud.accountapi.controller;
 
 import com.honghao.cloud.accountapi.common.enums.ErrorCodeEnum;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
-import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
+import com.honghao.cloud.basic.common.base.BaseResponse;
+import com.honghao.cloud.basic.common.factory.ThreadPoolFactory;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;

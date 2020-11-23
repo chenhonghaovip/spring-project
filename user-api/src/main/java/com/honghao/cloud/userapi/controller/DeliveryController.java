@@ -2,7 +2,7 @@ package com.honghao.cloud.userapi.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.userapi.common.enums.TacticsEnum;
 import com.honghao.cloud.userapi.tactics.KnightService;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi;
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.facade.BatchFacade;
 import lombok.extern.slf4j.Slf4j;

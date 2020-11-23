@@ -1,7 +1,7 @@
 package com.honghao.cloud.userapi.interceptor;
 
 import com.alibaba.fastjson.JSON;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.userapi.aspect.Auth;
 import com.honghao.cloud.userapi.dto.common.TokenInfoDTO;
 import com.honghao.cloud.userapi.dto.request.Operator;

@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.test.face;
 
-import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
+import com.honghao.cloud.basic.common.factory.ThreadPoolFactory;
 
 import java.math.BigDecimal;
 import java.util.Random;

@@ -2,8 +2,8 @@ package com.honghao.cloud.accountapi.config;
 
 import com.alibaba.fastjson.JSON;
 import com.honghao.cloud.accountapi.common.enums.ErrorCodeEnum;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
-import com.honghao.cloud.basic.common.base.base.BizException;
+import com.honghao.cloud.basic.common.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BizException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

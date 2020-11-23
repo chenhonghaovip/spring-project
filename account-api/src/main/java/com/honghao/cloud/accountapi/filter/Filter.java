@@ -1,7 +1,7 @@
 package com.honghao.cloud.accountapi.filter;
 
-import com.honghao.cloud.basic.common.base.base.BaseRequest;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseRequest;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 
 /**
  * 抽象过滤器

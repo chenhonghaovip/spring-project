@@ -1,6 +1,6 @@
 package com.honghao.cloud.message.client.hystrix;
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.message.client.AccountClient;
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;

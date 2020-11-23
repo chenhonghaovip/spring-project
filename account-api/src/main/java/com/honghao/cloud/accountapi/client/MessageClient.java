@@ -2,7 +2,7 @@ package com.honghao.cloud.accountapi.client;
 
 import com.honghao.cloud.accountapi.client.hystrix.MessageFallbackFactory;
 import com.honghao.cloud.accountapi.dto.request.MsgInfoDTO;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;

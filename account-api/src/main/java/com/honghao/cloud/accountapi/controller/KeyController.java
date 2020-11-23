@@ -1,7 +1,7 @@
 package com.honghao.cloud.accountapi.controller;
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
-import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
+import com.honghao.cloud.basic.common.base.BaseResponse;
+import com.honghao.cloud.basic.common.factory.ThreadPoolFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

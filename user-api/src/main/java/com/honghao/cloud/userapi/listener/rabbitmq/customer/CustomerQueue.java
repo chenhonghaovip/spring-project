@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.listener.rabbitmq.customer;
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.userapi.client.MessageClient;
 import com.honghao.cloud.userapi.config.RabbitConfig;
 import com.honghao.cloud.userapi.dto.request.MsgInfoDTO;

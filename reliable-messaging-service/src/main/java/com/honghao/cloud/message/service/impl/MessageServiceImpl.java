@@ -1,8 +1,8 @@
 package com.honghao.cloud.message.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
-import com.honghao.cloud.basic.common.base.utils.SnowFlakeShortUrl;
+import com.honghao.cloud.basic.common.base.BaseResponse;
+import com.honghao.cloud.basic.common.utils.SnowFlakeShortUrl;
 import com.honghao.cloud.message.common.enums.MsgStatusEnum;
 import com.honghao.cloud.message.component.MessageSender;
 import com.honghao.cloud.message.domain.entity.MsgInfo;

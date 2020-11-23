@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.client;
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.userapi.client.hystrix.MessageFallbackFactory;
 import com.honghao.cloud.userapi.dto.request.MsgInfoDTO;
 import org.springframework.cloud.openfeign.FeignClient;

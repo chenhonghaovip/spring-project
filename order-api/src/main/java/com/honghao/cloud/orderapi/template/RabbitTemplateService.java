@@ -1,9 +1,9 @@
 package com.honghao.cloud.orderapi.template;
 
 import com.alibaba.fastjson.JSON;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
-import com.honghao.cloud.basic.common.base.dto.ProtocolConstants;
-import com.honghao.cloud.basic.common.base.netty.NettyUtils;
+import com.honghao.cloud.basic.common.base.BaseResponse;
+import com.honghao.cloud.basic.common.dto.ProtocolConstants;
+import com.honghao.cloud.basic.common.netty.NettyUtils;
 import com.honghao.cloud.orderapi.client.MessageClient;
 import com.honghao.cloud.orderapi.dto.common.BatchMsgInfoDTO;
 import com.honghao.cloud.orderapi.dto.common.MsgInfoDTO;

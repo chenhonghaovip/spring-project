@@ -1,9 +1,9 @@
 package com.honghao.cloud.message.component;
 
 import com.alibaba.fastjson.JSON;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
-import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
-import com.honghao.cloud.basic.common.base.utils.HttpUtil;
+import com.honghao.cloud.basic.common.base.BaseResponse;
+import com.honghao.cloud.basic.common.factory.ThreadPoolFactory;
+import com.honghao.cloud.basic.common.utils.HttpUtil;
 import com.honghao.cloud.message.common.enums.MsgStatusEnum;
 import com.honghao.cloud.message.domain.entity.MsgInfo;
 import com.honghao.cloud.message.domain.mapper.MsgInfoMapper;

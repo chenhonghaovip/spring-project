@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.honghao.cloud.accountapi.client.MessageClient;
 import com.honghao.cloud.accountapi.config.RabbitConfig;
 import com.honghao.cloud.accountapi.dto.request.MsgInfoDTO;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;

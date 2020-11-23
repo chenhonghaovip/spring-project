@@ -1,6 +1,6 @@
 package com.honghao.cloud.orderapi.common.enums;
 
-import com.honghao.cloud.basic.common.base.base.BaseErrorInfoInterface;
+import com.honghao.cloud.basic.common.base.BaseErrorInfoInterface;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

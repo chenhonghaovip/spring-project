@@ -1,7 +1,7 @@
 package com.honghao.cloud.accountapi.service;
 
 import com.honghao.cloud.accountapi.dto.request.LikePointVO;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 
 /**
  * @author chenhonghao

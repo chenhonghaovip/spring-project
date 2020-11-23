@@ -1,9 +1,9 @@
 package com.honghao.cloud.message.netty;
 
 import com.alibaba.fastjson.JSON;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
-import com.honghao.cloud.basic.common.base.dto.ProtocolConstants;
-import com.honghao.cloud.basic.common.base.dto.RpcMessage;
+import com.honghao.cloud.basic.common.base.BaseResponse;
+import com.honghao.cloud.basic.common.dto.ProtocolConstants;
+import com.honghao.cloud.basic.common.dto.RpcMessage;
 import com.honghao.cloud.message.controller.MessageController;
 import com.honghao.cloud.message.dto.BatchMsgInfoDTO;
 import com.honghao.cloud.message.dto.MsgInfoDTO;

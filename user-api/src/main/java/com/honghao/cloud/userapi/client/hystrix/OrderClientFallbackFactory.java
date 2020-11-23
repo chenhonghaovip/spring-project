@@ -1,7 +1,7 @@
 package com.honghao.cloud.userapi.client.hystrix;
 
 import com.alibaba.fastjson.JSONObject;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import feign.hystrix.FallbackFactory;

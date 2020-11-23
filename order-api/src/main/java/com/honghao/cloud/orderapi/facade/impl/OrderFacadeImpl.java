@@ -2,9 +2,9 @@ package com.honghao.cloud.orderapi.facade.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
-import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
-import com.honghao.cloud.basic.common.base.utils.HttpUtil;
+import com.honghao.cloud.basic.common.base.BaseResponse;
+import com.honghao.cloud.basic.common.factory.ThreadPoolFactory;
+import com.honghao.cloud.basic.common.utils.HttpUtil;
 import com.honghao.cloud.orderapi.common.dict.Dict;
 import com.honghao.cloud.orderapi.config.RabbitConfig;
 import com.honghao.cloud.orderapi.domain.entity.Order;

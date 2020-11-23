@@ -1,7 +1,7 @@
 package com.honghao.cloud.orderapi.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.orderapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.orderapi.dto.request.MsgDTO;
 import com.honghao.cloud.orderapi.facade.OrderFacade;

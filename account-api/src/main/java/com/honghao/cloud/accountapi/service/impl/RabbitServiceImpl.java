@@ -3,7 +3,7 @@ package com.honghao.cloud.accountapi.service.impl;
 import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
 import com.honghao.cloud.accountapi.domain.mapper.ShopInfoMapper;
 import com.honghao.cloud.accountapi.service.RabbitService;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

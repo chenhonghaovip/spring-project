@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.test;
 
-import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
+import com.honghao.cloud.basic.common.factory.ThreadPoolFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

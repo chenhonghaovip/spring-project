@@ -1,6 +1,6 @@
 package com.honghao.cloud.orderapi.service;
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.orderapi.domain.entity.Order;
 
 import java.util.List;

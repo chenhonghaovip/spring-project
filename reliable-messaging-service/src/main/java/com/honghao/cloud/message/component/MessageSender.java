@@ -1,7 +1,7 @@
 package com.honghao.cloud.message.component;
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
-import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
+import com.honghao.cloud.basic.common.base.BaseResponse;
+import com.honghao.cloud.basic.common.factory.ThreadPoolFactory;
 import com.honghao.cloud.message.client.AccountClient;
 import com.honghao.cloud.message.client.OrderClient;
 import com.honghao.cloud.message.domain.entity.MsgInfo;

@@ -1,7 +1,7 @@
 package com.honghao.cloud.accountapi.client;
 
 import com.honghao.cloud.accountapi.client.hystrix.OrderFallbackFactory;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

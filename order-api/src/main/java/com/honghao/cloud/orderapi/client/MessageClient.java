@@ -1,6 +1,6 @@
 package com.honghao.cloud.orderapi.client;
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.orderapi.client.hystrix.MessageFallbackFactory;
 import com.honghao.cloud.orderapi.dto.common.BatchMsgInfoDTO;
 import com.honghao.cloud.orderapi.dto.common.MsgInfoDTO;
