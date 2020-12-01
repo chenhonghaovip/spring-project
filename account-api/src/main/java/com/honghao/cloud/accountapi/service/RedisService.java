@@ -3,6 +3,8 @@ package com.honghao.cloud.accountapi.service;
 import com.honghao.cloud.accountapi.dto.request.LikePointVO;
 import com.honghao.cloud.basic.common.base.BaseResponse;
 
+import java.util.Properties;
+
 /**
  * @author chenhonghao
  * @date 2020-07-23 21:31
@@ -134,4 +136,11 @@ public interface RedisService {
      * @return BaseResponse
      */
     BaseResponse redisConcurrent(String userId);
+
+    /**
+     * 获取redis监控信息
+     * @param param param
+     * @return Properties
+     */
+    Properties info(String param);
 }

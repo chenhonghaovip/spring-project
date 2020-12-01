@@ -1,5 +1,6 @@
 package com.honghao.cloud.accountapi.controller;
 
+import com.honghao.cloud.accountapi.dto.common.MonitorEntity;
 import com.honghao.cloud.accountapi.dto.request.LikePointVO;
 import com.honghao.cloud.accountapi.service.RedisService;
 import com.honghao.cloud.basic.common.base.BaseResponse;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -27,6 +31,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @RestController
 @RequestMapping("/redisController")
 public class RedisController {
+    private static final String[] monitorParam = new String[]{"memory","server","clients","stats","cpu"} ;
     private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(1000,10000,"123");
     @Resource
     private RedisService redisService;
@@ -244,5 +249,26 @@ public class RedisController {
         Boolean add1 = redisTemplate.opsForZSet().add(format, 1, 1);
         System.out.println(add + "--"+add1);
         return redisService.pubAndSub(userId);
+    }
+
+    /**
+     * memory：内存消耗相关信息
+     * server：有关Redis服务器的常规信息
+     * clients：客户端连接部分
+     * stats：一般统计
+     * cpu：CPU消耗统计信息
+     * @return BaseResponse
+     */
+    @GetMapping("/info")
+    public BaseResponse info(){
+        List<MonitorEntity> monitorEntityList = new ArrayList<>() ;
+        for (String param:monitorParam){
+            Properties properties = redisService.info(param) ;
+            MonitorEntity monitorEntity = new MonitorEntity () ;
+            monitorEntity.setMonitorParam(param);
+            monitorEntity.setProperties(properties);
+            monitorEntityList.add(monitorEntity);
+        }
+        return BaseResponse.successData(monitorEntityList) ;
     }
 }

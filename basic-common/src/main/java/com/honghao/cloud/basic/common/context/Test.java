@@ -8,10 +8,9 @@ import java.util.ServiceLoader;
  */
 public class Test {
     public static void main(String[] args) {
-        ServiceLoader<UploadSpi> uploadCDN = ServiceLoader.load(UploadSpi.class);
-        for (UploadSpi u : uploadCDN) {
+        ServiceLoader<UploadSpi> loads = ServiceLoader.load(UploadSpi.class);
+        for (UploadSpi u : loads) {
             u.upload("filePath");
         }
-
     }
 }

@@ -21,6 +21,7 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -422,6 +423,14 @@ public class RedisServiceImpl implements RedisService {
         }
         System.out.println("skip");
         return BaseResponse.error();
+    }
+
+    @Override
+    public Properties info(String param) {
+        if (StringUtils.isEmpty(param)){
+            return redisTemplate.getRequiredConnectionFactory().getConnection().info();
+        }
+        return redisTemplate.getRequiredConnectionFactory().getConnection().info(param);
     }
 
     private void refreshDay(Long time){

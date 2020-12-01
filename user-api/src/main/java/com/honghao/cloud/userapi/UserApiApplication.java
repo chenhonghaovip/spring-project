@@ -7,7 +7,6 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 /**
  * @author chenhonghao
  * @date 2019-7-17
@@ -15,7 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableHystrix
 @EnableHystrixDashboard
 @EnableFeignClients
-@EnableTransactionManagement
+//@EnableTransactionManagement
 @EnableEurekaClient
 @SpringBootApplication
 @MapperScan("com.honghao.cloud.userapi.domain.mapper")
