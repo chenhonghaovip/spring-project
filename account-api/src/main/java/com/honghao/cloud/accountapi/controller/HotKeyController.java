@@ -1,7 +1,5 @@
 package com.honghao.cloud.accountapi.controller;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -24,10 +22,10 @@ import java.util.concurrent.locks.ReentrantLock;
 @RequestMapping("/hotKey")
 public class HotKeyController {
     private static Map<String,String> cacheMap = new HashMap<>(100);
-    private static final Cache<String,Object> CACHE = Caffeine.newBuilder()
-            .initialCapacity(256).maximumSize(50000).expireAfterWrite(5, TimeUnit.SECONDS)
-//            .executor(executorService)
-            .softValues().build();
+//    private static final Cache<String,Object> CACHE = Caffeine.newBuilder()
+//            .initialCapacity(256).maximumSize(50000).expireAfterWrite(5, TimeUnit.SECONDS)
+////            .executor(executorService)
+//            .softValues().build();
 
     private static final LoadingCache<String, String> LOADING_CACHE = CacheBuilder.newBuilder().initialCapacity(1000)
             .expireAfterWrite(180, TimeUnit.SECONDS)
