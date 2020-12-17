@@ -485,8 +485,7 @@ public class RedisServiceImpl implements RedisService {
         // 加锁操作
         String key = "slidingWindowCounter";
         String uuid = UUID.randomUUID().toString();
-        String lua = "";
-        eval "redis.call('ZREMRANGEBYSCORE',KEYS[1],0,ARGV[1]) if redis.call('zcard',KEYS[1])<ARGV[2] then redis.call('zadd',KEYS[1],ARGV[3],ARGV[4]) then return 1 else return 0 end" 1 test 100 2 101 kkk
+        String lua = "redis.call('ZREMRANGEBYSCORE',KEYS[1],0,ARGV[1]) if redis.call('zcard',KEYS[1])<tonumber(ARGV[2]) then redis.call('zadd',KEYS[1],ARGV[3],ARGV[4]) return 1 else return 0 end";
         return BaseResponse.success();
     }
 
