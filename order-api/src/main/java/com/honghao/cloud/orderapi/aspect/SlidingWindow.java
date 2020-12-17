@@ -76,31 +76,16 @@ public class SlidingWindow {
 
         CyclicBarrier cyclicBarrier = new CyclicBarrier(10);
         for (int i = 0; i < 10; i++) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        cyclicBarrier.await();
-                    } catch (InterruptedException | BrokenBarrierException e) {
-                        e.printStackTrace();
-                    }
-                    boolean hot = window.addCount(2);
-                    System.out.println(hot);
+            new Thread(() -> {
+                try {
+                    cyclicBarrier.await();
+                } catch (InterruptedException | BrokenBarrierException e) {
+                    e.printStackTrace();
                 }
+                boolean hot = window.addCount(2);
+                System.out.println(hot);
             }).start();
         }
-
-//        for (int i = 0; i < 100; i++) {
-//            System.out.println(window.addCount(2));
-//
-//            window.print();
-//            System.out.println("--------------------------");
-//            try {
-//                Thread.sleep(102);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
 
     /**

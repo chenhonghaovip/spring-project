@@ -15,15 +15,25 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  */
 @Configuration
 public class RedisConfig {
+    /**
+     * 对比并且删除redis锁
+     */
+    public static final String UNLOCK = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+
+    /**
+     * 对比并且删除redis锁
+     */
+    public static final String UNLOCK1 = "redis.call('ZREMRANGEBYSCORE',KEYS[1],0,ARGV[1]) if  end";
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
-        redisTemplate.setValueSerializer(genericJackson2JsonRedisSerializer);
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(stringRedisSerializer);
+        redisTemplate.setKeySerializer(stringRedisSerializer);
+        redisTemplate.setHashKeySerializer(stringRedisSerializer);
         redisTemplate.setHashValueSerializer(genericJackson2JsonRedisSerializer);
         redisTemplate.afterPropertiesSet();
         return redisTemplate;

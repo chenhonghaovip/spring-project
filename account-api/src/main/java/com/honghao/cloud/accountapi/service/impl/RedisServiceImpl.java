@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.accountapi.common.dict.Dict;
 import com.honghao.cloud.accountapi.common.enums.ErrorCodeEnum;
+import com.honghao.cloud.accountapi.config.RedisConfig;
 import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
 import com.honghao.cloud.accountapi.domain.mapper.ShopInfoMapper;
 import com.honghao.cloud.accountapi.dto.request.LikePointVO;
@@ -19,6 +20,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -27,6 +29,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -204,9 +207,14 @@ public class RedisServiceImpl implements RedisService {
             }
             // 业务处理
         } finally {
+            // TODO: 2020/12/17  如果查询后确实相等，但是此时该key已经过期，别的线程已经成功加锁后，在删除时会出现误删除的情况.
+            //  所以这里必须通过执行lua语句或脚本来执行，在eval命令执行Lua代码的时候，Lua代码将被当成一个命令去执行，并且直到eval命令执行完成，Redis才会执行其他命令。
             if (clientId.equals(redisTemplate.opsForValue().get(userId))) {
                 redisTemplate.delete(userId);
             }
+            // 优化为如下代码，利用lua来确保查询和删除直减不会被插入其他redis操作
+            compareAndDel(RedisConfig.UNLOCK, 1, userId.getBytes(), clientId.getBytes());
+
         }
         return BaseResponse.success();
     }
@@ -434,22 +442,87 @@ public class RedisServiceImpl implements RedisService {
         return redisTemplate.getRequiredConnectionFactory().getConnection().info(param);
     }
 
+    /**
+     * 问题存在：当处于高并发环境下时，如果zCard()返回确实小于指定阈值，但是其他服务已经进行了add()操作
+     * 已经达到了指定阈值，但是本服务认为还未达到阈值，会继续进行add()操作，这会导致超过指定的阈值
+     * <p>
+     * 优化策略1：加锁操作，虽然可以确保不会超过阈值，但是会降低并发能力，根据具体的业务来选择即可
+     * 优化策略2：判断部分使用lua脚本来实现，保证原子性
+     *
+     * @param param param
+     * @return BaseResponse
+     */
     @Override
     public BaseResponse slidingWindowCounter(String param) {
-        ZSetOperations<String, Object> zSetOperations = redisTemplate.opsForZSet();
+        // 加锁操作
         String key = "slidingWindowCounter";
-        // 每次正式计数之前，先清除一次过期的数据,当前时间秒数 - 60 = 过期开始时间
-        long l = System.currentTimeMillis() / 1000;
-        zSetOperations.removeRangeByScore(key, 0, l - 60);
-        // 统计当前key中元素个数，即过期一分钟内的请求次数，如果达到阈值，返回请求失败，提示错误信息
-        Long aLong = zSetOperations.zCard(key);
-        if (Objects.nonNull(aLong) && aLong >= 2) {
+        String uuid = UUID.randomUUID().toString();
+        try {
+            Boolean aBoolean = redisTemplate.opsForValue().setIfAbsent(key, uuid, 2, TimeUnit.SECONDS);
+            if (Objects.nonNull(aBoolean) && aBoolean) {
+                ZSetOperations<String, Object> zSetOperations = redisTemplate.opsForZSet();
+
+                // 每次正式计数之前，先清除一次过期的数据,当前时间秒数 - 60 = 过期开始时间
+                long l = System.currentTimeMillis() / 1000;
+                zSetOperations.removeRangeByScore(key, 0, l - 60);
+                // 统计当前key中元素个数，即过期一分钟内的请求次数，如果达到阈值，返回请求失败，提示错误信息
+                Long aLong = zSetOperations.zCard(key);
+                if (Objects.nonNull(aLong) && aLong >= 2) {
+                    return BaseResponse.error("达到请求阈值阀门,请稍后重试");
+                }
+                // 说明此时未达到请求阈值阀门，可以继续接收请求进行业务逻辑处理
+                zSetOperations.add(key, param, l);
+                // 设置该key的过期时间为单位时间
+                redisTemplate.expire(key, 60, TimeUnit.SECONDS);
+            }
+        } finally {
+            compareAndDel(RedisConfig.UNLOCK, 1, key.getBytes(), uuid.getBytes());
+        }
+        return BaseResponse.success();
+    }
+
+    public BaseResponse slidingWindowCounter1(String param) {
+        // 加锁操作
+        String key = "slidingWindowCounter";
+        String uuid = UUID.randomUUID().toString();
+        String lua = "";
+        eval "redis.call('ZREMRANGEBYSCORE',KEYS[1],0,ARGV[1]) if redis.call('zcard',KEYS[1])<ARGV[2] then redis.call('zadd',KEYS[1],ARGV[3],ARGV[4]) then return 1 else return 0 end" 1 test 100 2 101 kkk
+        return BaseResponse.success();
+    }
+
+    @Override
+    public BaseResponse tokenBucket(String param) {
+        String key = "tokenBucket";
+        Object o = redisTemplate.opsForList().leftPop(key);
+        if (Objects.isNull(o)) {
             return BaseResponse.error("达到请求阈值阀门,请稍后重试");
         }
-        // 说明此时未达到请求阈值阀门，可以继续接收请求进行业务逻辑处理
-        zSetOperations.add(key, param, l);
-        // 设置该key的过期时间为单位时间
-        redisTemplate.expire(key, 60, TimeUnit.SECONDS);
+        System.out.println("消费的当前token值为：" + o);
+        return BaseResponse.success();
+    }
+
+    @Override
+    public BaseResponse leakyBucket(String key) {
+        String clientId = UUID.randomUUID().toString();
+        try {
+            redisTemplate.opsForValue().setIfAbsent(key, clientId, 1000, TimeUnit.SECONDS);
+            Object o = redisTemplate.opsForValue().get(key);
+            System.out.println((String) o);
+            // 业务处理
+        } finally {
+            redisTemplate.execute((RedisCallback<Integer>) redisConnection -> {
+                redisConnection.eval(RedisConfig.UNLOCK.getBytes(), ReturnType.VALUE, 1, key.getBytes(), clientId.getBytes());
+                return null;
+            });
+        }
+
+
+//        String key = "leakyBucket";
+//        Object o = redisTemplate.opsForList().rightPush(key,UUID.randomUUID());
+//        if (Objects.isNull(o)) {
+//            return BaseResponse.error("达到请求阈值阀门,请稍后重试");
+//        }
+//        System.out.println("消费的当前token值为：" + o);
         return BaseResponse.success();
     }
 
@@ -483,5 +556,21 @@ public class RedisServiceImpl implements RedisService {
             list.add(Dict.WEIBO + (time - i));
         }
         redisTemplate.opsForZSet().unionAndStore(Dict.WEIBO + time, list, Dict.WEIBO_MONTH);
+    }
+
+
+    /**
+     * 使用lua脚本执行任务
+     *
+     * @param lua   lua脚本
+     * @param size  key个数
+     * @param bytes key,args的byte[]
+     */
+    private void compareAndDel(String lua, int size, byte[]... bytes) {
+        redisTemplate.execute((RedisCallback<Integer>) redisConnection -> {
+            byte[] result = redisConnection.eval(lua.getBytes(), ReturnType.VALUE, size, bytes);
+            log.info(new String(result, StandardCharsets.UTF_8));
+            return null;
+        });
     }
 }

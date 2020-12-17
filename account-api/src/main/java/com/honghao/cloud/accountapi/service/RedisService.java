@@ -166,10 +166,26 @@ public interface RedisService {
     Properties info(String param);
 
     /**
-     * 获取redis监控信息
+     * redis滑动窗口计数器限流
      *
      * @param param param
      * @return Properties
      */
     BaseResponse slidingWindowCounter(String param);
+
+    /**
+     * redis令牌桶限流
+     *
+     * @param param param
+     * @return Properties
+     */
+    BaseResponse tokenBucket(String param);
+
+    /**
+     * redis漏桶限流
+     *
+     * @param param param
+     * @return Properties
+     */
+    BaseResponse leakyBucket(String param);
 }

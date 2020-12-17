@@ -290,12 +290,32 @@ public class RedisController {
     }
 
     /**
-     * redis滑动窗口计数器
+     * redis滑动窗口计数器限流
      *
      * @return BaseResponse
      */
     @GetMapping("/slidingWindowCounter")
     public BaseResponse slidingWindowCounter(String value) {
         return redisService.slidingWindowCounter(value);
+    }
+
+    /**
+     * redis令牌桶限流
+     *
+     * @return BaseResponse
+     */
+    @GetMapping("/tokenBucket")
+    public BaseResponse tokenBucket(String value) {
+        return redisService.tokenBucket(value);
+    }
+
+    /**
+     * redis漏桶限流
+     *
+     * @return BaseResponse
+     */
+    @GetMapping("/leakyBucket")
+    public BaseResponse leakyBucket(String value) {
+        return redisService.leakyBucket(value);
     }
 }
