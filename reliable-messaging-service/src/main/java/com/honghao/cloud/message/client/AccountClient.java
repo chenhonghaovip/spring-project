@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author chenhonghao
  * @date 2019-07-31 13:19
  */
-@FeignClient(name = AccountClient.SERVICE_ID,fallbackFactory = AccountFallbackFactory.class)
+@FeignClient(name = AccountClient.SERVICE_ID, fallbackFactory = AccountFallbackFactory.class)
 public interface AccountClient {
-    String SERVICE_ID="account-api";
+    String SERVICE_ID = "account-api";
 
     /**
      * 修改消息状态
+     *
      * @param msgInfoDTO msgInfoDTO
      * @return BaseResponse
      */

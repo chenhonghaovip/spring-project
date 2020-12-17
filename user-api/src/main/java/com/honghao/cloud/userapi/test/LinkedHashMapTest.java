@@ -11,13 +11,10 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author chenhonghao
  * @date 2020-04-08 09:43
  */
-public class LinkedHashMapTest<K,V> extends LinkedHashMap<K,V> {
+public class LinkedHashMapTest<K, V> extends LinkedHashMap<K, V> {
     private static final long serialVersionUID = 1L;
-
-    private final int maxCapacity;
-
     private static final float DEFAULT_LOAD_FACTOR = 0.75f;
-
+    private final int maxCapacity;
     private final Lock lock = new ReentrantLock();
 
     public LinkedHashMapTest(int maxCapacity) {

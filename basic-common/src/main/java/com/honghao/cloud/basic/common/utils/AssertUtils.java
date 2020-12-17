@@ -8,8 +8,8 @@ import org.springframework.util.Assert;
  * @date 2020-06-24 15:29
  */
 public class AssertUtils {
-    public static void notNullAndIsTrue(BaseResponse baseResponse){
-        Assert.notNull(baseResponse,"结果不能为空");
-        Assert.isTrue(baseResponse.isResult(),baseResponse.getRemark());
+    public static void notNullAndIsTrue(BaseResponse baseResponse) {
+        Assert.notNull(baseResponse, "结果不能为空");
+        Assert.isTrue(baseResponse.isResult(), baseResponse.getRemark());
     }
 }

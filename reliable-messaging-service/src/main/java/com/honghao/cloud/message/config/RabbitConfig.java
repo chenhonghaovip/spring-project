@@ -24,7 +24,7 @@ public class RabbitConfig {
     public static final String TEST = "test";
 
     @Bean
-    public Queue test(){
+    public Queue test() {
         return new Queue(TEST);
     }
 

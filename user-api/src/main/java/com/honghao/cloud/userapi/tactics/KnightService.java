@@ -13,8 +13,9 @@ public interface KnightService {
 
     /**
      * 到店操作
+     *
      * @param data data
      * @return Result
      */
-    BaseResponse receiveShop(String data) ;
+    BaseResponse receiveShop(String data);
 }

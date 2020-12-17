@@ -58,18 +58,19 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/elasticsearchController")
-@Api(tags = "搜索引擎控制中心",value = "搜索引擎控制中心")
+@Api(tags = "搜索引擎控制中心", value = "搜索引擎控制中心")
 public class ElasticsearchController {
     @Resource
     private RestHighLevelClient restHighLevelClient;
 
     /**
      * 创建索引
+     *
      * @return BaseResponse
      */
     @PostMapping("/createIndex")
-    @ApiOperation(value = "创建索引" ,notes = "创建索引")
-    public BaseResponse create(@RequestParam("index") String index){
+    @ApiOperation(value = "创建索引", notes = "创建索引")
+    public BaseResponse create(@RequestParam("index") String index) {
         CreateIndexRequest createIndexRequest = new CreateIndexRequest(index);
         createIndexRequest.alias(new Alias("honghao"));
         CreateIndexResponse createIndexResponse = null;
@@ -83,11 +84,12 @@ public class ElasticsearchController {
 
     /**
      * 通过别名获取索引,判断索引是否存在
+     *
      * @return BaseResponse
      */
     @GetMapping("/getAliasIndex")
-    @ApiOperation(value = "通过别名获取索引,判断索引是否存在" ,notes = "通过别名获取索引,判断索引是否存在")
-    public BaseResponse getAliasIndex(@RequestParam("alias") String alias){
+    @ApiOperation(value = "通过别名获取索引,判断索引是否存在", notes = "通过别名获取索引,判断索引是否存在")
+    public BaseResponse getAliasIndex(@RequestParam("alias") String alias) {
         GetIndexRequest getIndexRequest = new GetIndexRequest(alias);
 
         try {
@@ -100,11 +102,12 @@ public class ElasticsearchController {
 
     /**
      * 获取索引,判断索引是否存在
+     *
      * @return BaseResponse
      */
     @GetMapping("/getIndex")
-    @ApiOperation(value = "获取索引,判断索引是否存在" ,notes = "获取索引,判断索引是否存在")
-    public BaseResponse getIndex(@RequestParam("index") String index){
+    @ApiOperation(value = "获取索引,判断索引是否存在", notes = "获取索引,判断索引是否存在")
+    public BaseResponse getIndex(@RequestParam("index") String index) {
         GetIndexRequest getIndexRequest = new GetIndexRequest(index);
 
         try {
@@ -117,11 +120,12 @@ public class ElasticsearchController {
 
     /**
      * 删除索引
+     *
      * @return BaseResponse
      */
     @DeleteMapping("/deleteIndex")
-    @ApiOperation(value = "删除索引" ,notes = "删除索引")
-    public BaseResponse deleteIndex(@RequestParam("index") String index){
+    @ApiOperation(value = "删除索引", notes = "删除索引")
+    public BaseResponse deleteIndex(@RequestParam("index") String index) {
         DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(index);
         try {
             AcknowledgedResponse delete = restHighLevelClient.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
@@ -133,11 +137,12 @@ public class ElasticsearchController {
 
     /**
      * 创建文档
+     *
      * @return BaseResponse
      */
     @PostMapping("/createDocument")
-    @ApiOperation(value = "创建文档" ,notes = "创建文档")
-    public BaseResponse createDocument(@RequestBody ShopInfo shopInfo){
+    @ApiOperation(value = "创建文档", notes = "创建文档")
+    public BaseResponse createDocument(@RequestBody ShopInfo shopInfo) {
         // 创建请求
         IndexRequest indexRequest = new IndexRequest("222");
         indexRequest.id("2");
@@ -156,12 +161,13 @@ public class ElasticsearchController {
 
     /**
      * 获取文档
+     *
      * @return BaseResponse
      */
     @GetMapping("/getDocument")
-    @ApiOperation(value = "获取文档" ,notes = "获取文档")
-    public BaseResponse getDocument(@RequestParam("index") String index,@RequestParam("id") String id){
-        GetRequest getRequest = new GetRequest(index,id);
+    @ApiOperation(value = "获取文档", notes = "获取文档")
+    public BaseResponse getDocument(@RequestParam("index") String index, @RequestParam("id") String id) {
+        GetRequest getRequest = new GetRequest(index, id);
         try {
             GetResponse documentFields = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
             return BaseResponse.successData(documentFields);
@@ -172,13 +178,14 @@ public class ElasticsearchController {
 
     /**
      * 更新文档
+     *
      * @return BaseResponse
      */
     @PostMapping("/updateDocument")
-    @ApiOperation(value = "更新文档" ,notes = "更新文档")
-    public BaseResponse updateDocument(@RequestBody ShopInfo shopInfo){
-        UpdateRequest updateRequest = new UpdateRequest("test","1");
-        updateRequest.doc(JSON.toJSONString(shopInfo),XContentType.JSON);
+    @ApiOperation(value = "更新文档", notes = "更新文档")
+    public BaseResponse updateDocument(@RequestBody ShopInfo shopInfo) {
+        UpdateRequest updateRequest = new UpdateRequest("test", "1");
+        updateRequest.doc(JSON.toJSONString(shopInfo), XContentType.JSON);
         try {
             UpdateResponse update = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
             return BaseResponse.successData(update);
@@ -189,12 +196,13 @@ public class ElasticsearchController {
 
     /**
      * 删除文档
+     *
      * @return BaseResponse
      */
     @DeleteMapping("/deleteDocument")
-    @ApiOperation(value = "删除文档" ,notes = "删除文档")
-    public BaseResponse deleteDocument(@RequestParam("index") String index,@RequestParam("id") String id){
-        DeleteRequest deleteRequest = new DeleteRequest(index,id);
+    @ApiOperation(value = "删除文档", notes = "删除文档")
+    public BaseResponse deleteDocument(@RequestParam("index") String index, @RequestParam("id") String id) {
+        DeleteRequest deleteRequest = new DeleteRequest(index, id);
         try {
             DeleteResponse delete = restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);
             return BaseResponse.successData(delete);
@@ -208,19 +216,20 @@ public class ElasticsearchController {
      * 批量插入文档(更新和删除类似，只要修改对应的请求类型就可以)
      * update UpdateRequest
      * delete DeleteRequest
+     *
      * @return BaseResponse
      */
     @PostMapping("/batchInsertDocument")
-    @ApiOperation(value = "批量插入文档" ,notes = "批量插入文档")
-    public BaseResponse batchInsertDocument(){
+    @ApiOperation(value = "批量插入文档", notes = "批量插入文档")
+    public BaseResponse batchInsertDocument() {
         int k = 1;
         BulkRequest bulkRequest = new BulkRequest();
         bulkRequest.timeout("10s");
         List<ShopInfo> objects = new ArrayList<>();
-        objects.add(ShopInfo.builder().shopName("1").shopId("1"+k).build());
-        objects.add(ShopInfo.builder().shopName("2").shopId("2"+k).build());
-        objects.add(ShopInfo.builder().shopName("3").shopId("3"+k).build());
-        objects.add(ShopInfo.builder().shopName("4").shopId("4"+k).build());
+        objects.add(ShopInfo.builder().shopName("1").shopId("1" + k).build());
+        objects.add(ShopInfo.builder().shopName("2").shopId("2" + k).build());
+        objects.add(ShopInfo.builder().shopName("3").shopId("3" + k).build());
+        objects.add(ShopInfo.builder().shopName("4").shopId("4" + k).build());
 
         for (ShopInfo object : objects) {
             bulkRequest.add(new IndexRequest("test").source(JSON.toJSONString(object), XContentType.JSON));
@@ -239,34 +248,34 @@ public class ElasticsearchController {
      * 复杂查询模式
      * SearchRequest 搜索请求
      * SearchSourceBuilder 搜索条件
+     *
      * @return BaseResponse
      */
     @GetMapping("/search")
-    @ApiOperation(value = "复杂查询模式" ,notes = "复杂查询模式")
-    public BaseResponse search(@RequestParam("index") String index){
+    @ApiOperation(value = "复杂查询模式", notes = "复杂查询模式")
+    public BaseResponse search(@RequestParam("index") String index) {
         // 查询全部
         MatchAllQueryBuilder matchAllQueryBuilder = QueryBuilders.matchAllQuery();
         System.out.println(matchAllQueryBuilder);
 
         // 精确匹配
-        TermQueryBuilder termQuery = QueryBuilders.termQuery("shopName",  "string");
+        TermQueryBuilder termQuery = QueryBuilders.termQuery("shopName", "string");
 
-        return commonSearch(index,new BoolQueryBuilder().filter(termQuery));
+        return commonSearch(index, new BoolQueryBuilder().filter(termQuery));
     }
 
     /**
-     *
      * @return BaseResponse
      */
     @PostMapping("/init")
-    @ApiOperation(value = "批次插入文档" ,notes = "批次插入文档")
-    public BaseResponse init(){
+    @ApiOperation(value = "批次插入文档", notes = "批次插入文档")
+    public BaseResponse init() {
         String index = "order_info";
         String s = HttpUtil.doPost("http://127.0.0.1:8102/client/deliveryController/getInfo", 10);
         List<WaybillBcList> lists = JSONArray.parseArray(s, WaybillBcList.class);
         BulkRequest bulkRequest = new BulkRequest();
 
-        lists.forEach(each->bulkRequest.add(new IndexRequest(index).id(each.getWId()).source(JSON.toJSONString(each),XContentType.JSON)));
+        lists.forEach(each -> bulkRequest.add(new IndexRequest(index).id(each.getWId()).source(JSON.toJSONString(each), XContentType.JSON)));
 
         try {
             BulkResponse bulk = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
@@ -278,21 +287,22 @@ public class ElasticsearchController {
     }
 
     @GetMapping("/queryOrder")
-    public BaseResponse orderInfo(){
+    public BaseResponse orderInfo() {
         String index = "create_order";
         BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-        boolQueryBuilder.filter(QueryBuilders.termQuery("receiveAdcode",  "340202"))
-                .filter(QueryBuilders.termQuery("wId","2020052500000408"));
-        return commonSearch(index,boolQueryBuilder);
+        boolQueryBuilder.filter(QueryBuilders.termQuery("receiveAdcode", "340202"))
+                .filter(QueryBuilders.termQuery("wId", "2020052500000408"));
+        return commonSearch(index, boolQueryBuilder);
     }
 
     /**
      * 公共服务部分
-     * @param index 查询索引
+     *
+     * @param index            查询索引
      * @param boolQueryBuilder 查询条件
      * @return BaseResponse
      */
-    private BaseResponse commonSearch(String index , BoolQueryBuilder boolQueryBuilder){
+    private BaseResponse commonSearch(String index, BoolQueryBuilder boolQueryBuilder) {
         // 构建搜索请求
         SearchRequest searchRequest = new SearchRequest(index);
         // 构建搜索条件

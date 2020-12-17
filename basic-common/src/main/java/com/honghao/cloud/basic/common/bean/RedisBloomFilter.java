@@ -12,17 +12,17 @@ import org.springframework.data.redis.core.RedisTemplate;
  */
 public class RedisBloomFilter {
 
-    private RedisTemplate<String,Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
+
+    public RedisBloomFilter(RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     public RedisTemplate<String, Object> getRedisTemplate() {
         return redisTemplate;
     }
 
     public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
-
-    public RedisBloomFilter(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

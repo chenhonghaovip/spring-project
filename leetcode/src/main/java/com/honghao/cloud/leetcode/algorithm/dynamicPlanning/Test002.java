@@ -10,17 +10,7 @@ public class Test002 {
     public static void main(String[] args) {
         String haystack = "hello", needle = "abcdabd";
         Test002 test002 = new Test002();
-        test002.strStr(haystack,needle);
-    }
-    public int strStr(String haystack, String needle) {
-        char[] t = haystack.toCharArray();
-        char[] p = needle.toCharArray();
-        //主串的位置
-        int i = 0;
-        //模式串的位置
-        int j = 0;
-        int[] next = getNext(needle);
-        return 0;
+        test002.strStr(haystack, needle);
     }
 
     public static int[] getNext(String ps) {
@@ -37,5 +27,16 @@ public class Test002 {
             }
         }
         return next;
+    }
+
+    public int strStr(String haystack, String needle) {
+        char[] t = haystack.toCharArray();
+        char[] p = needle.toCharArray();
+        //主串的位置
+        int i = 0;
+        //模式串的位置
+        int j = 0;
+        int[] next = getNext(needle);
+        return 0;
     }
 }

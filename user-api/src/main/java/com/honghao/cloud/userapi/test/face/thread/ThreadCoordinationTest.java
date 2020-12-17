@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 通过使用wait和notify实现线程协同
+ *
  * @author chenhonghao
  * @date 2020-05-22 09:15
  */
@@ -18,58 +19,59 @@ public class ThreadCoordinationTest {
         ThreadCoordinationTest threadCoordinationTest = new ThreadCoordinationTest();
         threadCoordinationTest.test();
     }
+
     public void test() {
 
         ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(3, 3, "test");
 
-        threadPoolExecutor.submit(()-> {
-            while (true){
-                synchronized (object){
-                    while (atomicInteger.get()%3!=0){
+        threadPoolExecutor.submit(() -> {
+            while (true) {
+                synchronized (object) {
+                    while (atomicInteger.get() % 3 != 0) {
                         try {
                             object.wait();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-                    if (atomicInteger.get()<=99){
-                        System.out.println(Thread.currentThread().getName()+"=="+atomicInteger.getAndIncrement());
+                    if (atomicInteger.get() <= 99) {
+                        System.out.println(Thread.currentThread().getName() + "==" + atomicInteger.getAndIncrement());
                         object.notifyAll();
                     }
                 }
             }
         });
 
-        threadPoolExecutor.submit(()-> {
-            while (true){
-                synchronized (object){
-                    while (atomicInteger.get()%3!=1){
+        threadPoolExecutor.submit(() -> {
+            while (true) {
+                synchronized (object) {
+                    while (atomicInteger.get() % 3 != 1) {
                         try {
                             object.wait();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-                    if (atomicInteger.get()<=99){
-                        System.out.println(Thread.currentThread().getName()+"=="+atomicInteger.getAndIncrement());
+                    if (atomicInteger.get() <= 99) {
+                        System.out.println(Thread.currentThread().getName() + "==" + atomicInteger.getAndIncrement());
                         object.notifyAll();
                     }
                 }
             }
         });
 
-        threadPoolExecutor.submit(()-> {
-            while (true){
-                synchronized (object){
-                    while (atomicInteger.get()%3!=2){
+        threadPoolExecutor.submit(() -> {
+            while (true) {
+                synchronized (object) {
+                    while (atomicInteger.get() % 3 != 2) {
                         try {
                             object.wait();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-                    if (atomicInteger.get()<=99){
-                        System.out.println(Thread.currentThread().getName()+"=="+atomicInteger.getAndIncrement());
+                    if (atomicInteger.get() <= 99) {
+                        System.out.println(Thread.currentThread().getName() + "==" + atomicInteger.getAndIncrement());
                         object.notifyAll();
                     }
                 }

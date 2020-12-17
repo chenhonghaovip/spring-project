@@ -32,19 +32,18 @@ public class WaybillBcListFacadeImpl implements WaybillBcListFacade {
     private ApplicationEventPublisher applicationEventPublisher;
 
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public BaseResponse dateSource() {
-        EventDTO eventDTO= EventDTO.builder().code(1)
+        EventDTO eventDTO = EventDTO.builder().code(1)
                 .desc("chenhonghao").build();
-        EventDemo eventListener=new EventDemo(this,eventDTO);
+        EventDemo eventListener = new EventDemo(this, eventDTO);
         applicationEventPublisher.publishEvent(eventListener);
 
         WaybillBcList waybillBcList = WaybillBcList.builder().wId("2017111800000018").deleteFlag(1).build();
         waybillBcListService.updateInfos(waybillBcList);
 
-        CloudDeliveryMan cloudDeliveryMan =CloudDeliveryMan.builder().deliveryManId("3704784038811670").deleteFlag(1).build();
+        CloudDeliveryMan cloudDeliveryMan = CloudDeliveryMan.builder().deliveryManId("3704784038811670").deleteFlag(1).build();
         cloudOrderService.updateInfos(cloudDeliveryMan);
         return BaseResponse.success();
     }

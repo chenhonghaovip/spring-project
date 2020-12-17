@@ -9,6 +9,7 @@ package com.honghao.cloud.basic.common.context;
 public interface UploadSpi {
     /**
      * 上传接口
+     *
      * @param url url
      */
     void upload(String url);

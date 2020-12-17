@@ -14,14 +14,14 @@ import java.util.Stack;
  */
 public class ValidParenthesisTest {
     @Test
-    public void test(){
+    public void test() {
         String nums = "{[]}";
 
         System.out.println(isValid(nums));
     }
 
     public boolean isValid(String s) {
-        Map<String,String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         map.put(")", "(");
         map.put("}", "{");
         map.put("]", "[");
@@ -33,14 +33,14 @@ public class ValidParenthesisTest {
 
         for (char aChar : chars) {
             String value = String.valueOf(aChar);
-            if (map.containsValue(value)){
+            if (map.containsValue(value)) {
                 stack.push(value);
-            }else {
+            } else {
                 if (stack.isEmpty()) {
                     return false;
                 }
                 String pop = stack.pop();
-                if (!map.get(value).equals(pop)){
+                if (!map.get(value).equals(pop)) {
                     return false;
                 }
             }

@@ -20,7 +20,7 @@ package com.honghao.cloud.basic.common.dto;
  * @since 0.7.0
  */
 public class ProtocolConstants {
-    
+
     /**
      * Message type: insert
      */

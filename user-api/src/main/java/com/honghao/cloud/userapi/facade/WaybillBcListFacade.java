@@ -12,6 +12,7 @@ import com.honghao.cloud.basic.common.base.BaseResponse;
 public interface WaybillBcListFacade {
     /**
      * 多数据源测试
+     *
      * @return BaseResponse
      */
     BaseResponse dateSource();

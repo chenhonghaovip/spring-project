@@ -28,7 +28,7 @@ public class ReceiveDTO implements Serializable {
     /**
      * 骑士手机
      */
-    private  String kappPhone;
+    private String kappPhone;
 
     /**
      * 运单号

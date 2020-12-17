@@ -28,7 +28,7 @@ public class MyRejectedExecutionHandler implements RejectedExecutionHandler {
             executor.execute(r);
         }
 
-        System.out.println("my info is :"+"Task " + r.toString() +
+        System.out.println("my info is :" + "Task " + r.toString() +
                 " rejected from " +
                 executor.toString());
 //            executor.getQueue().take()

@@ -18,6 +18,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
     /**
      * 发现如果继承了WebMvcConfigurationSupport，则在yml中配置的相关内容会失效。
      * 需要重新指定静态资源
+     *
      * @param registry 注冊中心
      */
     @Override
@@ -28,8 +29,10 @@ public class WebConfig extends WebMvcConfigurationSupport {
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
         super.addResourceHandlers(registry);
     }
+
     /**
      * 添加拦截器信息
+     *
      * @param registry register
      */
     @Override
@@ -42,10 +45,11 @@ public class WebConfig extends WebMvcConfigurationSupport {
 
     /**
      * 注入bean,交由容器进行管理
+     *
      * @return UserInterceptor对象
      */
     @Bean
-    public UserInterceptor userInterceptor(){
+    public UserInterceptor userInterceptor() {
         return new UserInterceptor();
     }
 }

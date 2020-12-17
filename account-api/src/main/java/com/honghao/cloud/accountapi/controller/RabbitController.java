@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 @Slf4j
 @RestController
 @RequestMapping("/rabbitMqController")
-@Api(value = "Rabbit测试使用" ,tags = "Rabbit测试使用")
+@Api(value = "Rabbit测试使用", tags = "Rabbit测试使用")
 public class RabbitController {
     @Resource
     private RabbitService rabbitService;
@@ -30,23 +30,25 @@ public class RabbitController {
 
     /**
      * 可靠消息服务api
+     *
      * @param shopInfo shopInfo
      * @return BaseResponse
      */
     @PostMapping("/business")
-    @ApiOperation(value = "可靠消息服务",notes = "可靠消息服务")
-    public BaseResponse business(@RequestBody ShopInfo shopInfo){
+    @ApiOperation(value = "可靠消息服务", notes = "可靠消息服务")
+    public BaseResponse business(@RequestBody ShopInfo shopInfo) {
         return rabbitTemplateService.sendMessage(shopInfo, "test", () -> rabbitService.saveShop(shopInfo));
     }
 
     /**
      * 可靠消息服务query
+     *
      * @param data data
      * @return BaseResponse
      */
     @PostMapping("/query")
-    @ApiOperation(value = "可靠消息服务查询",notes = "可靠消息服务查询")
-    public BaseResponse query(@RequestBody String data){
+    @ApiOperation(value = "可靠消息服务查询", notes = "可靠消息服务查询")
+    public BaseResponse query(@RequestBody String data) {
         return BaseResponse.successData(data);
     }
 }

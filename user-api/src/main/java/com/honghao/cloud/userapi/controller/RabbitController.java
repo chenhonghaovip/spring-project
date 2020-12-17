@@ -16,18 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/rabbitMqController")
-@Api(value = "Rabbit测试使用" ,tags = "Rabbit测试使用")
+@Api(value = "Rabbit测试使用", tags = "Rabbit测试使用")
 public class RabbitController {
 
 
     /**
      * 可靠消息服务query
+     *
      * @param data data
      * @return BaseResponse
      */
     @PostMapping("/query")
-    @ApiOperation(value = "可靠消息服务查询",notes = "可靠消息服务查询")
-    public BaseResponse query(@RequestBody String data){
+    @ApiOperation(value = "可靠消息服务查询", notes = "可靠消息服务查询")
+    public BaseResponse query(@RequestBody String data) {
         return BaseResponse.successData(data);
     }
 }

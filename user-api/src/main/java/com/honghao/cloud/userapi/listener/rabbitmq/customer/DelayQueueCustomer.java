@@ -20,16 +20,16 @@ import org.springframework.stereotype.Component;
 public class DelayQueueCustomer {
     /**
      * 延迟消费队列信息
+     *
      * @param jsonObject json字符串
      */
     @RabbitHandler
     public void process(JSONObject jsonObject) {
         try {
             log.info("延迟队列开始执行,RequestBody:{}", JSON.toJSONString(jsonObject));
-            log.info(">>>>>>>>>>>>>{}",jsonObject.getString("value"));
+            log.info(">>>>>>>>>>>>>{}", jsonObject.getString("value"));
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

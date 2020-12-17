@@ -23,20 +23,26 @@ import java.util.concurrent.locks.ReentrantLock;
 @RestController
 @RequestMapping("/keyController")
 public class KeyController {
+    private static final int SECOND_CAPACITY = 10000;
     private static int thirdValue = 0;
     private static long secondValue = 0L;
-    private static final int SECOND_CAPACITY = 10000;
     private static LocalDate today = LocalDate.now();
     private static ReentrantLock reentrantLock = new ReentrantLock();
     private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
     private static String firstValue = today.format(dateTimeFormatter);
-    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(1000,10000,"usfas");
+    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(1000, 10000, "usfas");
 
     @Resource
-    private RedisTemplate<String,Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
+
+    public static void main(String[] args) {
+        int sec = 12345;
+        System.out.println(String.format("%04d", sec));
+    }
 
     /**
      * 封装keyId,8位日期，4位redis生成，4位各自服务填充
+     *
      * @return BaseResponse
      */
     @GetMapping("/primaryKeyGeneration")
@@ -45,7 +51,7 @@ public class KeyController {
         reentrantLock.lock();
         try {
             // 换日之后，重新计数，第一部分改为当前日期，第二部分从0001开始，第三部分各自服务从0000到9999
-            if (!now.isEqual(today)){
+            if (!now.isEqual(today)) {
                 redisTemplate.delete(firstValue);
                 today = now;
                 firstValue = now.format(dateTimeFormatter);
@@ -53,12 +59,12 @@ public class KeyController {
                 thirdValue = -1;
             }
             // 本地生成的第三部分达到9999条之后，第二部分重新生成
-            if (++thirdValue>= SECOND_CAPACITY || secondValue == 0L){
+            if (++thirdValue >= SECOND_CAPACITY || secondValue == 0L) {
                 secondValue = redisTemplate.opsForValue().increment(firstValue);
                 thirdValue = 0;
             }
 
-            String key = firstValue + String.format("%04d", secondValue)+String.format("%04d", thirdValue);
+            String key = firstValue + String.format("%04d", secondValue) + String.format("%04d", thirdValue);
             return BaseResponse.successData(key);
         } finally {
             reentrantLock.unlock();
@@ -67,6 +73,7 @@ public class KeyController {
 
     /**
      * 封装keyId,8位日期，4位redis生成，4位各自服务填充
+     *
      * @return BaseResponse
      */
     @GetMapping("/test")
@@ -76,7 +83,7 @@ public class KeyController {
         Set<String> set = new HashSet<>();
         long l = System.currentTimeMillis();
         for (int i = 0; i < 100000; i++) {
-            threadPoolExecutor.execute(()-> {
+            threadPoolExecutor.execute(() -> {
                 countDownLatch.countDown();
                 BaseResponse<String> response = primaryKeyGeneration();
                 set.add(response.getData());
@@ -89,12 +96,7 @@ public class KeyController {
             e.printStackTrace();
         }
         System.out.println(set.size());
-        System.out.println("历时："+(System.currentTimeMillis()-l));
+        System.out.println("历时：" + (System.currentTimeMillis() - l));
         return BaseResponse.success();
-    }
-
-    public static void main(String[] args) {
-        int sec = 12345;
-        System.out.println(String.format("%04d", sec));
     }
 }

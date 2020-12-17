@@ -52,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderMapper.selectByPrimaryKey(wId);
         BaseAssert.notNull(order, ErrorCodeEnum.PARAM_ERROR);
         System.out.println(JSON.toJSONString(order));
-        if (Objects.equals(order.getOrderStatus(),1) && orderMapper.update(wId,order.getVersion())==0){
+        if (Objects.equals(order.getOrderStatus(), 1) && orderMapper.update(wId, order.getVersion()) == 0) {
             throw new RetryException("乐观锁更新失败");
         }
         return BaseResponse.success();

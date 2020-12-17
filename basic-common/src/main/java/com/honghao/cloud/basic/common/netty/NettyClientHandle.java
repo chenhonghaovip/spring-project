@@ -24,6 +24,7 @@ import java.util.Objects;
 public class NettyClientHandle extends SimpleChannelInboundHandler<ByteBuf> {
     /**
      * 超时检测
+     *
      * @param ctx ctx
      * @param evt evt
      * @throws Exception Exception
@@ -45,22 +46,23 @@ public class NettyClientHandle extends SimpleChannelInboundHandler<ByteBuf> {
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, ByteBuf s) {
         String s1 = s.toString(CharsetUtil.UTF_8);
-        System.out.println("接收到消息为"+s1);
+        System.out.println("接收到消息为" + s1);
         RpcMessage rpcMessage = JSON.parseObject(s1, RpcMessage.class);
 
         MessageFuture messageFuture;
-        if (Objects.nonNull(messageFuture = NettyUtils.MAP.remove(rpcMessage.getId()))){
+        if (Objects.nonNull(messageFuture = NettyUtils.MAP.remove(rpcMessage.getId()))) {
             messageFuture.setResultMessage(rpcMessage);
         }
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        NettyUtils.releaseChannel(ctx.channel(),NettyUtils.toStringAddress(ctx.channel().remoteAddress()));
+        NettyUtils.releaseChannel(ctx.channel(), NettyUtils.toStringAddress(ctx.channel().remoteAddress()));
     }
 
     /**
      * 检测连接活动情况，只会在通道建立时调用一次
+     *
      * @param ctx ctx
      */
     @Override
@@ -70,11 +72,12 @@ public class NettyClientHandle extends SimpleChannelInboundHandler<ByteBuf> {
 
     /**
      * 检测连接非活动情况，只会在通道失效时调用一次（服务端失败时）
+     *
      * @param ctx ctx
      */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         System.out.println("和服务器端连接掉线");
-        NettyUtils.releaseChannel(ctx.channel(),NettyUtils.toStringAddress(ctx.channel().remoteAddress()));
+        NettyUtils.releaseChannel(ctx.channel(), NettyUtils.toStringAddress(ctx.channel().remoteAddress()));
     }
 }

@@ -16,12 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author chenhonghao
  * @date 2019-07-31 13:19
  */
-@FeignClient(name = MessageClient.SERVICE_ID,fallbackFactory = MessageFallbackFactory.class)
+@FeignClient(name = MessageClient.SERVICE_ID, fallbackFactory = MessageFallbackFactory.class)
 public interface MessageClient {
-    String SERVICE_ID="ReliableMessagingService";
+    String SERVICE_ID = "ReliableMessagingService";
 
     /**
      * 存入消息表
+     *
      * @param msgInfoDTO msgInfoDTO
      * @return BaseResponse
      */
@@ -30,6 +31,7 @@ public interface MessageClient {
 
     /**
      * 修改消息状态
+     *
      * @param msgInfoDTO msgInfoDTO
      * @return BaseResponse
      */
@@ -38,6 +40,7 @@ public interface MessageClient {
 
     /**
      * 修改消息状态
+     *
      * @param msgInfoDTO msgInfoDTO
      * @return BaseResponse
      */
@@ -46,6 +49,7 @@ public interface MessageClient {
 
     /**
      * 消息处理完成
+     *
      * @param msgInfoDTO msgInfoDTO
      * @return BaseResponse
      */

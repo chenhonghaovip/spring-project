@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class EventDemoListener1{
+public class EventDemoListener1 {
 
     @Async("asyncPool")
     @EventListener(classes = EventDemo.class)
     public void onApplicationEvent(EventDemo eventDemo) {
         log.info(JSON.toJSONString(eventDemo));
-        log.info("事件监听1:{}",eventDemo);
+        log.info("事件监听1:{}", eventDemo);
     }
 }

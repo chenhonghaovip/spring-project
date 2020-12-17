@@ -24,7 +24,7 @@ public class RabbitTemplateService {
     @Resource
     private MessageClient messageClient;
 
-    public BaseResponse sendMessage(MsgInfoDTO msgInfoDTO,RabbitLoad rabbitLoad){
+    public BaseResponse sendMessage(MsgInfoDTO msgInfoDTO, RabbitLoad rabbitLoad) {
 
         BaseResponse baseResponse = BaseResponse.error();
         try {
@@ -35,7 +35,7 @@ public class RabbitTemplateService {
         }
 
         Object data;
-        if (baseResponse.isResult()){
+        if (baseResponse.isResult()) {
             try {
                 data = baseResponse.getData();
                 baseResponse = rabbitLoad.run();
@@ -44,7 +44,7 @@ public class RabbitTemplateService {
                 return BaseResponse.error(e.getMessage());
             }
 
-            if (baseResponse.isResult()){
+            if (baseResponse.isResult()) {
                 msgInfoDTO.setMsgId((Long) data);
                 messageClient.send(msgInfoDTO);
             }
@@ -52,18 +52,18 @@ public class RabbitTemplateService {
         return baseResponse;
     }
 
-    public BaseResponse sendMessage(MsgInfoDTO msgInfoDTO, RabbitLoad rabbitLoad,int type) {
+    public BaseResponse sendMessage(MsgInfoDTO msgInfoDTO, RabbitLoad rabbitLoad, int type) {
 
         BaseResponse baseResponse = BaseResponse.error();
         try {
-            baseResponse = NettyUtils.sendMessageLoad(msgInfoDTO,ProtocolConstants.INSERT);
+            baseResponse = NettyUtils.sendMessageLoad(msgInfoDTO, ProtocolConstants.INSERT);
         } catch (Exception e) {
             log.error(e.getMessage());
             return baseResponse;
         }
 
         Object data;
-        if (baseResponse.isResult()){
+        if (baseResponse.isResult()) {
             try {
                 data = baseResponse.getData();
                 baseResponse = rabbitLoad.run();
@@ -72,10 +72,10 @@ public class RabbitTemplateService {
                 return BaseResponse.error(e.getMessage());
             }
 
-            if (baseResponse.isResult()){
+            if (baseResponse.isResult()) {
                 msgInfoDTO.setMsgId((Long) data);
                 try {
-                    NettyUtils.sendMessageLoad(msgInfoDTO,ProtocolConstants.UPDATE);
+                    NettyUtils.sendMessageLoad(msgInfoDTO, ProtocolConstants.UPDATE);
                 } catch (TimeoutException e) {
                     e.printStackTrace();
                 }
@@ -85,8 +85,7 @@ public class RabbitTemplateService {
     }
 
 
-
-    public BaseResponse batchMessage(BatchMsgInfoDTO batchMsgInfoDTO, RabbitLoad rabbitLoad){
+    public BaseResponse batchMessage(BatchMsgInfoDTO batchMsgInfoDTO, RabbitLoad rabbitLoad) {
         BaseResponse baseResponse = BaseResponse.error();
         try {
             baseResponse = messageClient.batchSaveMessage(batchMsgInfoDTO);
@@ -96,7 +95,7 @@ public class RabbitTemplateService {
         }
 
         List<Long> list;
-        if (baseResponse.isResult()){
+        if (baseResponse.isResult()) {
             try {
                 Object data = baseResponse.getData();
                 list = JSON.parseArray(JSON.toJSONString(data), Long.class);
@@ -106,7 +105,7 @@ public class RabbitTemplateService {
                 return BaseResponse.error(e.getMessage());
             }
 
-            if (baseResponse.isResult()){
+            if (baseResponse.isResult()) {
                 batchMsgInfoDTO.setMsgIds(list);
                 messageClient.batchSend(batchMsgInfoDTO);
             }
@@ -114,17 +113,17 @@ public class RabbitTemplateService {
         return baseResponse;
     }
 
-    public BaseResponse batchMessage(BatchMsgInfoDTO batchMsgInfoDTO, RabbitLoad rabbitLoad,int type) {
+    public BaseResponse batchMessage(BatchMsgInfoDTO batchMsgInfoDTO, RabbitLoad rabbitLoad, int type) {
         BaseResponse baseResponse = BaseResponse.error();
         try {
-            baseResponse = NettyUtils.sendMessageLoad(batchMsgInfoDTO,ProtocolConstants.BATCH_INSERT);
+            baseResponse = NettyUtils.sendMessageLoad(batchMsgInfoDTO, ProtocolConstants.BATCH_INSERT);
         } catch (Exception e) {
             log.error(e.getMessage());
             return baseResponse;
         }
 
         List<Long> list;
-        if (baseResponse.isResult()){
+        if (baseResponse.isResult()) {
             try {
                 Object data = baseResponse.getData();
                 list = JSON.parseArray(JSON.toJSONString(data), Long.class);
@@ -134,10 +133,10 @@ public class RabbitTemplateService {
                 return BaseResponse.error(e.getMessage());
             }
 
-            if (baseResponse.isResult()){
+            if (baseResponse.isResult()) {
                 batchMsgInfoDTO.setMsgIds(list);
                 try {
-                    NettyUtils.sendMessageLoad(batchMsgInfoDTO,ProtocolConstants.BATCH_UPDATE);
+                    NettyUtils.sendMessageLoad(batchMsgInfoDTO, ProtocolConstants.BATCH_UPDATE);
                 } catch (TimeoutException e) {
                     e.printStackTrace();
                 }

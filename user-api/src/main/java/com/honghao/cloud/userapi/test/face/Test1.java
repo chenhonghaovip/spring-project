@@ -12,24 +12,25 @@ import java.util.concurrent.locks.ReentrantLock;
  * @date 2020-08-12 19:31
  */
 public class Test1 {
-    private static ReentrantLock reentrantLock = new ReentrantLock();
     private static final int num = 10;
+    private static ReentrantLock reentrantLock = new ReentrantLock();
     private static List<String> list = new ArrayList<>();
     private static AtomicInteger atomicInteger = new AtomicInteger(0);
+
     public static void main(String[] args) {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Condition f1 = reentrantLock.newCondition();
         Condition f2 = reentrantLock.newCondition();
         Condition f3 = reentrantLock.newCondition();
         new Thread(() -> {
-            while (atomicInteger.get()<num){
+            while (atomicInteger.get() < num) {
                 reentrantLock.lock();
                 try {
-                    if (list.isEmpty() || "i".equals(list.get(list.size()-1))){
+                    if (list.isEmpty() || "i".equals(list.get(list.size() - 1))) {
                         list.add("A");
                         f2.signal();
 //                        System.out.println("A");
-                    }else {
+                    } else {
                         f1.await();
                     }
                 } catch (InterruptedException e) {
@@ -42,14 +43,14 @@ public class Test1 {
         }).start();
 
         new Thread(() -> {
-            while (atomicInteger.get()<num){
+            while (atomicInteger.get() < num) {
                 reentrantLock.lock();
                 try {
-                    if ("A".equals(list.get(list.size()-1))){
+                    if ("A".equals(list.get(list.size() - 1))) {
                         list.add("1");
                         f3.signal();
 //                        System.out.println("1");
-                    }else {
+                    } else {
                         f2.await();
                     }
                 } catch (InterruptedException e) {
@@ -62,19 +63,19 @@ public class Test1 {
         }).start();
 
         new Thread(() -> {
-            while (atomicInteger.get()<num){
+            while (atomicInteger.get() < num) {
                 reentrantLock.lock();
                 try {
-                    if ("1".equals(list.get(list.size()-1))){
+                    if ("1".equals(list.get(list.size() - 1))) {
                         list.add("i");
                         f1.signal();
 //                        System.out.println("i");
 
                         int a = atomicInteger.incrementAndGet();
-                        if (a==num){
+                        if (a == num) {
                             countDownLatch.countDown();
                         }
-                    }else {
+                    } else {
                         f3.await();
                     }
                 } catch (InterruptedException e) {

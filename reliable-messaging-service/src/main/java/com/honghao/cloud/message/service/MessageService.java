@@ -15,6 +15,7 @@ public interface MessageService {
 
     /**
      * 预发布消息
+     *
      * @param msgInfoDTO msgInfoDTO
      * @return BaseResponse
      */
@@ -22,6 +23,7 @@ public interface MessageService {
 
     /**
      * 发送消息到队列
+     *
      * @param msgInfoDTO msgInfoDTO
      * @return BaseResponse
      */
@@ -30,6 +32,7 @@ public interface MessageService {
 
     /**
      * 批量预发布消息
+     *
      * @param batchMsgInfoDTO batchMsgInfoDTO
      * @return BaseResponse
      */
@@ -37,6 +40,7 @@ public interface MessageService {
 
     /**
      * 批量发送消息到队列
+     *
      * @param batchMsgInfoDTO batchMsgInfoDTO
      * @return BaseResponse
      */
@@ -44,6 +48,7 @@ public interface MessageService {
 
     /**
      * 消息处理完成
+     *
      * @param msgInfoDTO msgInfoDTO
      * @return BaseResponse
      */
@@ -51,6 +56,7 @@ public interface MessageService {
 
     /**
      * 查询消息状态
+     *
      * @param messageId messageId
      * @return BaseResponse
      */

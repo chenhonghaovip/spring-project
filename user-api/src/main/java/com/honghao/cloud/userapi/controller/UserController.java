@@ -33,8 +33,8 @@ public class UserController {
 
 
     @GetMapping("/test")
-    public BaseResponse test(@RequestParam("wId") String data){
-        BaseAssert.isNull(data,ErrorCodeEnum.OBJECT_CANNOT_BE_EMPTY);
+    public BaseResponse test(@RequestParam("wId") String data) {
+        BaseAssert.isNull(data, ErrorCodeEnum.OBJECT_CANNOT_BE_EMPTY);
         return BaseResponse.success();
     }
 }

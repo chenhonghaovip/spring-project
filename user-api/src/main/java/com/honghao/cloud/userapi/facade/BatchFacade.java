@@ -13,6 +13,7 @@ public interface BatchFacade {
 
     /**
      * 请求合并测试
+     *
      * @param data data
      * @return BaseResponse
      * @throws Exception Exception
@@ -21,6 +22,7 @@ public interface BatchFacade {
 
     /**
      * 利用线程阻塞机制实现请求合并
+     *
      * @param data 请求数据
      * @return BaseResponse
      */

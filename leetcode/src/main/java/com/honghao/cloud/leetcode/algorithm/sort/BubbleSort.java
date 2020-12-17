@@ -13,17 +13,17 @@ import java.util.Arrays;
 @Slf4j
 public class BubbleSort {
     public static void main(String[] args) {
-        int[] arr = new int[]{253,435,53,62,213,51,423,123,12};
+        int[] arr = new int[]{253, 435, 53, 62, 213, 51, 423, 123, 12};
         int temp;
         for (int i = 1; i < arr.length; i++) {
             for (int j = 0; j < arr.length - i; j++) {
-                if (arr[j]> arr[j+1]){
-                    temp = arr[j+1];
-                    arr[j+1] = arr[j];
+                if (arr[j] > arr[j + 1]) {
+                    temp = arr[j + 1];
+                    arr[j + 1] = arr[j];
                     arr[j] = temp;
                 }
             }
         }
-        log.info("{}",Arrays.stream(arr).filter(value -> value< 400).toArray());
+        log.info("{}", Arrays.stream(arr).filter(value -> value < 400).toArray());
     }
 }

@@ -12,9 +12,10 @@ import com.honghao.cloud.basic.common.base.BaseResponse;
 public interface Filter {
     /**
      * 过滤器执行
-     * @param request request
+     *
+     * @param request  request
      * @param response response
-     * @param chain chain
+     * @param chain    chain
      */
     void doFilter(BaseRequest request, BaseResponse response, FilterChain chain);
 }

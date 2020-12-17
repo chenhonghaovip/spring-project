@@ -12,6 +12,7 @@ public interface OrderMapper {
 
     /**
      * 选择性插入
+     *
      * @param record record
      * @return int
      */
@@ -19,6 +20,7 @@ public interface OrderMapper {
 
     /**
      * 主键查询
+     *
      * @param wId wId
      * @return int
      */
@@ -26,6 +28,7 @@ public interface OrderMapper {
 
     /**
      * 选择性更新
+     *
      * @param record record
      * @return int
      */
@@ -33,6 +36,7 @@ public interface OrderMapper {
 
     /**
      * 通过订单id批次查询订单是否存在
+     *
      * @param list list
      * @return List<String>
      */
@@ -41,6 +45,7 @@ public interface OrderMapper {
 
     /**
      * 批次插入信息
+     *
      * @param list list
      * @return List<String>
      */
@@ -48,8 +53,9 @@ public interface OrderMapper {
 
     /**
      * 乐观更新操作
+     *
      * @param wId list
      * @return List<String>
      */
-    int update(@Param("wId") String wId,@Param("version") int version);
+    int update(@Param("wId") String wId, @Param("version") int version);
 }

@@ -16,52 +16,52 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class SemaphoreTest {
     public static void main(String[] args) {
-        ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(3,3,"test_");
+        ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(3, 3, "test_");
         AtomicInteger atomicInteger = new AtomicInteger(1);
         //信号量，只允许 3个线程同时访问
         Semaphore semaphore = new Semaphore(1);
-        threadPoolExecutor.submit(()->{
-            while (true){
+        threadPoolExecutor.submit(() -> {
+            while (true) {
                 try {
-                    if (atomicInteger.get()%3==1 && atomicInteger.get()<=99){
+                    if (atomicInteger.get() % 3 == 1 && atomicInteger.get() <= 99) {
                         semaphore.acquire();
-                        System.out.println(Thread.currentThread().getName()+"==="+atomicInteger.getAndIncrement());
+                        System.out.println(Thread.currentThread().getName() + "===" + atomicInteger.getAndIncrement());
                         semaphore.release();
                     }
-                    if (atomicInteger.get()>99){
-                        return ;
+                    if (atomicInteger.get() > 99) {
+                        return;
                     }
                 } catch (InterruptedException e) {
                     log.error(e.getMessage());
                 }
             }
         });
-        threadPoolExecutor.submit(()->{
-            while (true){
+        threadPoolExecutor.submit(() -> {
+            while (true) {
                 try {
-                    if (atomicInteger.get()%3==2 && atomicInteger.get()<=99){
+                    if (atomicInteger.get() % 3 == 2 && atomicInteger.get() <= 99) {
                         semaphore.acquire();
-                        System.out.println(Thread.currentThread().getName()+"==="+atomicInteger.getAndIncrement());
+                        System.out.println(Thread.currentThread().getName() + "===" + atomicInteger.getAndIncrement());
                         semaphore.release();
                     }
-                    if (atomicInteger.get()>99){
-                        return ;
+                    if (atomicInteger.get() > 99) {
+                        return;
                     }
                 } catch (InterruptedException e) {
                     log.error(e.getMessage());
                 }
             }
         });
-        threadPoolExecutor.submit(()->{
-            while (true){
+        threadPoolExecutor.submit(() -> {
+            while (true) {
                 try {
-                    if (atomicInteger.get()%3==0 && atomicInteger.get()<=99){
+                    if (atomicInteger.get() % 3 == 0 && atomicInteger.get() <= 99) {
                         semaphore.acquire();
-                        System.out.println(Thread.currentThread().getName()+"==="+atomicInteger.getAndIncrement());
+                        System.out.println(Thread.currentThread().getName() + "===" + atomicInteger.getAndIncrement());
                         semaphore.release();
                     }
-                    if (atomicInteger.get()>99){
-                        return ;
+                    if (atomicInteger.get() > 99) {
+                        return;
                     }
                 } catch (InterruptedException e) {
                     log.error(e.getMessage());

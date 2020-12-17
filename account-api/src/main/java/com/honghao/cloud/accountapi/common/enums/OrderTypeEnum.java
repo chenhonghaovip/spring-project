@@ -37,19 +37,20 @@ public class OrderTypeEnum {
     private List<CommonDTO> orderTypeEnumList;
 
     @PostConstruct
-    private void getOrderTypeEnumList(){
-        this.orderTypeEnumList = JSON.parseArray(orderType,CommonDTO.class);
+    private void getOrderTypeEnumList() {
+        this.orderTypeEnumList = JSON.parseArray(orderType, CommonDTO.class);
     }
 
     /**
      * 获取汉字描述
+     *
      * @param code code
      * @return desc
      */
-    public String getOrderTypeEnum(Integer code){
-        if (!CollectionUtils.isEmpty(orderTypeEnumList)){
+    public String getOrderTypeEnum(Integer code) {
+        if (!CollectionUtils.isEmpty(orderTypeEnumList)) {
             Optional<CommonDTO> commonDTO = orderTypeEnumList.stream().filter(each -> each.getCode().equals(code)).findFirst();
-            if (commonDTO.isPresent()){
+            if (commonDTO.isPresent()) {
                 return commonDTO.get().getDesc();
             }
             return StringUtils.EMPTY;

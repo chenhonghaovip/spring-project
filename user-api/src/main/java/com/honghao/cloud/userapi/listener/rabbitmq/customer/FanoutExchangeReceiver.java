@@ -15,12 +15,12 @@ import org.springframework.stereotype.Component;
 public class FanoutExchangeReceiver {
 
     @RabbitListener(queues = "11111")
-    public void consumerBroadcastQueue1(String message){
-        System.out.println("1111111111"+message);
+    public void consumerBroadcastQueue1(String message) {
+        System.out.println("1111111111" + message);
     }
 
     @RabbitListener(queues = "22222")
-    public void consumerBroadcastQueue2(String message){
-        System.out.println("2222222222"+message);
+    public void consumerBroadcastQueue2(String message) {
+        System.out.println("2222222222" + message);
     }
 }

@@ -47,11 +47,11 @@ public class MessageFuture {
      * @param timeout the timeout
      * @param unit    the unit
      * @return the object
-     * @throws TimeoutException the timeout exception
+     * @throws TimeoutException     the timeout exception
      * @throws InterruptedException the interrupted exception
      */
     public Object get(long timeout, TimeUnit unit) throws TimeoutException,
-        InterruptedException {
+            InterruptedException {
         Object result = null;
         try {
             result = origin.get(timeout, unit);
@@ -62,9 +62,9 @@ public class MessageFuture {
         }
 
         if (result instanceof RuntimeException) {
-            throw (RuntimeException)result;
+            throw (RuntimeException) result;
         } else if (result instanceof Throwable) {
-            throw new RuntimeException((Throwable)result);
+            throw new RuntimeException((Throwable) result);
         }
 
         return result;

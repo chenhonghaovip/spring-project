@@ -14,15 +14,16 @@ import javax.annotation.Resource;
 public class NettyServerStarted {
     @Resource
     private MessageController messageController;
-    @PostConstruct
-    public void init(){
-        NettyServer nettyServer = new NettyServer();
-        nettyServer.init();
-        NettyServerHandle.messageController = messageController;
-    }
 
     public static void main(String[] args) {
         NettyServer nettyServer = new NettyServer();
         nettyServer.init();
+    }
+
+    @PostConstruct
+    public void init() {
+        NettyServer nettyServer = new NettyServer();
+        nettyServer.init();
+        NettyServerHandle.messageController = messageController;
     }
 }

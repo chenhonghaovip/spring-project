@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author chenhonghao
  * @date 2019-07-31 13:19
  */
-@FeignClient(name = OrderClient.SERVICE_ID,fallbackFactory = OrderFallbackFactory.class)
+@FeignClient(name = OrderClient.SERVICE_ID, fallbackFactory = OrderFallbackFactory.class)
 public interface OrderClient {
-    String SERVICE_ID="order-api";
+    String SERVICE_ID = "order-api";
 
     /**
      * 账户服务调用
+     *
      * @param param string
      * @return BaseResponse
      */
@@ -27,6 +28,7 @@ public interface OrderClient {
 
     /**
      * 账户服务调用
+     *
      * @param param string
      * @return BaseResponse
      */

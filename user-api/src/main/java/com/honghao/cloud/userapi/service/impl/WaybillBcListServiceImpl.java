@@ -39,7 +39,7 @@ public class WaybillBcListServiceImpl implements WaybillBcListService {
         List<WaybillBcListEasyPoi> result = new ArrayList<>();
         for (WaybillBcList list : lists) {
             waybillBcListEasyPoi = new WaybillBcListEasyPoi();
-            BeanUtils.copyProperties(list,waybillBcListEasyPoi);
+            BeanUtils.copyProperties(list, waybillBcListEasyPoi);
             result.add(waybillBcListEasyPoi);
         }
         return result;

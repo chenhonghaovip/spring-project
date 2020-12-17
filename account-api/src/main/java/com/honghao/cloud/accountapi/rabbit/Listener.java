@@ -33,22 +33,22 @@ public class Listener {
     @RabbitListener(queues = RabbitConfig.CREATE_ORDER)
     public void process(String data) {
         try {
-            log.info("订单异步双写elasticsearch队列消息为：{}",data);
+            log.info("订单异步双写elasticsearch队列消息为：{}", data);
             MsgInfoDTO msgInfoDTO = JSON.parseObject(data, MsgInfoDTO.class);
             IndexRequest indexRequest = new IndexRequest(RabbitConfig.CREATE_ORDER);
             indexRequest.id(msgInfoDTO.getBusinessId());
             indexRequest.source(msgInfoDTO.getContent(), XContentType.JSON);
             IndexResponse index = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
-            if (Objects.equals(index.status(), RestStatus.OK) || Objects.equals(index.status(), RestStatus.CREATED)){
+            if (Objects.equals(index.status(), RestStatus.OK) || Objects.equals(index.status(), RestStatus.CREATED)) {
                 BaseResponse complete = messageClient.complete(msgInfoDTO);
-                if (!complete.isResult()){
+                if (!complete.isResult()) {
                     log.error(complete.getRemark());
-                }else {
+                } else {
                     log.info("订单异步双写elasticsearch成功，接受信息成功");
                 }
             }
-        }catch (Exception e){
-            log.error("订单异步双写elasticsearch操作异常:{}",e.getMessage());
+        } catch (Exception e) {
+            log.error("订单异步双写elasticsearch操作异常:{}", e.getMessage());
         }
     }
 
@@ -57,13 +57,13 @@ public class Listener {
         try {
             MsgInfoDTO msgInfoDTO = JSON.parseObject(data, MsgInfoDTO.class);
             BaseResponse complete = messageClient.complete(msgInfoDTO);
-            if (!complete.isResult()){
+            if (!complete.isResult()) {
                 log.error(complete.getRemark());
-            }else {
+            } else {
                 log.info("do something，接受信息成功");
             }
-        }catch (Exception e){
-            log.error("do something操作异常:{}",e.getMessage());
+        } catch (Exception e) {
+            log.error("do something操作异常:{}", e.getMessage());
         }
     }
 }

@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 @Slf4j
 public class BigTest {
-    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(4,10,"t4est");
+    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(4, 10, "t4est");
     private static List<StartEndPair> list = new ArrayList<>();
     private static long fileSize;
     private static RandomAccessFile rAccessFile;
@@ -29,17 +29,17 @@ public class BigTest {
     public static void main(String[] args) {
         File file = new File("F:\\u02\\logs\\waybill\\waybill-DESKTOP-O5RAEHE.log");
         fileSize = file.length();
-        BigTest bigTest= new BigTest();
-        long size = fileSize/threadPoolExecutor.getCorePoolSize();
+        BigTest bigTest = new BigTest();
+        long size = fileSize / threadPoolExecutor.getCorePoolSize();
         try {
-            rAccessFile = new RandomAccessFile(file,"r");
-            bigTest.calculate(0,size);
+            rAccessFile = new RandomAccessFile(file, "r");
+            bigTest.calculate(0, size);
         } catch (IOException e) {
             log.error(e.toString());
         }
 
         List<CompletableFuture<Void>> result = new ArrayList<>();
-        list.forEach(each->{
+        list.forEach(each -> {
             CompletableFuture<Void> voidCompletableFuture = CompletableFuture.runAsync(() -> {
                 long temp = each.getEnd() - each.getStart() + 1;
                 int core = (int) temp;
@@ -63,17 +63,17 @@ public class BigTest {
             }, threadPoolExecutor);
             result.add(voidCompletableFuture);
         });
-        CompletableFuture.allOf(result.toArray(new CompletableFuture[0])).whenComplete((t,e)->{
-           threadPoolExecutor.shutdown();
+        CompletableFuture.allOf(result.toArray(new CompletableFuture[0])).whenComplete((t, e) -> {
+            threadPoolExecutor.shutdown();
         });
     }
 
-    private void calculate(long start,long size) throws IOException {
+    private void calculate(long start, long size) throws IOException {
         StartEndPair startEndPair = new StartEndPair();
         startEndPair.setStart(start);
-        long end = start+size-1;
-        if (end > fileSize){
-            end = fileSize-1;
+        long end = start + size - 1;
+        if (end > fileSize) {
+            end = fileSize - 1;
             startEndPair.setEnd(end);
             list.add(startEndPair);
             return;
@@ -82,9 +82,9 @@ public class BigTest {
         rAccessFile.seek(end);
         byte b = rAccessFile.readByte();
         long nowRead = end;
-        while (b!='\r' && b!='\n'){
+        while (b != '\r' && b != '\n') {
             nowRead++;
-            if (nowRead >= fileSize){
+            if (nowRead >= fileSize) {
                 startEndPair.setEnd(nowRead);
                 list.add(startEndPair);
                 break;
@@ -95,10 +95,10 @@ public class BigTest {
 
         startEndPair.setEnd(nowRead);
         list.add(startEndPair);
-        calculate(nowRead+1,size);
+        calculate(nowRead + 1, size);
     }
 
-    public static class StartEndPair{
+    public static class StartEndPair {
         private long start;
         private long end;
 

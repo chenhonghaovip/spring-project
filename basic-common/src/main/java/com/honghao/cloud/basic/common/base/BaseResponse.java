@@ -25,13 +25,14 @@ public class BaseResponse<T> implements Serializable {
 
     private String remark;
 
-    public static <T> BaseResponse<T> successData(T data){
-        return new BaseResponse<>(true,200,data,"请求成功");
+    public static <T> BaseResponse<T> successData(T data) {
+        return new BaseResponse<>(true, 200, data, "请求成功");
     }
 
     public static BaseResponse success() {
         return new BaseResponse<>(true, 200, null, "请求成功");
     }
+
     public static <T> BaseResponse<T> error(String msg) {
         return new BaseResponse<>(false, -1, null, msg);
     }

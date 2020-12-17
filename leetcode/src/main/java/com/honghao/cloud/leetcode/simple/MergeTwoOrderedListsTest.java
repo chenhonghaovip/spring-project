@@ -5,7 +5,7 @@ import org.junit.Test;
 
 /**
  * 将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
- *
+ * <p>
  * 输入：1->2->4, 1->3->4
  * 输出：1->1->2->3->4->4
  *
@@ -14,7 +14,7 @@ import org.junit.Test;
  */
 public class MergeTwoOrderedListsTest {
     @Test
-    public void test(){
+    public void test() {
         ListNode l1 = new ListNode(1);
         l1.next = new ListNode(2);
         l1.next.next = new ListNode(4);
@@ -31,12 +31,12 @@ public class MergeTwoOrderedListsTest {
         ListNode pre = new ListNode(0);
         ListNode first = pre;
 
-        while (l1!=null && l2!=null){
+        while (l1 != null && l2 != null) {
             int value;
-            if (l1.val>l2.val){
+            if (l1.val > l2.val) {
                 value = l2.val;
                 l2 = l2.next;
-            }else {
+            } else {
                 value = l1.val;
                 l1 = l1.next;
             }
@@ -44,12 +44,12 @@ public class MergeTwoOrderedListsTest {
             pre = pre.next;
         }
 
-        while (l1!=null){
+        while (l1 != null) {
             pre.next = l1;
             l1 = null;
         }
 
-        while (l2!=null){
+        while (l2 != null) {
             pre.next = l2;
             l2 = null;
         }

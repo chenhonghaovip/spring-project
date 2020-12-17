@@ -12,18 +12,23 @@ import java.util.Properties;
 public interface RedisService {
     /**
      * redis添加大量数据
+     *
      * @param userId userId
      * @return BaseResponse
      */
     BaseResponse addBigData(String userId);
+
     /**
      * redis删除bigkey
+     *
      * @param userId userId
      * @return BaseResponse
      */
     BaseResponse delBigHash(String userId);
+
     /**
      * redis缓存击穿处理
+     *
      * @param userId userId
      * @return BaseResponse
      */
@@ -31,6 +36,7 @@ public interface RedisService {
 
     /**
      * 缓存穿透
+     *
      * @param userId userId
      * @return BaseResponse
      */
@@ -38,6 +44,7 @@ public interface RedisService {
 
     /**
      * redis加锁操作
+     *
      * @param userId userId
      * @return BaseResponse
      */
@@ -45,6 +52,7 @@ public interface RedisService {
 
     /**
      * redisson加锁操作
+     *
      * @param userId userId
      * @return BaseResponse
      */
@@ -52,6 +60,7 @@ public interface RedisService {
 
     /**
      * redis实现list
+     *
      * @param userId userId
      * @return BaseResponse
      */
@@ -59,6 +68,7 @@ public interface RedisService {
 
     /**
      * redis实现Set
+     *
      * @param userId userId
      * @return BaseResponse
      */
@@ -66,6 +76,7 @@ public interface RedisService {
 
     /**
      * redis实现ZSet
+     *
      * @param userId userId
      * @return BaseResponse
      */
@@ -74,6 +85,7 @@ public interface RedisService {
 
     /**
      * redis实现ZSet
+     *
      * @param userId userId
      * @return BaseResponse
      */
@@ -81,6 +93,7 @@ public interface RedisService {
 
     /**
      * redis获取服务器信息
+     *
      * @param userId userId
      * @return BaseResponse
      */
@@ -88,6 +101,7 @@ public interface RedisService {
 
     /**
      * redis模拟实现微博热搜排行榜（点击）
+     *
      * @param key 请求参数
      * @return BaseResponse
      */
@@ -95,6 +109,7 @@ public interface RedisService {
 
     /**
      * 查询微博热搜数据
+     *
      * @param type 查询类型
      * @return 热搜数据
      */
@@ -102,6 +117,7 @@ public interface RedisService {
 
     /**
      * 朋友圈点赞和取消点赞功能实现
+     *
      * @param likePointVO likePointVO
      * @return BaseResponse
      */
@@ -110,6 +126,7 @@ public interface RedisService {
 
     /**
      * 朋友圈点赞总数
+     *
      * @param likePointVO likePointVO
      * @return BaseResponse
      */
@@ -118,6 +135,7 @@ public interface RedisService {
 
     /**
      * 朋友圈点赞和取消点赞功能实现
+     *
      * @param likePointVO likePointVO
      * @return BaseResponse
      */
@@ -125,6 +143,7 @@ public interface RedisService {
 
     /**
      * redis发布与订阅功能
+     *
      * @param userId userId
      * @return BaseResponse
      */
@@ -132,6 +151,7 @@ public interface RedisService {
 
     /**
      * redis并发抢购
+     *
      * @param userId userId
      * @return BaseResponse
      */
@@ -139,8 +159,17 @@ public interface RedisService {
 
     /**
      * 获取redis监控信息
+     *
      * @param param param
      * @return Properties
      */
     Properties info(String param);
+
+    /**
+     * 获取redis监控信息
+     *
+     * @param param param
+     * @return Properties
+     */
+    BaseResponse slidingWindowCounter(String param);
 }

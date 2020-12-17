@@ -11,6 +11,7 @@ public interface RabbitService {
 
     /**
      * 保存商品信息
+     *
      * @param shopInfo shopInfo
      * @return BaseResponse
      */

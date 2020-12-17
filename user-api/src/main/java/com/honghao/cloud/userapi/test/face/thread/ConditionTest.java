@@ -20,15 +20,15 @@ public class ConditionTest {
         Condition condition = reentrantLock.newCondition();
         AtomicInteger atomicInteger = new AtomicInteger(0);
         ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(3, 3, "test");
-        threadPoolExecutor.submit(()-> {
-            while (true){
+        threadPoolExecutor.submit(() -> {
+            while (true) {
                 reentrantLock.lock();
                 try {
-                    while (atomicInteger.get()%3!=0){
+                    while (atomicInteger.get() % 3 != 0) {
                         condition.await();
                     }
-                    if (atomicInteger.get()<=99){
-                        System.out.println(Thread.currentThread().getName()+"==="+atomicInteger.getAndIncrement());
+                    if (atomicInteger.get() <= 99) {
+                        System.out.println(Thread.currentThread().getName() + "===" + atomicInteger.getAndIncrement());
                         condition.signalAll();
                     }
                 } catch (InterruptedException e) {
@@ -39,15 +39,15 @@ public class ConditionTest {
             }
         });
 
-        threadPoolExecutor.submit(()-> {
-            while (true){
+        threadPoolExecutor.submit(() -> {
+            while (true) {
                 reentrantLock.lock();
                 try {
-                    while (atomicInteger.get()%3!=1){
+                    while (atomicInteger.get() % 3 != 1) {
                         condition.await();
                     }
-                    if (atomicInteger.get()<=99){
-                        System.out.println(Thread.currentThread().getName()+"==="+atomicInteger.getAndIncrement());
+                    if (atomicInteger.get() <= 99) {
+                        System.out.println(Thread.currentThread().getName() + "===" + atomicInteger.getAndIncrement());
                         condition.signalAll();
                     }
                 } catch (InterruptedException e) {
@@ -58,15 +58,15 @@ public class ConditionTest {
             }
         });
 
-        threadPoolExecutor.submit(()-> {
-            while (true){
+        threadPoolExecutor.submit(() -> {
+            while (true) {
                 reentrantLock.lock();
                 try {
-                    while (atomicInteger.get()%3!=2){
+                    while (atomicInteger.get() % 3 != 2) {
                         condition.await();
                     }
-                    if (atomicInteger.get()<=99){
-                        System.out.println(Thread.currentThread().getName()+"==="+atomicInteger.getAndIncrement());
+                    if (atomicInteger.get() <= 99) {
+                        System.out.println(Thread.currentThread().getName() + "===" + atomicInteger.getAndIncrement());
                         condition.signalAll();
                     }
                 } catch (InterruptedException e) {

@@ -15,17 +15,17 @@ import java.util.Map;
 public class Test01 {
     public static void main(String[] args) {
         int sum = 15;
-        int[] num = {1,2,3,4,5,6,7,8};
+        int[] num = {1, 2, 3, 4, 5, 6, 7, 8};
 
         Map map = new HashMap();
         for (int i = 0; i < num.length; i++) {
-           map.put(num[i],i);
+            map.put(num[i], i);
         }
 
         for (int i = 0; i < num.length; i++) {
             int target = sum - num[i];
-            if (map.containsKey(target)){
-                log.info("数组中位置为{}，{}",i,map.get(target));
+            if (map.containsKey(target)) {
+                log.info("数组中位置为{}，{}", i, map.get(target));
                 return;
             }
         }

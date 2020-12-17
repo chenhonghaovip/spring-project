@@ -38,44 +38,44 @@ public class NIOServer {
 
     private void run() throws IOException {
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-        while (true){
+        while (true) {
             // 如果与SelectionKey相关的事件发生了，这个SelectionKey就被加入selected-keys集合中
             int read = selector.select();
-            if (read==0){
+            if (read == 0) {
                 continue;
             }
 
             // 代表ServerSocketChannel以及SocketChannel向Selector注册事件的句柄。
             // 当一个SelectionKey对象位于Selector对象的selected-keys集合中，就表示与这个SelectionKey对象相关的事件发生了。
             // 获取相关事件已经被Selector捕获的SelectionKey的集合
-            SelectionKey selectionKey = null ;
+            SelectionKey selectionKey = null;
             Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
             while (iterator.hasNext()) {
                 try {
                     selectionKey = iterator.next();
                     //  接收连接就绪事件，表示服务器监听到了客户连接，服务器可以接收这个连接了。
-                    if (selectionKey.isAcceptable()){
+                    if (selectionKey.isAcceptable()) {
                         ServerSocketChannel socketChannel = (ServerSocketChannel) selectionKey.channel();
                         SocketChannel accept = socketChannel.accept();
-                        System.out.println("接收连接就绪事件:"+socketChannel.socket().getInetAddress()+":port="+socketChannel.socket().getLocalPort());
+                        System.out.println("接收连接就绪事件:" + socketChannel.socket().getInetAddress() + ":port=" + socketChannel.socket().getLocalPort());
                         accept.configureBlocking(false);
                         // 创建一个用户发送来的数据的缓冲区
                         ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-                        accept.register(selector, SelectionKey.OP_READ ,byteBuffer);
+                        accept.register(selector, SelectionKey.OP_READ, byteBuffer);
                     }
                     // 读就绪事件，表示输入流中已经有了可读数据，可以执行读操作了。
-                    else if (selectionKey.isReadable()){
+                    else if (selectionKey.isReadable()) {
                         System.out.println("读就绪事件");
                         // 创建一个用户发送来的数据的缓冲区
                         this.receive(selectionKey);
                     }
                     // 写就绪事件，表示已经可以向输出流写数据了。
-                    else if (selectionKey.isWritable()){
+                    else if (selectionKey.isWritable()) {
                         System.out.println("写就绪事件");
                         this.send(selectionKey);
                     }
                     // 连接就绪事件，表示客户与服务器的连接已经建立成功。
-                    else if (selectionKey.isConnectable()){
+                    else if (selectionKey.isConnectable()) {
                         System.out.println("连接就绪事件");
                     }
                     iterator.remove();
@@ -89,8 +89,8 @@ public class NIOServer {
     }
 
     private void send(SelectionKey key) throws IOException {
-        ByteBuffer buffer = (ByteBuffer)key.attachment();
-        SocketChannel socketChannel = (SocketChannel)key.channel();
+        ByteBuffer buffer = (ByteBuffer) key.attachment();
+        SocketChannel socketChannel = (SocketChannel) key.channel();
         buffer.flip();
         String data = this.decode(buffer);
         if (data.indexOf("\r\n") != -1) {
@@ -98,7 +98,7 @@ public class NIOServer {
             System.out.print(outputData);
             ByteBuffer outputBuffer = this.encode("echo:" + outputData);
 
-            while(outputBuffer.hasRemaining()) {
+            while (outputBuffer.hasRemaining()) {
                 socketChannel.write(outputBuffer);
             }
 
@@ -115,8 +115,8 @@ public class NIOServer {
     }
 
     private void receive(SelectionKey key) throws IOException {
-        ByteBuffer buffer = (ByteBuffer)key.attachment();
-        SocketChannel socketChannel = (SocketChannel)key.channel();
+        ByteBuffer buffer = (ByteBuffer) key.attachment();
+        SocketChannel socketChannel = (SocketChannel) key.channel();
         ByteBuffer readBuff = ByteBuffer.allocate(32);
         socketChannel.read(readBuff);
         readBuff.flip();

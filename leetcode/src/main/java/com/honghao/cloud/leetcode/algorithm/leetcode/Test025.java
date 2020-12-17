@@ -10,35 +10,34 @@ package com.honghao.cloud.leetcode.algorithm.leetcode;
 public class Test025 {
     public static void main(String[] args) {
         Test025 test025 = new Test025();
-        System.out.println(test025.divide(-11,-1));
+        System.out.println(test025.divide(-11, -1));
     }
+
     public int divide(int dividend, int divisor) {
-        if (dividend == 0 || divisor == 0){
+        if (dividend == 0 || divisor == 0) {
             return 0;
         }
-        int k=0;
-        if (dividend > 0 && divisor > 0){
-            while (dividend-divisor>=0){
+        int k = 0;
+        if (dividend > 0 && divisor > 0) {
+            while (dividend - divisor >= 0) {
                 dividend = dividend - divisor;
                 k++;
             }
             return k;
-        }else
-        if (dividend < 0 && divisor < 0){
-            while (dividend-divisor <= 0){
+        } else if (dividend < 0 && divisor < 0) {
+            while (dividend - divisor <= 0) {
                 dividend = dividend - divisor;
                 k++;
             }
             return k;
-        }else
-        if (dividend < 0 && divisor > 0){
-            while (dividend + divisor <= 0){
+        } else if (dividend < 0 && divisor > 0) {
+            while (dividend + divisor <= 0) {
                 dividend = dividend + divisor;
                 k--;
             }
             return k;
-        }else {
-            while (dividend + divisor >= 0){
+        } else {
+            while (dividend + divisor >= 0) {
                 dividend = dividend + divisor;
                 k--;
             }

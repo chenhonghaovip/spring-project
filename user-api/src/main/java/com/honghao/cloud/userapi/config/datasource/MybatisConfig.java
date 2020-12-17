@@ -17,7 +17,7 @@ public class MybatisConfig {
     @Scope(value = "prototype")
     @Bean(name = "mybatis.config")
     @ConfigurationProperties(prefix = "mybatis.configuration")
-    public org.apache.ibatis.session.Configuration globalConfiguration(){
+    public org.apache.ibatis.session.Configuration globalConfiguration() {
         return new org.apache.ibatis.session.Configuration();
     }
 

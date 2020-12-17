@@ -23,16 +23,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The type Named thread factory.
- *  线程工厂
+ * 线程工厂
  *
  * @author chenhonghao
  */
 public class NamedThreadFactory implements ThreadFactory {
     private final static Map<String, AtomicInteger> PREFIX_COUNTER = new ConcurrentHashMap<>();
-    private AtomicInteger counter = new AtomicInteger(0);
     private final String prefix;
     private final int totalSize;
     private final boolean makeDaemons;
+    private AtomicInteger counter = new AtomicInteger(0);
 
     /**
      * Instantiates a new Named thread factory.

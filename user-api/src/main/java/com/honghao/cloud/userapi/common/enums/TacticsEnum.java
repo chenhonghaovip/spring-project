@@ -19,18 +19,16 @@ public enum TacticsEnum {
     /**
      * 同城订单处理
      */
-    SAME_CITY_SERVICE(2,"sameCityService"),
+    SAME_CITY_SERVICE(2, "sameCityService"),
     /**
      * 快递订单处理
      */
-    DELIVERY_ORDER_SERVICE(4,"deliveryOrderService")
-    ;
+    DELIVERY_ORDER_SERVICE(4, "deliveryOrderService");
+    public final static List<Integer> CODES = Arrays.stream(TacticsEnum.values()).map(TacticsEnum::getOrderType).collect(Collectors.toList());
     private Integer orderType;
     private String deliveryServiceName;
 
-    public final static List<Integer> CODES = Arrays.stream(TacticsEnum.values()).map(TacticsEnum::getOrderType).collect(Collectors.toList());
-
-    public static TacticsEnum formCode(Integer code){
+    public static TacticsEnum formCode(Integer code) {
         if (CODES.contains(code)) {
             for (TacticsEnum value : TacticsEnum.values()) {
                 if (value.getOrderType().equals(code)) {

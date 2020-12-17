@@ -32,7 +32,7 @@ public class AccountServiceImpl implements AccountService {
     @Transactional(rollbackFor = Exception.class)
     public void createOrders(String data) {
         BaseResponse response = cacheTemplate.redisStringCache("order", data, () -> waybillBcListMapper.selectByPrimaryKey(data));
-        if (response.isResult()){
+        if (response.isResult()) {
             WaybillBcList order = (WaybillBcList) response.getData();
             System.out.println(JSON.toJSONString(order));
         }

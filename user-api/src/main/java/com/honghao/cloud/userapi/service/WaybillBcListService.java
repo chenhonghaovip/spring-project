@@ -15,6 +15,7 @@ import java.util.List;
 public interface WaybillBcListService {
     /**
      * 插入用户数据
+     *
      * @param waybillBcList waybillBcListService
      */
     void createUser(WaybillBcList waybillBcList);
@@ -25,6 +26,7 @@ public interface WaybillBcListService {
 
     /**
      * 查询同城订单数量
+     *
      * @param knightId 骑士id
      * @return BaseResponse
      */

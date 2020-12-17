@@ -43,11 +43,19 @@ import java.util.concurrent.locks.ReentrantLock;
 @Slf4j
 @Service
 public class RedisServiceImpl implements RedisService {
+    private static final ScheduledThreadPoolExecutor SCHEDULED_THREAD_POOL_EXECUTOR = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1);
+    private static final ThreadPoolExecutor POOL_EXECUTOR = ThreadPoolFactory.buildThreadPoolExecutor(1, 10, "add_redis");
     private static volatile boolean flag = true;
     private static List<ShopInfo> ids = new ArrayList<>();
+
+    static {
+        for (int i = 0; i < 10; i++) {
+            String value = String.valueOf(i);
+            ids.add(ShopInfo.builder().shopName(value).shopUrl(value).shopId("20200724000000" + i).shopPrice(new BigDecimal(i)).build());
+        }
+    }
+
     private ConcurrentHashMap<String, ReentrantLock> concurrentHashMap = new ConcurrentHashMap<>();
-    private static final ScheduledThreadPoolExecutor SCHEDULED_THREAD_POOL_EXECUTOR = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1);
-    private static final ThreadPoolExecutor POOL_EXECUTOR = ThreadPoolFactory.buildThreadPoolExecutor(1,10,"add_redis");
     @Resource
     private Redisson redisson;
     @Resource
@@ -55,15 +63,15 @@ public class RedisServiceImpl implements RedisService {
     @Resource
     private CacheTemplate<ShopInfo> cacheTemplate;
     @Resource
-    private RedisTemplate<String,Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @PostConstruct
-    public void timerTask(){
-        SCHEDULED_THREAD_POOL_EXECUTOR.scheduleAtFixedRate(()->{
+    public void timerTask() {
+        SCHEDULED_THREAD_POOL_EXECUTOR.scheduleAtFixedRate(() -> {
             // 利用list数据结构实现队列消费功能
             String key = "list12345";
             Object object;
-            while (Objects.nonNull(object = redisTemplate.opsForList().rightPop(key))){
+            while (Objects.nonNull(object = redisTemplate.opsForList().rightPop(key))) {
                 System.out.println(object);
             }
 
@@ -73,24 +81,17 @@ public class RedisServiceImpl implements RedisService {
             refreshWeek(times);
             refreshMonth(times);
 
-        },0,2,TimeUnit.MINUTES);
+        }, 0, 2, TimeUnit.MINUTES);
 
-    }
-
-    static {
-        for (int i = 0; i < 10; i++) {
-            String value = String.valueOf(i);
-            ids.add(ShopInfo.builder().shopName(value).shopUrl(value).shopId("20200724000000"+i).shopPrice(new BigDecimal(i)).build());
-        }
     }
 
     @Override
     public BaseResponse addBigData(String userId) {
-        POOL_EXECUTOR.execute(()->redisTemplate.executePipelined((RedisCallback<String>) redisConnection -> {
+        POOL_EXECUTOR.execute(() -> redisTemplate.executePipelined((RedisCallback<String>) redisConnection -> {
             for (int i = 0; i < 2000000; i++) {
                 String s = String.valueOf(i);
-                redisConnection.hSet("123456".getBytes(),s.getBytes(),s.getBytes());
-                redisConnection.hSet("1234567".getBytes(),s.getBytes(),s.getBytes());
+                redisConnection.hSet("123456".getBytes(), s.getBytes(), s.getBytes());
+                redisConnection.hSet("1234567".getBytes(), s.getBytes(), s.getBytes());
             }
             redisConnection.close();
             return null;
@@ -102,40 +103,39 @@ public class RedisServiceImpl implements RedisService {
     public BaseResponse delBigHash(String userId) {
         long start = System.currentTimeMillis();
         long middle = System.currentTimeMillis();
-        System.out.println(middle-start);
+        System.out.println(middle - start);
         // 删除bigHash
         Cursor<Map.Entry<Object, Object>> scan = redisTemplate.opsForHash().scan("1234567", ScanOptions.scanOptions().count(100).build());
-        while (scan.hasNext()){
+        while (scan.hasNext()) {
             Map.Entry<Object, Object> next = scan.next();
-            redisTemplate.opsForHash().delete("1234567",next.getKey());
+            redisTemplate.opsForHash().delete("1234567", next.getKey());
         }
 
-        System.out.println(System.currentTimeMillis()-middle);
+        System.out.println(System.currentTimeMillis() - middle);
 
         // redis删除List类型的BigKey
-
 
 
         // redis删除Set类型的BigKey
         List<Object> list = new ArrayList<>();
         Cursor<Object> scan1 = redisTemplate.opsForSet().scan("123", ScanOptions.scanOptions().count(100).build());
-        while (scan1.hasNext()){
+        while (scan1.hasNext()) {
             Object next = scan1.next();
-            if (list.size()>=100){
+            if (list.size() >= 100) {
                 redisTemplate.executePipelined(new SessionCallback<Object>() {
                     @Override
                     public Object execute(RedisOperations redisOperations) throws DataAccessException {
                         for (Object o : list) {
-                            redisOperations.opsForSet().remove("1234",o);
+                            redisOperations.opsForSet().remove("1234", o);
                         }
                         return null;
                     }
                 });
                 list.clear();
-            }else {
+            } else {
                 list.add(next);
             }
-            redisTemplate.opsForSet().remove("1234",next);
+            redisTemplate.opsForSet().remove("1234", next);
         }
 
         // redis删除SortedSet类型的BigKey
@@ -153,12 +153,12 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public BaseResponse cacheBreakdown(String userId) {
         Object o = redisTemplate.opsForValue().get(userId);
-        if (Objects.nonNull(o)){
+        if (Objects.nonNull(o)) {
             return BaseResponse.success();
         }
         // 缓存未命中时，以用户id为颗粒度加锁，加本地锁，减少访问数据库的次数（如要完全限制只查询一次数据库，使用分布式锁）
         ReentrantLock reentrantLock = new ReentrantLock();
-        if ((concurrentHashMap.putIfAbsent(userId,reentrantLock)) != null){
+        if ((concurrentHashMap.putIfAbsent(userId, reentrantLock)) != null) {
             reentrantLock = concurrentHashMap.get(userId);
         }
 
@@ -166,7 +166,7 @@ public class RedisServiceImpl implements RedisService {
         try {
             // 利用DCL(Double Check Lock)双锁检查机制
             Object temp = redisTemplate.opsForValue().get(userId);
-            if (Objects.nonNull(temp)){
+            if (Objects.nonNull(temp)) {
                 return BaseResponse.success();
             }
             // 查询数据库并且放入到缓存中
@@ -175,7 +175,7 @@ public class RedisServiceImpl implements RedisService {
             return BaseResponse.success();
         } finally {
             // 当前锁的等待队列为空时，删除该锁
-            if (!reentrantLock.hasQueuedThreads()){
+            if (!reentrantLock.hasQueuedThreads()) {
                 concurrentHashMap.remove(userId);
             }
             reentrantLock.unlock();
@@ -184,12 +184,13 @@ public class RedisServiceImpl implements RedisService {
 
     /**
      * 利用redis中的bitmap实现redis布隆过滤器
+     *
      * @param userId userId
      * @return BaseResponse
      */
     @Override
     public BaseResponse cachePenetration(String userId) {
-        return cacheTemplate.redisStringCache(null,userId,10,TimeUnit.MINUTES,()-> shopInfoMapper.selectByPrimaryKey("1"));
+        return cacheTemplate.redisStringCache(null, userId, 10, TimeUnit.MINUTES, () -> shopInfoMapper.selectByPrimaryKey("1"));
     }
 
     @Override
@@ -197,13 +198,13 @@ public class RedisServiceImpl implements RedisService {
         String clientId = UUID.randomUUID().toString();
         try {
             Boolean aBoolean = redisTemplate.opsForValue().setIfAbsent(userId, clientId, 10, TimeUnit.SECONDS);
-            BaseAssert.notNull(aBoolean,"");
-            if (!aBoolean){
+            BaseAssert.notNull(aBoolean, "");
+            if (!aBoolean) {
                 return BaseResponse.error(ErrorCodeEnum.API_GATEWAY_ERROR);
             }
             // 业务处理
         } finally {
-            if (clientId.equals(redisTemplate.opsForValue().get(userId))){
+            if (clientId.equals(redisTemplate.opsForValue().get(userId))) {
                 redisTemplate.delete(userId);
             }
         }
@@ -224,29 +225,29 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public BaseResponse redisList(String userId) {
-        String key = "list"+userId;
+        String key = "list" + userId;
         redisTemplate.delete(key);
         // 从左边向list中插入数据
-        redisTemplate.opsForList().leftPushAll(key,ids.toArray());
+        redisTemplate.opsForList().leftPushAll(key, ids.toArray());
 
         // 取出list中的全部数据
         List<Object> range = redisTemplate.opsForList().range(key, 0, -1);
 
         // 队尾出队
         Object rightPop = redisTemplate.opsForList().rightPop(key);
-        System.out.println("队尾出队"+rightPop);
+        System.out.println("队尾出队" + rightPop);
 
         // 队首出队
         Object leftPop = redisTemplate.opsForList().leftPop(key);
-        System.out.println("队首出队"+leftPop);
+        System.out.println("队首出队" + leftPop);
 
         // 用于移除列表的最后一个元素，并将该元素添加到另一个列表并返回
         Object rightPopAndLeftPush = redisTemplate.opsForList().rightPopAndLeftPush(key, "list1" + userId);
-        System.out.println("新队列元素"+redisTemplate.opsForList().range("list1"+userId,0,-1));
+        System.out.println("新队列元素" + redisTemplate.opsForList().range("list1" + userId, 0, -1));
 
-        if (Objects.nonNull(rightPopAndLeftPush)){
+        if (Objects.nonNull(rightPopAndLeftPush)) {
             // 只有存在key对应的列表才能将这个value值插入到key所对应的列表中
-            redisTemplate.opsForList().leftPushIfPresent("testList",rightPopAndLeftPush);
+            redisTemplate.opsForList().leftPushIfPresent("testList", rightPopAndLeftPush);
         }
 
         // 可利用list数据结构实现队列和栈的功能
@@ -255,7 +256,7 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public BaseResponse redisSet(String userId) {
-        String key = "set"+userId;
+        String key = "set" + userId;
         redisTemplate.delete(key);
         ShopInfo shopInfo = new ShopInfo();
         ShopInfo shopInfo1 = new ShopInfo();
@@ -268,32 +269,32 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public BaseResponse redisSortedSet(String userId) {
         final String key1 = "order:time:out";
-        long l = System.currentTimeMillis()/1000 + 60;
+        long l = System.currentTimeMillis() / 1000 + 60;
         for (int i = 0; i < 1000; i++) {
-            redisTemplate.opsForZSet().add(key1,i,l);
+            redisTemplate.opsForZSet().add(key1, i, l);
         }
         Set<ZSetOperations.TypedTuple<Object>> set1 = redisTemplate.opsForZSet().rangeWithScores(key1, 0, 1);
         for (ZSetOperations.TypedTuple<Object> tuple : set1) {
-            redisTemplate.opsForZSet().remove(key1,tuple.getValue());
+            redisTemplate.opsForZSet().remove(key1, tuple.getValue());
         }
 
-        String key = "zSet"+userId;
+        String key = "zSet" + userId;
         ShopInfo third = ids.get(3);
         redisTemplate.delete(key);
         // 向key中新增一个有序集合，存在的话为false，不存在的话为true
-        ids.forEach(each->redisTemplate.opsForZSet().add(key, each, each.getShopPrice().doubleValue()));
+        ids.forEach(each -> redisTemplate.opsForZSet().add(key, each, each.getShopPrice().doubleValue()));
 
         // 查询集合中全部数据
         Set<Object> range = redisTemplate.opsForZSet().range(key, 0, -1);
-        System.out.println("全部数据："+range);
+        System.out.println("全部数据：" + range);
 
         // 增加元素的score值，并返回增加后的值
         Double aDouble = redisTemplate.opsForZSet().incrementScore(key, third, 2.0);
-        System.out.println("元素新的score:"+aDouble);
+        System.out.println("元素新的score:" + aDouble);
 
         // 从有序集合中移除一个或者多个元素
         Long remove = redisTemplate.opsForZSet().remove(key, third);
-        System.out.println("删除元素数量："+remove);
+        System.out.println("删除元素数量：" + remove);
 
         // 返回有序集中指定成员的排名，其中有序集成员按分数值递增(从小到大)顺序排列
         ShopInfo first = ids.get(0);
@@ -309,7 +310,7 @@ public class RedisServiceImpl implements RedisService {
         System.out.println(set);
 
         // 计算给定的一个有序集的并集，并存储在新的 destKey中，key相同的话会把score值相加
-        redisTemplate.opsForZSet().unionAndStore("test001","test002","test003");
+        redisTemplate.opsForZSet().unionAndStore("test001", "test002", "test003");
         return BaseResponse.success();
     }
 
@@ -317,30 +318,30 @@ public class RedisServiceImpl implements RedisService {
     public BaseResponse redisGeo(String userId) {
         Map<Object, Point> map = new HashMap<>(16);
         for (int i = 0; i < 10; i++) {
-            map.put(String.valueOf(i),new Point(123,1.34));
+            map.put(String.valueOf(i), new Point(123, 1.34));
         }
-        Point point = new Point(123,1.34);
-        redisTemplate.opsForGeo().add("1234",point,"123");
-        redisTemplate.opsForGeo().add("1234",map);
-        redisTemplate.opsForGeo().remove("1234","1","2");
+        Point point = new Point(123, 1.34);
+        redisTemplate.opsForGeo().add("1234", point, "123");
+        redisTemplate.opsForGeo().add("1234", map);
+        redisTemplate.opsForGeo().remove("1234", "1", "2");
         return BaseResponse.success();
     }
 
     @Override
     public BaseResponse redisInfo(String userId) {
         RedisConnectionFactory factory = redisTemplate.getConnectionFactory();
-        BaseAssert.notNull(factory,"");
+        BaseAssert.notNull(factory, "");
         RedisConnection conn = null;
 
         try {
             conn = RedisConnectionUtils.getConnection(factory);
             Long incr = conn.incr(userId.getBytes());
             Map redisInfo = conn.info();
-            BaseAssert.notNull(redisInfo,"");
+            BaseAssert.notNull(redisInfo, "");
 
             JSONObject json = new JSONObject();
-            json.put("incr",incr);
-            json.put("processId",redisInfo.get("process_id"));
+            json.put("incr", incr);
+            json.put("processId", redisInfo.get("process_id"));
             System.out.println(JSON.toJSONString(json));
             return BaseResponse.successData(JSON.toJSONString(json));
         } finally {
@@ -352,13 +353,13 @@ public class RedisServiceImpl implements RedisService {
     public BaseResponse hotSearchOnWeibo(String key) {
         long times = System.currentTimeMillis() / (60 * 60 * 1000);
         String redisKey = Dict.WEIBO + times;
-        redisTemplate.opsForZSet().incrementScore(redisKey,key,1);
+        redisTemplate.opsForZSet().incrementScore(redisKey, key, 1);
         return BaseResponse.success();
     }
 
     @Override
     public BaseResponse getHot(String type) {
-        if ("hour".equals(type)){
+        if ("hour".equals(type)) {
             long times = System.currentTimeMillis() / (60 * 60 * 1000);
             type = Dict.WEIBO + times;
         }
@@ -370,8 +371,8 @@ public class RedisServiceImpl implements RedisService {
     public BaseResponse likePoint(LikePointVO data) {
         try {
             redisTemplate.execute((RedisCallback<Object>) redisConnection -> {
-                redisConnection.setBit((Dict.BIT_MAP + data.getId()).getBytes(),data.getUserId(),data.getStatus());
-                redisConnection.expire((Dict.BIT_MAP + data.getId()).getBytes(),1000*60*60);
+                redisConnection.setBit((Dict.BIT_MAP + data.getId()).getBytes(), data.getUserId(), data.getStatus());
+                redisConnection.expire((Dict.BIT_MAP + data.getId()).getBytes(), 1000 * 60 * 60);
                 redisConnection.close();
                 return null;
             });
@@ -389,7 +390,7 @@ public class RedisServiceImpl implements RedisService {
             redisConnection.close();
             return aLong;
         });
-        return BaseResponse.successData((Long)execute);
+        return BaseResponse.successData((Long) execute);
     }
 
     @Override
@@ -401,21 +402,21 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public BaseResponse pubAndSub(String userId) {
         Boolean aBoolean = redisTemplate.opsForValue().setBit(userId, 123L, true);
-        if (aBoolean!=null && aBoolean){
+        if (aBoolean != null && aBoolean) {
             return BaseResponse.error();
-        }else {
+        } else {
             return BaseResponse.success();
         }
     }
 
     @Override
     public BaseResponse redisConcurrent(String userId) {
-        if (flag){
+        if (flag) {
             Long decrement = redisTemplate.opsForValue().increment(userId);
-            if(decrement!=null && decrement<=100){
+            if (decrement != null && decrement <= 100) {
                 System.out.println("123");
                 return BaseResponse.success();
-            }else {
+            } else {
                 System.out.println("error");
                 flag = false;
                 return BaseResponse.error();
@@ -427,40 +428,59 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public Properties info(String param) {
-        if (StringUtils.isEmpty(param)){
+        if (StringUtils.isEmpty(param)) {
             return redisTemplate.getRequiredConnectionFactory().getConnection().info();
         }
         return redisTemplate.getRequiredConnectionFactory().getConnection().info(param);
     }
 
-    private void refreshDay(Long time){
+    @Override
+    public BaseResponse slidingWindowCounter(String param) {
+        ZSetOperations<String, Object> zSetOperations = redisTemplate.opsForZSet();
+        String key = "slidingWindowCounter";
+        // 每次正式计数之前，先清除一次过期的数据,当前时间秒数 - 60 = 过期开始时间
+        long l = System.currentTimeMillis() / 1000;
+        zSetOperations.removeRangeByScore(key, 0, l - 60);
+        // 统计当前key中元素个数，即过期一分钟内的请求次数，如果达到阈值，返回请求失败，提示错误信息
+        Long aLong = zSetOperations.zCard(key);
+        if (Objects.nonNull(aLong) && aLong >= 2) {
+            return BaseResponse.error("达到请求阈值阀门,请稍后重试");
+        }
+        // 说明此时未达到请求阈值阀门，可以继续接收请求进行业务逻辑处理
+        zSetOperations.add(key, param, l);
+        // 设置该key的过期时间为单位时间
+        redisTemplate.expire(key, 60, TimeUnit.SECONDS);
+        return BaseResponse.success();
+    }
+
+    private void refreshDay(Long time) {
         // 获取前23小时的数据和当前时间数据，刷新到
         List<String> list = new ArrayList<>();
         for (int i = 1; i < 24; i++) {
-            list.add(Dict.WEIBO+(time-i));
+            list.add(Dict.WEIBO + (time - i));
         }
         redisTemplate.opsForZSet().unionAndStore(Dict.WEIBO + time, list, Dict.WEIBO_DAY);
 
-        list.add(Dict.WEIBO+time);
+        list.add(Dict.WEIBO + time);
         for (String s : list) {
-            redisTemplate.expire(s,40, TimeUnit.DAYS);
+            redisTemplate.expire(s, 40, TimeUnit.DAYS);
         }
     }
 
-    private void refreshWeek(Long time){
+    private void refreshWeek(Long time) {
         // 获取一周的数据和当前时间数据，刷新到
         List<String> list = new ArrayList<>();
-        for (int i = 1; i < 24*7; i++) {
-            list.add(Dict.WEIBO+(time-i));
+        for (int i = 1; i < 24 * 7; i++) {
+            list.add(Dict.WEIBO + (time - i));
         }
         redisTemplate.opsForZSet().unionAndStore(Dict.WEIBO + time, list, Dict.WEIBO_WEEK);
     }
 
-    private void refreshMonth(Long time){
+    private void refreshMonth(Long time) {
         // 获取一月的数据和当前时间数据，刷新到
         List<String> list = new ArrayList<>();
-        for (int i = 1; i < 24*7*30; i++) {
-            list.add(Dict.WEIBO+(time-i));
+        for (int i = 1; i < 24 * 7 * 30; i++) {
+            list.add(Dict.WEIBO + (time - i));
         }
         redisTemplate.opsForZSet().unionAndStore(Dict.WEIBO + time, list, Dict.WEIBO_MONTH);
     }

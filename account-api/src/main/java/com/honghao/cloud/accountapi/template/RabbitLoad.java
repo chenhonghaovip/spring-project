@@ -8,5 +8,5 @@ import com.honghao.cloud.basic.common.base.BaseResponse;
  */
 @FunctionalInterface
 public interface RabbitLoad {
-   BaseResponse run();
+    BaseResponse run();
 }

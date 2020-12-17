@@ -27,7 +27,7 @@ public class MsgRequest {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class MsgDTO{
+    public static class MsgDTO {
         /**
          * 第三方业务id
          */

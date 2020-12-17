@@ -22,22 +22,23 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @date 2020-10-22 13:59
  */
 class NettyServer {
-    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(1,1,"netty-server-init");
+    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(1, 1, "netty-server-init");
+
     /**
      * 初始化配置信息
      */
-    void init(){
-        threadPoolExecutor.submit(()->{
+    void init() {
+        threadPoolExecutor.submit(() -> {
             ServerBootstrap bootstrap = new ServerBootstrap();
             EventLoopGroup eventExecutors = new NioEventLoopGroup();
             EventLoopGroup eventExecutors1 = new NioEventLoopGroup(4);
             try {
 
-                bootstrap.group(eventExecutors,eventExecutors1)
+                bootstrap.group(eventExecutors, eventExecutors1)
                         .channel(NioServerSocketChannel.class)
                         .localAddress(8899)
                         // 保持连接
-                        .option(ChannelOption.SO_KEEPALIVE,true)
+                        .option(ChannelOption.SO_KEEPALIVE, true)
                         // 有数据立即发送
                         .option(ChannelOption.TCP_NODELAY, true)
                         .childHandler(new ChannelInitializer<SocketChannel>() {

@@ -8,7 +8,7 @@ package com.honghao.cloud.leetcode.algorithm.leetcode;
  */
 public class Test013 {
     public static void main(String[] args) {
-        String[] strs = new String[]{"aa","a"};
+        String[] strs = new String[]{"aa", "a"};
         System.out.println(longestCommonPrefix(strs));
         longestCommonPrefix(strs);
     }

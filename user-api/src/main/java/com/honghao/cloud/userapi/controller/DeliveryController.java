@@ -24,10 +24,10 @@ public class DeliveryController {
     private Map<String, KnightService> deliveryServiceMap;
 
     @PostMapping("/deliveryAction")
-    public BaseResponse receiveShop(@RequestBody String data){
+    public BaseResponse receiveShop(@RequestBody String data) {
         JSONObject json = JSON.parseObject(data);
         Integer orderType = json.getInteger("orderType");
-        if (TacticsEnum.CODES.contains(orderType)){
+        if (TacticsEnum.CODES.contains(orderType)) {
             KnightService deliveryService = deliveryServiceMap.get(TacticsEnum.formCode(orderType).getDeliveryServiceName());
             deliveryService.receiveShop(data);
             return BaseResponse.success();

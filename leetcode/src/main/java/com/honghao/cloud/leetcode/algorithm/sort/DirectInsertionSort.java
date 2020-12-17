@@ -19,8 +19,8 @@ public class DirectInsertionSort {
 //        for (int i = 0; i < list.size(); i++) {
 //
 //        }
-        int a = (int) Math.pow(10,2);
-        System.out.println(Math.pow(10,2));
+        int a = (int) Math.pow(10, 2);
+        System.out.println(Math.pow(10, 2));
 
     }
 }

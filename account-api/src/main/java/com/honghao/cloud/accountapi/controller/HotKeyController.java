@@ -21,7 +21,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @RestController
 @RequestMapping("/hotKey")
 public class HotKeyController {
-    private static Map<String,String> cacheMap = new HashMap<>(100);
+    private static Map<String, String> cacheMap = new HashMap<>(100);
 //    private static final Cache<String,Object> CACHE = Caffeine.newBuilder()
 //            .initialCapacity(256).maximumSize(50000).expireAfterWrite(5, TimeUnit.SECONDS)
 ////            .executor(executorService)
@@ -38,7 +38,7 @@ public class HotKeyController {
 
 
     @PostMapping("/addCache")
-    public BaseResponse addCache(){
+    public BaseResponse addCache() {
         ReentrantLock reentrantLock = new ReentrantLock();
         reentrantLock.lock();
         try {
@@ -50,7 +50,7 @@ public class HotKeyController {
 //        CACHE.getIfPresent()
         for (int i = 0; i < 10; i++) {
             String s = String.valueOf(i);
-            cacheMap.put(s,s);
+            cacheMap.put(s, s);
         }
         try {
             for (String s : cacheMap.keySet()) {
@@ -63,7 +63,7 @@ public class HotKeyController {
     }
 
     @GetMapping("/queryCache")
-    public BaseResponse queryCache(@RequestParam("key") String key){
+    public BaseResponse queryCache(@RequestParam("key") String key) {
         try {
             return BaseResponse.successData(LOADING_CACHE.get(key));
         } catch (ExecutionException e) {

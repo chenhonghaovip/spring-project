@@ -56,7 +56,7 @@ public class SlaveDataSourceConfig {
     }
 
     @Bean(name = "slaveSqlSessionFactory")
-    public SqlSessionFactory slaveSqlSessionFactory(@Qualifier("slaveDataSource") DataSource slaveDataSource, @Qualifier("mybatis.config")org.apache.ibatis.session.Configuration config)
+    public SqlSessionFactory slaveSqlSessionFactory(@Qualifier("slaveDataSource") DataSource slaveDataSource, @Qualifier("mybatis.config") org.apache.ibatis.session.Configuration config)
             throws Exception {
         final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(slaveDataSource);

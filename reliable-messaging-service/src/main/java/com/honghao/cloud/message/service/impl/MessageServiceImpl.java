@@ -33,24 +33,24 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Service
 public class MessageServiceImpl implements MessageService {
-    private static SnowFlakeShortUrl snowFlake = new SnowFlakeShortUrl(2, 3);
     private static final LinkedBlockingQueue<Long> SEND_BLOCKING_QUEUE = new LinkedBlockingQueue<>(10000);
     private static final LinkedBlockingQueue<Long> COMPLETE_BLOCKING_QUEUE = new LinkedBlockingQueue<>(10000);
-    private static ScheduledThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1,"rabbitmq_sender");
-    private static ScheduledThreadPoolExecutor threadPoolExecutor1 = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1,"complete");
+    private static SnowFlakeShortUrl snowFlake = new SnowFlakeShortUrl(2, 3);
+    private static ScheduledThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1, "rabbitmq_sender");
+    private static ScheduledThreadPoolExecutor threadPoolExecutor1 = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1, "complete");
     @Resource
     private MsgInfoMapper msgInfoMapper;
     @Resource
     private MessageSender messageSender;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         /*
          * 发送到消息队列并修改数据库状态
          */
-        threadPoolExecutor.scheduleAtFixedRate(()->{
+        threadPoolExecutor.scheduleAtFixedRate(() -> {
             int a;
-            if ((a = SEND_BLOCKING_QUEUE.size())==0){
+            if ((a = SEND_BLOCKING_QUEUE.size()) == 0) {
                 return;
             }
             List<Long> msgIds = new ArrayList<>();
@@ -59,14 +59,14 @@ public class MessageServiceImpl implements MessageService {
                 msgIds.add(l);
             }
             business(msgIds);
-        },1,1, TimeUnit.SECONDS);
+        }, 1, 1, TimeUnit.SECONDS);
 
         /*
          * 队列消费完成，回调通知消息完成
          */
-        threadPoolExecutor1.scheduleAtFixedRate(()->{
+        threadPoolExecutor1.scheduleAtFixedRate(() -> {
             int a;
-            if ((a = COMPLETE_BLOCKING_QUEUE.size())==0){
+            if ((a = COMPLETE_BLOCKING_QUEUE.size()) == 0) {
                 return;
             }
             List<Long> msgIds = new ArrayList<>();
@@ -74,15 +74,15 @@ public class MessageServiceImpl implements MessageService {
                 Long l = COMPLETE_BLOCKING_QUEUE.poll();
                 msgIds.add(l);
             }
-            msgInfoMapper.updateBatch(msgIds,MsgStatusEnum.COMPLETED.getCode());
-        },1,1, TimeUnit.SECONDS);
+            msgInfoMapper.updateBatch(msgIds, MsgStatusEnum.COMPLETED.getCode());
+        }, 1, 1, TimeUnit.SECONDS);
     }
 
     @Override
     public BaseResponse saveMessage(MsgInfoDTO msgInfoDTO) {
         long id = snowFlake.nextId();
         MsgInfo msgInfo = new MsgInfo();
-        BeanUtils.copyProperties(msgInfoDTO,msgInfo);
+        BeanUtils.copyProperties(msgInfoDTO, msgInfo);
         msgInfo.setMsgId(id);
         msgInfo.setStatus(MsgStatusEnum.TO_BE_CONFIRMED.getCode());
         msgInfo.setCreateTime(LocalDateTime.now());
@@ -107,11 +107,11 @@ public class MessageServiceImpl implements MessageService {
 
         List<MsgInfo> list = new ArrayList<>();
         List<Long> ids = new ArrayList<>();
-        batchMsgInfoDTO.getMsgList().forEach(each->{
+        batchMsgInfoDTO.getMsgList().forEach(each -> {
             long id = snowFlake.nextId();
             ids.add(id);
             MsgInfo msgInfo = new MsgInfo();
-            BeanUtils.copyProperties(each,msgInfo);
+            BeanUtils.copyProperties(each, msgInfo);
             msgInfo.setMsgId(id);
             msgInfo.setStatus(MsgStatusEnum.TO_BE_CONFIRMED.getCode());
             msgInfo.setCreateTime(now);
@@ -144,11 +144,11 @@ public class MessageServiceImpl implements MessageService {
         return BaseResponse.successData(msgInfoMapper.selectByPrimaryKey(messageId));
     }
 
-    private void business(List<Long> msgIds){
+    private void business(List<Long> msgIds) {
         List<MsgInfo> list = msgInfoMapper.selectBatch(msgIds);
         // 发送到消息队列
-        list.forEach(each-> messageSender.publicQueueProcessing(JSON.toJSONString(each),each.getTopic()));
+        list.forEach(each -> messageSender.publicQueueProcessing(JSON.toJSONString(each), each.getTopic()));
         // 批次更新消息记录
-        msgInfoMapper.updateBatch(msgIds,MsgStatusEnum.HAS_BEEN_SENT.getCode());
+        msgInfoMapper.updateBatch(msgIds, MsgStatusEnum.HAS_BEEN_SENT.getCode());
     }
 }

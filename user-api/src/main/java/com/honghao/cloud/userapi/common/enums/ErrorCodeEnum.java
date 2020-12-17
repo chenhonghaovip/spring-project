@@ -21,12 +21,12 @@ public enum ErrorCodeEnum implements BaseErrorInfoInterface {
     /**
      * 请求的数据格式不符
      */
-    BODY_NOT_MATCH("400","请求的数据格式不符!"),
+    BODY_NOT_MATCH("400", "请求的数据格式不符!"),
 
     /**
      * 请求的数字签名不匹配
      */
-    SIGNATURE_NOT_MATCH("401","请求的数字签名不匹配!"),
+    SIGNATURE_NOT_MATCH("401", "请求的数字签名不匹配!"),
 
     /**
      * 未找到该资源
@@ -40,7 +40,7 @@ public enum ErrorCodeEnum implements BaseErrorInfoInterface {
     /**
      * 成功
      */
-    SERVER_BUSY("503","服务器正忙，请稍后再试!"),
+    SERVER_BUSY("503", "服务器正忙，请稍后再试!"),
 
     /**
      * 系统繁忙，请稍后重试
@@ -76,23 +76,6 @@ public enum ErrorCodeEnum implements BaseErrorInfoInterface {
      * 对象不能为空
      */
     OBJECT_CANNOT_BE_EMPTY("100006", "当前对象不能为空"),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     ;

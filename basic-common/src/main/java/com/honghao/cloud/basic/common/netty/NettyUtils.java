@@ -31,21 +31,17 @@ import java.util.concurrent.TimeoutException;
  */
 @Slf4j
 public class NettyUtils {
-    static Bootstrap bootstrap;
-
     /**
      * 用于异步获取返回结果
      */
     static final ConcurrentHashMap<Integer, MessageFuture> MAP = new ConcurrentHashMap<>();
+    private final static ConcurrentMap<String, Channel> CHANNELS = new ConcurrentHashMap<>();
+    private final static ConcurrentMap<String, Object> CHANNEL_LOCKS = new ConcurrentHashMap<>();
+    static Bootstrap bootstrap;
     /**
      * 用于生成id,获取返回结果时通过此参数绑定请求结果与返回结果
      */
     private static PositiveAtomicCounter positiveAtomicCounter = new PositiveAtomicCounter();
-
-    private final static ConcurrentMap<String, Channel> CHANNELS = new ConcurrentHashMap<>();
-
-    private final static ConcurrentMap<String, Object> CHANNEL_LOCKS = new ConcurrentHashMap<>();
-
     private static ChannelFuture connect;
 
     static void setConnect(ChannelFuture connect) {
@@ -69,14 +65,14 @@ public class NettyUtils {
         }
     }
 
-   static Channel acquireChannel(String serverAddress) {
+    static Channel acquireChannel(String serverAddress) {
         Channel channelToServer = CHANNELS.get(serverAddress);
         if (channelIsOk(channelToServer)) {
             return channelToServer;
         }
         // 加锁操作
-       CHANNEL_LOCKS.putIfAbsent(serverAddress,new Object());
-        synchronized (CHANNEL_LOCKS.get(serverAddress)){
+        CHANNEL_LOCKS.putIfAbsent(serverAddress, new Object());
+        synchronized (CHANNEL_LOCKS.get(serverAddress)) {
             return doConnect(serverAddress);
         }
     }
@@ -94,12 +90,12 @@ public class NettyUtils {
             try {
                 connect.await(2, TimeUnit.SECONDS);
                 if (connect.isCancelled()) {
-                    throw new RuntimeException("connect cancelled, can not connect to services-server.",connect.cause());
+                    throw new RuntimeException("connect cancelled, can not connect to services-server.", connect.cause());
                 } else if (!connect.isSuccess()) {
-                    throw new RuntimeException("connect failed, can not connect to services-server.",connect.cause());
+                    throw new RuntimeException("connect failed, can not connect to services-server.", connect.cause());
                 } else {
                     channelFromPool = connect.channel();
-                    CHANNELS.put(serverAddress,channelFromPool);
+                    CHANNELS.put(serverAddress, channelFromPool);
                 }
             } catch (InterruptedException e) {
                 log.error(e.getMessage());
@@ -112,20 +108,22 @@ public class NettyUtils {
     }
 
 
-    static void releaseChannel(Channel channel ,String serverAddress) {
-        if (channel == null || serverAddress == null){
-            return ;
+    static void releaseChannel(Channel channel, String serverAddress) {
+        if (channel == null || serverAddress == null) {
+            return;
         }
-        synchronized (CHANNEL_LOCKS.get(serverAddress)){
+        synchronized (CHANNEL_LOCKS.get(serverAddress)) {
             Channel channelToServer = CHANNELS.get(serverAddress);
-            if (channel.compareTo(channelToServer) == 0){
-                destroyChannel(serverAddress,channel);
+            if (channel.compareTo(channelToServer) == 0) {
+                destroyChannel(serverAddress, channel);
             }
         }
     }
 
     private static void destroyChannel(String serverAddress, Channel channel) {
-        if (null == channel) { return; }
+        if (null == channel) {
+            return;
+        }
         try {
             if (channel.equals(CHANNELS.get(serverAddress))) {
                 CHANNELS.remove(serverAddress);
@@ -160,37 +158,37 @@ public class NettyUtils {
     }
 
 
-    public static BaseResponse sendMessageLoad(Object object, int type) throws TimeoutException{
+    public static BaseResponse sendMessageLoad(Object object, int type) throws TimeoutException {
         List<String> list = new ArrayList<>(CHANNELS.keySet());
         int size = list.size();
         int i = 0;
-        if (size <= 0){
+        if (size <= 0) {
             return BaseResponse.error();
-        }else if (size > 1){
+        } else if (size > 1) {
             Random random = new Random();
             i = random.nextInt(size - 1);
         }
 
         Channel channel = CHANNELS.get(list.get(i));
-        return sendMessage(object,type,channel);
+        return sendMessage(object, type, channel);
     }
 
-    public static BaseResponse sendMessage(Object object,int type) throws TimeoutException{
-        if (connect!=null && connect.channel().isActive()){
+    public static BaseResponse sendMessage(Object object, int type) throws TimeoutException {
+        if (connect != null && connect.channel().isActive()) {
             Channel channel = connect.channel();
-            return sendMessage(object,type,channel);
-        }else {
+            return sendMessage(object, type, channel);
+        } else {
             return null;
         }
     }
 
-    private static BaseResponse sendMessage(Object object, int type, Channel channel) throws TimeoutException{
-        if (channel!=null && channel.isActive()){
+    private static BaseResponse sendMessage(Object object, int type, Channel channel) throws TimeoutException {
+        if (channel != null && channel.isActive()) {
             int nextId = positiveAtomicCounter.getAndIncrement();
             RpcMessage rpcMessage = RpcMessage.builder().id(nextId).messageType(type).body(object).build();
 
             MessageFuture messageFuture = new MessageFuture();
-            MAP.putIfAbsent(nextId,messageFuture);
+            MAP.putIfAbsent(nextId, messageFuture);
             ChannelFuture channelFuture = channel.writeAndFlush(Unpooled.copiedBuffer(JSON.toJSONString(rpcMessage), CharsetUtil.UTF_8));
             channelFuture.addListener((ChannelFutureListener) future -> {
                 if (!future.isSuccess()) {
@@ -203,9 +201,9 @@ public class NettyUtils {
             });
             try {
                 Object o = messageFuture.get(10000, TimeUnit.MILLISECONDS);
-                if (o instanceof RpcMessage){
+                if (o instanceof RpcMessage) {
                     RpcMessage result = (RpcMessage) o;
-                    return JSON.parseObject(JSON.toJSONString(result.getBody()),BaseResponse.class);
+                    return JSON.parseObject(JSON.toJSONString(result.getBody()), BaseResponse.class);
                 }
                 return null;
             } catch (Exception e) {
@@ -216,7 +214,7 @@ public class NettyUtils {
                     throw new RuntimeException(e);
                 }
             }
-        }else {
+        } else {
             return null;
         }
     }

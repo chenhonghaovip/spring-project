@@ -10,13 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2020-01-16 19:59
  */
 public class Test06 {
-    @Data
-    static class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
-        TreeNode(int x) { val = x; }
-    }
     public static void main(String[] args) {
         TreeNode treeNode = new TreeNode(0);
         treeNode.setLeft(new TreeNode(1));
@@ -26,7 +19,7 @@ public class Test06 {
         treeNode.getRight().setLeft(new TreeNode(5));
         treeNode.getRight().setRight(new TreeNode(6));
         treeNode.getRight().getLeft().setLeft(new TreeNode(7));
-        List<Integer>  middleList= inorderTraversal(treeNode);
+        List<Integer> middleList = inorderTraversal(treeNode);
         System.out.println(middleList);
 
         List<Integer> firstList = firstTraversal(treeNode);
@@ -40,7 +33,7 @@ public class Test06 {
 
     private static void getInfo() {
         ConcurrentHashMap concurrentHashMap = new ConcurrentHashMap(5);
-        concurrentHashMap.put("1","1");
+        concurrentHashMap.put("1", "1");
         int[] a = new int[5];
         a[0] = 1;
         System.out.println(a.length);
@@ -59,15 +52,16 @@ public class Test06 {
         while (!stack.isEmpty()) {
             treeNode = stack.pop();
             list.add(treeNode.getVal());
-            if (treeNode.getRight()!=null){
+            if (treeNode.getRight() != null) {
                 stack.push(treeNode.getRight());
             }
-            if (treeNode.getLeft()!=null){
+            if (treeNode.getLeft() != null) {
                 stack.push(treeNode.getLeft());
             }
         }
         return list;
     }
+
     /**
      * 中序遍历
      */
@@ -76,8 +70,8 @@ public class Test06 {
         Stack<TreeNode> stack = new Stack<>();
         TreeNode treeNode = root;
 
-        while (!stack.isEmpty() || treeNode!=null) {
-            while (treeNode!=null){
+        while (!stack.isEmpty() || treeNode != null) {
+            while (treeNode != null) {
                 stack.push(treeNode);
                 treeNode = treeNode.getLeft();
             }
@@ -87,6 +81,7 @@ public class Test06 {
         }
         return list;
     }
+
     /**
      * 后序遍历
      */
@@ -97,13 +92,13 @@ public class Test06 {
 
         Set<TreeNode> set = new HashSet<>();
 
-        while (!stack.isEmpty() || treeNode!=null) {
-            while (treeNode!=null && !set.contains(treeNode)){
+        while (!stack.isEmpty() || treeNode != null) {
+            while (treeNode != null && !set.contains(treeNode)) {
                 stack.push(treeNode);
                 treeNode = treeNode.getLeft();
             }
             treeNode = stack.peek();
-            if (treeNode.getRight() == null || set.contains(treeNode)){
+            if (treeNode.getRight() == null || set.contains(treeNode)) {
                 treeNode = stack.pop();
                 set.add(treeNode);
                 list.add(treeNode.getVal());
@@ -112,12 +107,23 @@ public class Test06 {
                 }
                 treeNode = stack.peek();
                 treeNode = treeNode.getRight();
-            }else {
+            } else {
                 set.add(treeNode);
                 treeNode = treeNode.getRight();
             }
         }
         return list;
+    }
+
+    @Data
+    static class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode(int x) {
+            val = x;
+        }
     }
 
 }

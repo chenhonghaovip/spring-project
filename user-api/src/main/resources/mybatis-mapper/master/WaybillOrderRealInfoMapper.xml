@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.honghao.cloud.userapi.domain.mapper.master.WaybillOrderRealInfoMapper">
-  <resultMap id="BaseResultMap" type="com.honghao.cloud.userapi.domain.entity.WaybillOrderRealInfo">
-    <id column="w_id" jdbcType="CHAR" property="wId" />
-    <result column="user_id" jdbcType="CHAR" property="userId" />
-    <result column="identity_name" jdbcType="VARCHAR" property="identityName" />
-    <result column="identity_card" jdbcType="VARCHAR" property="identityCard" />
-    <result column="real_info_from" jdbcType="TINYINT" property="realInfoFrom" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="delete_flag" jdbcType="TINYINT" property="deleteFlag" />
-  </resultMap>
-  <sql id="Base_Column_List">
+    <resultMap id="BaseResultMap" type="com.honghao.cloud.userapi.domain.entity.WaybillOrderRealInfo">
+        <id column="w_id" jdbcType="CHAR" property="wId"/>
+        <result column="user_id" jdbcType="CHAR" property="userId"/>
+        <result column="identity_name" jdbcType="VARCHAR" property="identityName"/>
+        <result column="identity_card" jdbcType="VARCHAR" property="identityCard"/>
+        <result column="real_info_from" jdbcType="TINYINT" property="realInfoFrom"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="delete_flag" jdbcType="TINYINT" property="deleteFlag"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     w_id, user_id, identity_name, identity_card, real_info_from, create_time, update_time, 
     delete_flag
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from waybill_order_real_info
-    where w_id = #{wId,jdbcType=CHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from waybill_order_real_info
+        where w_id = #{wId,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from waybill_order_real_info
     where w_id = #{wId,jdbcType=CHAR}
   </delete>
-  <insert id="insert" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillOrderRealInfo">
+    <insert id="insert" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillOrderRealInfo">
     insert into waybill_order_real_info (w_id, user_id, identity_name, 
       identity_card, real_info_from, create_time, 
       update_time, delete_flag)
@@ -33,89 +33,90 @@
       #{identityCard,jdbcType=VARCHAR}, #{realInfoFrom,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=TINYINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillOrderRealInfo">
-    insert into waybill_order_real_info
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="wId != null">
-        w_id,
-      </if>
-      <if test="userId != null">
-        user_id,
-      </if>
-      <if test="identityName != null">
-        identity_name,
-      </if>
-      <if test="identityCard != null">
-        identity_card,
-      </if>
-      <if test="realInfoFrom != null">
-        real_info_from,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="deleteFlag != null">
-        delete_flag,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="wId != null">
-        #{wId,jdbcType=CHAR},
-      </if>
-      <if test="userId != null">
-        #{userId,jdbcType=CHAR},
-      </if>
-      <if test="identityName != null">
-        #{identityName,jdbcType=VARCHAR},
-      </if>
-      <if test="identityCard != null">
-        #{identityCard,jdbcType=VARCHAR},
-      </if>
-      <if test="realInfoFrom != null">
-        #{realInfoFrom,jdbcType=TINYINT},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteFlag != null">
-        #{deleteFlag,jdbcType=TINYINT},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillOrderRealInfo">
-    update waybill_order_real_info
-    <set>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=CHAR},
-      </if>
-      <if test="identityName != null">
-        identity_name = #{identityName,jdbcType=VARCHAR},
-      </if>
-      <if test="identityCard != null">
-        identity_card = #{identityCard,jdbcType=VARCHAR},
-      </if>
-      <if test="realInfoFrom != null">
-        real_info_from = #{realInfoFrom,jdbcType=TINYINT},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteFlag != null">
-        delete_flag = #{deleteFlag,jdbcType=TINYINT},
-      </if>
-    </set>
-    where w_id = #{wId,jdbcType=CHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillOrderRealInfo">
+    <insert id="insertSelective" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillOrderRealInfo">
+        insert into waybill_order_real_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="wId != null">
+                w_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="identityName != null">
+                identity_name,
+            </if>
+            <if test="identityCard != null">
+                identity_card,
+            </if>
+            <if test="realInfoFrom != null">
+                real_info_from,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="wId != null">
+                #{wId,jdbcType=CHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=CHAR},
+            </if>
+            <if test="identityName != null">
+                #{identityName,jdbcType=VARCHAR},
+            </if>
+            <if test="identityCard != null">
+                #{identityCard,jdbcType=VARCHAR},
+            </if>
+            <if test="realInfoFrom != null">
+                #{realInfoFrom,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.honghao.cloud.userapi.domain.entity.WaybillOrderRealInfo">
+        update waybill_order_real_info
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=CHAR},
+            </if>
+            <if test="identityName != null">
+                identity_name = #{identityName,jdbcType=VARCHAR},
+            </if>
+            <if test="identityCard != null">
+                identity_card = #{identityCard,jdbcType=VARCHAR},
+            </if>
+            <if test="realInfoFrom != null">
+                real_info_from = #{realInfoFrom,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=TINYINT},
+            </if>
+        </set>
+        where w_id = #{wId,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.userapi.domain.entity.WaybillOrderRealInfo">
     update waybill_order_real_info
     set user_id = #{userId,jdbcType=CHAR},
       identity_name = #{identityName,jdbcType=VARCHAR},

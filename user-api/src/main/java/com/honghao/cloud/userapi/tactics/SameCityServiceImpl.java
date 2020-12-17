@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class SameCityServiceImpl implements KnightService {
     @Override
     public BaseResponse receiveShop(String data) {
-        System.out.println("同城商家"+data);
+        System.out.println("同城商家" + data);
         return null;
     }
 

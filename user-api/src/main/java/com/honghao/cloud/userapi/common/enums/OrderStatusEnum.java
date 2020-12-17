@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public enum  OrderStatusEnum {
+public enum OrderStatusEnum {
     /**
      * 待分配
      */
@@ -44,14 +44,12 @@ public enum  OrderStatusEnum {
      */
     EXCEPTION_TICKET(5, "异常单");
 
+    public static final List<Integer> CODES = Arrays.stream(OrderStatusEnum.values()).map(OrderStatusEnum::getCode).collect(Collectors.toList());
     private Integer code;
-
     private String desc;
 
-    public static final List<Integer> CODES = Arrays.stream(OrderStatusEnum.values()).map(OrderStatusEnum::getCode).collect(Collectors.toList());
-
-    public OrderStatusEnum formCode(@NotNull Integer code){
-        if (!CODES.contains(code)){
+    public OrderStatusEnum formCode(@NotNull Integer code) {
+        if (!CODES.contains(code)) {
             throw new RuntimeException("订单状态异常");
         }
         return Arrays.stream(OrderStatusEnum.values()).filter(each -> code.equals(each.getCode())).findFirst().orElse(null);

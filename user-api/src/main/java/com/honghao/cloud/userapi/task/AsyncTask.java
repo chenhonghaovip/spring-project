@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class AsyncTask {
 
     @Async("asyncPool")
-    public void sendInfo(){
+    public void sendInfo() {
         log.info("async start info");
     }
 }

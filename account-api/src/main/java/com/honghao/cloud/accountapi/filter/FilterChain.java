@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Component
 @Scope("prototype")
-public class FilterChain implements Filter{
+public class FilterChain implements Filter {
 
     /**
      * 用List集合来存储过滤规则
@@ -29,6 +29,7 @@ public class FilterChain implements Filter{
 
     /**
      * 往规则链条中添加规则
+     *
      * @param f f
      * @return FilterChain
      */
@@ -41,11 +42,11 @@ public class FilterChain implements Filter{
     @Override
     public void doFilter(BaseRequest request, BaseResponse response, FilterChain chain) {
         //index初始化为0,filters.size()为3，不会执行return操作
-        if(index==filters.size()){
+        if (index == filters.size()) {
             return;
         }
         //每添加一个过滤规则，index自增1
-        Filter f=filters.get(index);
+        Filter f = filters.get(index);
         index++;
         //根据索引值获取对应的规律规则对字符串进行处理
         f.doFilter(request, response, chain);

@@ -22,14 +22,14 @@ public class JsonUtil {
      * @param object object
      * @return String
      */
-    public static String changeToHump(Object object){
+    public static String changeToHump(Object object) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         try {
             return mapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
-           log.error(e.getMessage());
+            log.error(e.getMessage());
         }
         return null;
     }
@@ -38,7 +38,7 @@ public class JsonUtil {
     /**
      * 将下划线转换为驼峰的形式，例如：user_name-->userName
      *
-     * @param json json字符串
+     * @param json  json字符串
      * @param clazz 转换类型
      * @return T
      */

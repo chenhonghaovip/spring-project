@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * 无重复字符的最长子串优化
+ *
  * @author chenhonghao
  * @date 2019-10-11 15:09
  */
@@ -18,13 +19,13 @@ public class Test002 {
         char[] arr = s.toCharArray();
         int max = 0;
         for (int i = 0; i < arr.length; i++) {
-            while (list.contains(arr[i])){
+            while (list.contains(arr[i])) {
                 list.remove(0);
             }
-            if (!list.contains(arr[i])){
+            if (!list.contains(arr[i])) {
                 list.add(arr[i]);
             }
-            max = list.size()> max?list.size():max;
+            max = list.size() > max ? list.size() : max;
         }
         System.out.println(max);
     }

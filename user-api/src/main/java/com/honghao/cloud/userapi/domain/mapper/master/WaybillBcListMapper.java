@@ -22,10 +22,11 @@ public interface WaybillBcListMapper {
 
     int updateByPrimaryKey(WaybillBcList record);
 
-    List<WaybillBcList> selectAllOrder(@Param("date") String date,@Param("orderType") Integer orderType);
+    List<WaybillBcList> selectAllOrder(@Param("date") String date, @Param("orderType") Integer orderType);
 
     /**
      * 批量插入
+     *
      * @param list list
      * @return int
      */
@@ -33,6 +34,7 @@ public interface WaybillBcListMapper {
 
     /**
      * 查询同城订单数量
+     *
      * @param knightId 骑士id
      * @return BaseResponse
      */

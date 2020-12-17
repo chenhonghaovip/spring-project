@@ -24,7 +24,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/eurekaController")
-@Api(value = "eureka服务",tags = "eureka服务")
+@Api(value = "eureka服务", tags = "eureka服务")
 public class EurekaController {
     @Resource
     private ApplicationContext applicationContext;
@@ -36,7 +36,7 @@ public class EurekaController {
 
 
     @PostMapping("/test")
-    public BaseResponse test(){
+    public BaseResponse test() {
         List<ServiceInstance> instances1 = discoveryClient.getInstances("account-api");
         ServiceInstance choose = loadBalancerClient.choose("user-api");
         List<ServiceInstance> instances = applicationContext.getBean(EurekaDiscoveryClient.class).getInstances("user-api");

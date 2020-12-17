@@ -16,23 +16,25 @@ import java.util.concurrent.ConcurrentHashMap;
 public class QuartzFactory {
     private static ConcurrentHashMap<String, JobDetail> jobDetaiMap = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<String, Trigger> triggerMap = new ConcurrentHashMap<>();
+
     private QuartzFactory() {
     }
 
     /**
      * 构建jobDetail
+     *
      * @param clazz 实现类
-     * @param map 参数
-     * @param name name
+     * @param map   参数
+     * @param name  name
      * @param group group
-     * @param <T> T
+     * @param <T>   T
      * @return JobDetail
      */
-    public static <T extends Job> JobDetail buildJobDetail(Class<T> clazz, Map<String,String> map, String name, String group){
+    public static <T extends Job> JobDetail buildJobDetail(Class<T> clazz, Map<String, String> map, String name, String group) {
         JobDetail jobDetail = JobBuilder.newJob(clazz)
                 .setJobData(new JobDataMap(map))
                 .withIdentity(name, group).build();
-        if (jobDetaiMap.putIfAbsent(name,jobDetail)!=null){
+        if (jobDetaiMap.putIfAbsent(name, jobDetail) != null) {
             jobDetail = jobDetaiMap.get(name);
         }
         return jobDetail;
@@ -40,9 +42,10 @@ public class QuartzFactory {
 
     /**
      * 构建调度器
+     *
      * @return Trigger
      */
-    public static Trigger buildTrigger(String name, String group){
+    public static Trigger buildTrigger(String name, String group) {
         // 构建Trigger实例,每隔1s执行一次
         Trigger trigger = TriggerBuilder.newTrigger().withIdentity(name, group)
                 .startNow()//立即生效
@@ -50,7 +53,7 @@ public class QuartzFactory {
                         .withIntervalInMinutes(1)
                         .withRepeatCount(3)).build();
 
-        if (triggerMap.putIfAbsent(name,trigger)!=null){
+        if (triggerMap.putIfAbsent(name, trigger) != null) {
             trigger = triggerMap.get(name);
         }
         return trigger;

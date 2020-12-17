@@ -13,16 +13,17 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class MyScheduler {
-    @Test
-    public void scheduler1(){
-        System.out.println("111");
-    }
-
     public static void main(String[] args) {
         MyScheduler myScheduler = new MyScheduler();
         myScheduler.scheduler();
     }
-    public void scheduler(){
+
+    @Test
+    public void scheduler1() {
+        System.out.println("111");
+    }
+
+    public void scheduler() {
         // 1、创建调度器Scheduler
         Scheduler scheduler = QuartzFactory.getInstance();
 
@@ -38,7 +39,7 @@ public class MyScheduler {
                         .repeatForever()).build();//一直执行
 
         try {
-            scheduler.scheduleJob(jobDetail,trigger);
+            scheduler.scheduleJob(jobDetail, trigger);
             System.out.println("--------scheduler start ! ------------");
             scheduler.start();
             TimeUnit.MINUTES.sleep(1);

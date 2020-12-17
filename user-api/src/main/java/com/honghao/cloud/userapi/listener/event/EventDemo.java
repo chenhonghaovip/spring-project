@@ -17,6 +17,6 @@ public class EventDemo extends ApplicationEvent {
 
     public EventDemo(Object source, EventDTO eventDTO) {
         super(source);
-        this.eventDTO=eventDTO;
+        this.eventDTO = eventDTO;
     }
 }

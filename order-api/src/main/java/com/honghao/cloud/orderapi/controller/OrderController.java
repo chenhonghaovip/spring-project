@@ -30,14 +30,14 @@ public class OrderController {
     private OrderFacade orderFacade;
 
     @PostMapping("/create")
-    @ApiOperation(value = "创建订单",notes = "创建订单")
+    @ApiOperation(value = "创建订单", notes = "创建订单")
     public BaseResponse createOrder(@RequestParam String data) {
         return orderFacade.createOrders(data);
     }
 
 
     @PostMapping("/createBatchOrder")
-    @ApiOperation(value = "创建订单",notes = "创建订单")
+    @ApiOperation(value = "创建订单", notes = "创建订单")
     public BaseResponse createBatchOrder(@RequestParam String data) {
         return orderFacade.createBatchOrder(data);
     }
@@ -45,36 +45,39 @@ public class OrderController {
 
     /**
      * 批次查询 - 通过查询订单是否生成返回消息id
+     *
      * @param data list
      * @return List<WaybillBcList>
      */
     @PostMapping("/batchQuery")
-    @ApiOperation(value = "批次查询",notes = "批次查询")
-    public BaseResponse batchQuery(@RequestBody String data){
+    @ApiOperation(value = "批次查询", notes = "批次查询")
+    public BaseResponse batchQuery(@RequestBody String data) {
         List<MsgDTO> list = JSON.parseArray(data, MsgDTO.class);
         return BaseResponse.successData(orderFacade.batchQuery(list));
     }
 
     /**
      * 单次查询
+     *
      * @return List<WaybillBcList>
      */
     @GetMapping("/singleQuery")
-    @ApiOperation(value = "单次查询",notes = "单次查询")
-    public BaseResponse<WaybillBcList> singleQuery(){
+    @ApiOperation(value = "单次查询", notes = "单次查询")
+    public BaseResponse<WaybillBcList> singleQuery() {
         return BaseResponse.successData(new WaybillBcList());
     }
 
     /**
      * 单次查询
+     *
      * @return List<WaybillBcList>
      */
     @GetMapping("/update")
-    @ApiOperation(value = "乐观更新操作",notes = "乐观更新操作")
-    public BaseResponse update(){
+    @ApiOperation(value = "乐观更新操作", notes = "乐观更新操作")
+    public BaseResponse update() {
         CyclicBarrier cyclicBarrier = new CyclicBarrier(2);
         for (int i = 0; i < 2; i++) {
-            new Thread(()->{
+            new Thread(() -> {
                 try {
                     cyclicBarrier.await();
                 } catch (InterruptedException e) {

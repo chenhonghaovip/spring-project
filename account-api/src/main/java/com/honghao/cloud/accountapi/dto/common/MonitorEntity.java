@@ -4,8 +4,8 @@ import java.util.Properties;
 
 public class MonitorEntity {
 
-    private String monitorParam ;
-    private Properties properties ;
+    private String monitorParam;
+    private Properties properties;
 
     public String getMonitorParam() {
         return monitorParam;

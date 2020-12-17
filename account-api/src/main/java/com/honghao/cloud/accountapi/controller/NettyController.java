@@ -23,7 +23,7 @@ import java.util.concurrent.TimeoutException;
 public class NettyController {
 
     @PostMapping("/netty")
-    public BaseResponse netty(){
+    public BaseResponse netty() {
         MsgInfoDTO msgInfoDTO = MsgInfoDTO.builder().businessId("111111").content(JSON.toJSONString("werqwrqw"))
                 .status(0).topic(RabbitConfig.CREATE_ORDER).appId("4214124").url("/order/batchQuery").build();
 

@@ -11,7 +11,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class BizException extends RuntimeException{
+public class BizException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     /**

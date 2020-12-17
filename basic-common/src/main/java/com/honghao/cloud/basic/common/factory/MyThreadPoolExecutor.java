@@ -27,7 +27,7 @@ public class MyThreadPoolExecutor {
 
 
     public MyThreadPoolExecutor(int core, int taskSize) {
-        if (core<=0 || taskSize<=0){
+        if (core <= 0 || taskSize <= 0) {
             throw new IllegalArgumentException("参数非法");
         }
         this.core = core;
@@ -41,7 +41,11 @@ public class MyThreadPoolExecutor {
         }
     }
 
-    public static class Worker extends Thread{
+    public void execute(Runnable runnable) {
+        this.blockingQueue.offer(runnable);
+    }
+
+    public static class Worker extends Thread {
         private MyThreadPoolExecutor myThreadPoolExecutor;
 
         public Worker(MyThreadPoolExecutor myThreadPoolExecutor) {
@@ -50,26 +54,19 @@ public class MyThreadPoolExecutor {
 
         @Override
         public void run() {
-            while (true){
+            while (true) {
                 Runnable runnable = null;
                 try {
                     runnable = this.myThreadPoolExecutor.blockingQueue.poll();
                 } catch (Exception e) {
-                   log.error(e.getMessage());
+                    log.error(e.getMessage());
                 }
-                if (Objects.nonNull(runnable)){
+                if (Objects.nonNull(runnable)) {
                     runnable.run();
                 }
             }
         }
     }
-
-    public void execute(Runnable runnable){
-        this.blockingQueue.offer(runnable);
-    }
-
-
-
 
 
 }

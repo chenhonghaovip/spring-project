@@ -22,22 +22,23 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Slf4j
 @RestController
 @RequestMapping("/concurrent")
-@Api(value = "并发服务",tags = "并发服务")
+@Api(value = "并发服务", tags = "并发服务")
 public class ConcurrentController {
-    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(10000,20000,"ConcurrentController");
+    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(10000, 20000, "ConcurrentController");
     @Resource
     private RedisService redisService;
 
     /**
      * 并发测试抢购，减少redis压力，做出的限流操作
+     *
      * @param userId userId
      * @return BaseResponse
      */
     @GetMapping("/redisConcurrent")
-    public BaseResponse redisConcurrent(@RequestParam("userId") String userId){
+    public BaseResponse redisConcurrent(@RequestParam("userId") String userId) {
         CyclicBarrier cyclicBarrier = new CyclicBarrier(9999);
         for (int i = 0; i < 10000; i++) {
-            threadPoolExecutor.submit(()->{
+            threadPoolExecutor.submit(() -> {
                 try {
                     cyclicBarrier.await();
                     redisService.redisConcurrent(userId);

@@ -20,20 +20,21 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 @Slf4j
 public class FileTest {
-    private static ConcurrentHashMap<String,Integer> map = new ConcurrentHashMap<>();
-    ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(4,10,"file—import");
+    private static ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();
+    ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(4, 10, "file—import");
 
     public static void main(String[] args) {
         String path = "F:\\u02\\logs\\waybill";
         FileTest fileTest = new FileTest();
         fileTest.test(path);
     }
-    public void test(String path){
+
+    public void test(String path) {
         File file = new File(path);
         File[] tempList = file.listFiles();
         assert tempList != null;
         List<CompletableFuture<Void>> list = new ArrayList<>();
-        Arrays.stream(tempList).forEach(each-> {
+        Arrays.stream(tempList).forEach(each -> {
             CompletableFuture<Void> voidCompletableFuture = CompletableFuture.runAsync(() -> {
                 try {
                     test02(each.toString());
@@ -43,7 +44,7 @@ public class FileTest {
             }, threadPoolExecutor);
             list.add(voidCompletableFuture);
         });
-        CompletableFuture.allOf(list.toArray(new CompletableFuture[0])).whenComplete((r,t)->{
+        CompletableFuture.allOf(list.toArray(new CompletableFuture[0])).whenComplete((r, t) -> {
             System.out.println(map.keySet());
         });
     }
@@ -58,12 +59,12 @@ public class FileTest {
             int line = 1;
             while ((tempString = reader.readLine()) != null) {
                 // 显示行号
-                map.put(tempString,line);
+                map.put(tempString, line);
                 line++;
             }
 
         } finally {
-            if (reader!=null){
+            if (reader != null) {
                 reader.close();
             }
         }
