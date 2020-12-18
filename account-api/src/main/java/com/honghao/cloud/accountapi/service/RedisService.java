@@ -84,6 +84,15 @@ public interface RedisService {
 
 
     /**
+     * redis实现HyperLogLog
+     *
+     * @param userId userId
+     * @return BaseResponse
+     */
+    BaseResponse redisHyperLogLog(String userId);
+
+
+    /**
      * redis实现ZSet
      *
      * @param userId userId
@@ -174,7 +183,17 @@ public interface RedisService {
     BaseResponse slidingWindowCounter(String param);
 
     /**
+     * redis滑动窗口计数器限流升级版本-改进使用lua脚本，防止redis高并发下重复操作问题
+     *
+     * @param param param
+     * @return Properties
+     */
+    BaseResponse slidingWindowCounterUpdate(String param);
+
+    /**
      * redis令牌桶限流
+     * 系统会按恒定1/QPS时间间隔(如果QPS=100,则间隔是10ms)往桶里加入Token，
+     * 如果桶已经满了就不再加了.新请求来临时,会各自拿走一个Token,如果没有Token就拒绝服务。
      *
      * @param param param
      * @return Properties

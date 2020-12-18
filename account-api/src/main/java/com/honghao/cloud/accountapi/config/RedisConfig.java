@@ -17,13 +17,28 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
     /**
      * 对比并且删除redis锁
+     * KEYS[1] redis中的key值
+     * ARGV[1] 该key中期望的value值
      */
     public static final String UNLOCK = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
 
     /**
-     * 对比并且删除redis锁
+     * 滑动窗口限流
+     * KEYS[1] redis中的key值
+     * ARGV[1] 删除的score上限
+     * ARGV[2] 单位时间内访问上限次数
+     * ARGV[3] 新成员的score
+     * ARGV[4] 新成员内容
      */
-    public static final String UNLOCK1 = "redis.call('ZREMRANGEBYSCORE',KEYS[1],0,ARGV[1]) if  end";
+    public static final String SLIDING_WINDOW_CURRENT_LIMIT = "redis.call('ZREMRANGEBYSCORE',KEYS[1],0,ARGV[1]) if redis.call('zcard',KEYS[1])<tonumber(ARGV[2]) then redis.call('zadd',KEYS[1],ARGV[3],ARGV[4]) return 1 else return 0 end";
+
+    /**
+     * 令牌桶限流，只保持存有固定个数的令牌，满了之后不再往里面放
+     * KEYS[1] redis中的key值
+     * argv[1] = 每次放入的令牌个数
+     * argv[2] = 该队列中最多持有的令牌个数 - 1
+     */
+    public static final String TOKEN_BUCKET_CURRENT_LIMIT = "for i=1,ARGV[1] do redis.call('RPUSH',KEYS[1],i) end redis.call('LTRIM',KEYS[1],tonumber(0),tonumber(ARGV[2]))";
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {

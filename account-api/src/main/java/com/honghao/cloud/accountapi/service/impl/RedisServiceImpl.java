@@ -29,7 +29,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -48,6 +47,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class RedisServiceImpl implements RedisService {
     private static final ScheduledThreadPoolExecutor SCHEDULED_THREAD_POOL_EXECUTOR = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1);
     private static final ThreadPoolExecutor POOL_EXECUTOR = ThreadPoolFactory.buildThreadPoolExecutor(1, 10, "add_redis");
+    private static final ScheduledThreadPoolExecutor EXECUTOR = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1);
     private static volatile boolean flag = true;
     private static List<ShopInfo> ids = new ArrayList<>();
 
@@ -85,6 +85,14 @@ public class RedisServiceImpl implements RedisService {
             refreshMonth(times);
 
         }, 0, 2, TimeUnit.MINUTES);
+
+        // 每分钟往令牌桶里面放入10个令牌
+        String key = "tokenBucket";
+        EXECUTOR.scheduleAtFixedRate(() -> redisTemplate.execute((RedisCallback<String>) redisConnection -> {
+            System.out.println("sssssss");
+            redisConnection.eval(RedisConfig.TOKEN_BUCKET_CURRENT_LIMIT.getBytes(), ReturnType.VALUE, 1, key.getBytes(), String.valueOf(10).getBytes(), String.valueOf(9).getBytes());
+            return null;
+        }), 0, 1, TimeUnit.MINUTES);
 
     }
 
@@ -200,21 +208,24 @@ public class RedisServiceImpl implements RedisService {
     public BaseResponse redisLock(String userId) {
         String clientId = UUID.randomUUID().toString();
         try {
-            Boolean aBoolean = redisTemplate.opsForValue().setIfAbsent(userId, clientId, 10, TimeUnit.SECONDS);
+            Boolean aBoolean = redisTemplate.opsForValue().setIfAbsent(userId, clientId, 1000, TimeUnit.SECONDS);
             BaseAssert.notNull(aBoolean, "");
             if (!aBoolean) {
                 return BaseResponse.error(ErrorCodeEnum.API_GATEWAY_ERROR);
             }
             // 业务处理
         } finally {
-            // TODO: 2020/12/17  如果查询后确实相等，但是此时该key已经过期，别的线程已经成功加锁后，在删除时会出现误删除的情况.
-            //  所以这里必须通过执行lua语句或脚本来执行，在eval命令执行Lua代码的时候，Lua代码将被当成一个命令去执行，并且直到eval命令执行完成，Redis才会执行其他命令。
-            if (clientId.equals(redisTemplate.opsForValue().get(userId))) {
-                redisTemplate.delete(userId);
-            }
+            /*
+             * 如果查询后确实相等，但是此时该key已经过期，别的线程已经成功加锁后，在删除时会出现误删除的情况.
+             * 所以这里必须通过执行lua语句或脚本来执行，在eval命令执行Lua代码的时候，Lua代码将被当成一个命令去执行，并且直到eval命令执行完成，Redis才会执行其他命令。
+             */
+//            if (clientId.equals(redisTemplate.opsForValue().get(userId))) {
+//                redisTemplate.delete(userId);
+//            }
             // 优化为如下代码，利用lua来确保查询和删除直减不会被插入其他redis操作
-            compareAndDel(RedisConfig.UNLOCK, 1, userId.getBytes(), clientId.getBytes());
+            redisTemplate.execute((RedisCallback<String>) redisConnection -> redisConnection.eval(RedisConfig.UNLOCK.getBytes(), ReturnType.VALUE, 1, userId.getBytes(), clientId.getBytes())
 
+            );
         }
         return BaseResponse.success();
     }
@@ -269,7 +280,7 @@ public class RedisServiceImpl implements RedisService {
         ShopInfo shopInfo = new ShopInfo();
         ShopInfo shopInfo1 = new ShopInfo();
         Long add = redisTemplate.opsForSet().add(key, shopInfo, shopInfo1);
-        Boolean aBoolean = redisTemplate.opsForValue().setBit(key, 123L, true);
+        redisTemplate.opsForValue().setBit(key, 123L, true);
         System.out.println(add);
         return BaseResponse.successData(redisTemplate.opsForSet().members(key));
     }
@@ -282,6 +293,7 @@ public class RedisServiceImpl implements RedisService {
             redisTemplate.opsForZSet().add(key1, i, l);
         }
         Set<ZSetOperations.TypedTuple<Object>> set1 = redisTemplate.opsForZSet().rangeWithScores(key1, 0, 1);
+        assert set1 != null;
         for (ZSetOperations.TypedTuple<Object> tuple : set1) {
             redisTemplate.opsForZSet().remove(key1, tuple.getValue());
         }
@@ -319,6 +331,18 @@ public class RedisServiceImpl implements RedisService {
 
         // 计算给定的一个有序集的并集，并存储在新的 destKey中，key相同的话会把score值相加
         redisTemplate.opsForZSet().unionAndStore("test001", "test002", "test003");
+        return BaseResponse.success();
+    }
+
+    @Override
+    public BaseResponse redisHyperLogLog(String userId) {
+        String key = "redisHyperLogLog";
+        // 添加元素
+        redisTemplate.opsForHyperLogLog().add(key, userId);
+
+        Long size = redisTemplate.opsForHyperLogLog().size(key);
+        System.out.println(size);
+
         return BaseResponse.success();
     }
 
@@ -381,7 +405,6 @@ public class RedisServiceImpl implements RedisService {
             redisTemplate.execute((RedisCallback<Object>) redisConnection -> {
                 redisConnection.setBit((Dict.BIT_MAP + data.getId()).getBytes(), data.getUserId(), data.getStatus());
                 redisConnection.expire((Dict.BIT_MAP + data.getId()).getBytes(), 1000 * 60 * 60);
-                redisConnection.close();
                 return null;
             });
         } catch (Exception e) {
@@ -393,11 +416,7 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public BaseResponse likePointCount(LikePointVO likePointVO) {
-        Object execute = redisTemplate.execute((RedisCallback<Object>) redisConnection -> {
-            Long aLong = redisConnection.bitCount((Dict.BIT_MAP + likePointVO.getId()).getBytes());
-            redisConnection.close();
-            return aLong;
-        });
+        Object execute = redisTemplate.execute((RedisCallback<Object>) redisConnection -> redisConnection.bitCount((Dict.BIT_MAP + likePointVO.getId()).getBytes()));
         return BaseResponse.successData((Long) execute);
     }
 
@@ -476,16 +495,23 @@ public class RedisServiceImpl implements RedisService {
                 redisTemplate.expire(key, 60, TimeUnit.SECONDS);
             }
         } finally {
-            compareAndDel(RedisConfig.UNLOCK, 1, key.getBytes(), uuid.getBytes());
+            redisTemplate.execute((RedisCallback<Integer>) redisConnection -> redisConnection.eval(RedisConfig.UNLOCK.getBytes(), ReturnType.VALUE, 1, key.getBytes(), uuid.getBytes()));
         }
         return BaseResponse.success();
     }
 
-    public BaseResponse slidingWindowCounter1(String param) {
+    @Override
+    public BaseResponse slidingWindowCounterUpdate(String param) {
         // 加锁操作
         String key = "slidingWindowCounter";
-        String uuid = UUID.randomUUID().toString();
-        String lua = "redis.call('ZREMRANGEBYSCORE',KEYS[1],0,ARGV[1]) if redis.call('zcard',KEYS[1])<tonumber(ARGV[2]) then redis.call('zadd',KEYS[1],ARGV[3],ARGV[4]) return 1 else return 0 end";
+        String value = UUID.randomUUID().toString();
+        long l = System.currentTimeMillis() / 1000;
+        Long execute1 = redisTemplate.execute((RedisCallback<Long>) redisConnection -> redisConnection.eval(RedisConfig.SLIDING_WINDOW_CURRENT_LIMIT.getBytes(), ReturnType.VALUE, 1, key.getBytes(), String.valueOf(l - 60).getBytes(), String.valueOf(2).getBytes(), String.valueOf(l).getBytes(), value.getBytes()));
+
+        if (Objects.equals(0L, execute1)) {
+            return BaseResponse.error("达到请求阈值阀门,请稍后重试");
+        }
+        // 做业务逻辑操作
         return BaseResponse.success();
     }
 
@@ -501,29 +527,16 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
-    public BaseResponse leakyBucket(String key) {
-        String clientId = UUID.randomUUID().toString();
-        try {
-            redisTemplate.opsForValue().setIfAbsent(key, clientId, 1000, TimeUnit.SECONDS);
-            Object o = redisTemplate.opsForValue().get(key);
-            System.out.println((String) o);
-            // 业务处理
-        } finally {
-            redisTemplate.execute((RedisCallback<Integer>) redisConnection -> {
-                redisConnection.eval(RedisConfig.UNLOCK.getBytes(), ReturnType.VALUE, 1, key.getBytes(), clientId.getBytes());
-                return null;
-            });
+    public BaseResponse leakyBucket(String param) {
+        String key = "leakyBucket";
+        Object o = redisTemplate.opsForList().rightPush(key, UUID.randomUUID());
+        if (Objects.isNull(o)) {
+            return BaseResponse.error("达到请求阈值阀门,请稍后重试");
         }
-
-
-//        String key = "leakyBucket";
-//        Object o = redisTemplate.opsForList().rightPush(key,UUID.randomUUID());
-//        if (Objects.isNull(o)) {
-//            return BaseResponse.error("达到请求阈值阀门,请稍后重试");
-//        }
-//        System.out.println("消费的当前token值为：" + o);
+        System.out.println("消费的当前token值为：" + o);
         return BaseResponse.success();
     }
+
 
     private void refreshDay(Long time) {
         // 获取前23小时的数据和当前时间数据，刷新到
@@ -555,21 +568,5 @@ public class RedisServiceImpl implements RedisService {
             list.add(Dict.WEIBO + (time - i));
         }
         redisTemplate.opsForZSet().unionAndStore(Dict.WEIBO + time, list, Dict.WEIBO_MONTH);
-    }
-
-
-    /**
-     * 使用lua脚本执行任务
-     *
-     * @param lua   lua脚本
-     * @param size  key个数
-     * @param bytes key,args的byte[]
-     */
-    private void compareAndDel(String lua, int size, byte[]... bytes) {
-        redisTemplate.execute((RedisCallback<Integer>) redisConnection -> {
-            byte[] result = redisConnection.eval(lua.getBytes(), ReturnType.VALUE, size, bytes);
-            log.info(new String(result, StandardCharsets.UTF_8));
-            return null;
-        });
     }
 }

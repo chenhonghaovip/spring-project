@@ -300,6 +300,16 @@ public class RedisController {
     }
 
     /**
+     * redis滑动窗口计数器限流
+     *
+     * @return BaseResponse
+     */
+    @GetMapping("/slidingWindowCounterUpdate")
+    public BaseResponse slidingWindowCounterUpdate(String value) {
+        return redisService.slidingWindowCounterUpdate(value);
+    }
+
+    /**
      * redis令牌桶限流
      *
      * @return BaseResponse
