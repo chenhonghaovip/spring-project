@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 @Configuration
 public class LocalDateTimeConfig {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer customizeLocalDateTimeFormat() {
         return jacksonObjectMapperBuilder -> {

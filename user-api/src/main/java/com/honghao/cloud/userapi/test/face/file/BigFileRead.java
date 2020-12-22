@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.test.face.file;
 
-import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
+import com.honghao.cloud.basic.common.factory.ThreadPoolFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -22,8 +22,8 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 @Slf4j
 public class BigFileRead {
-    private static ConcurrentHashMap<String,Integer> map = new ConcurrentHashMap<>();
-    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(20,100,"file—import");
+    private static ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();
+    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(20, 100, "file—import");
 
 
     public static void main(String[] args) {
@@ -35,8 +35,8 @@ public class BigFileRead {
         File[] result = new File[10];
         for (int i = 0; i < 10; i++) {
             try {
-                File file1 = new File(path+File.separator+i+".txt");
-                if (!file1.exists()){
+                File file1 = new File(path + File.separator + i + ".txt");
+                if (!file1.exists()) {
                     file1.createNewFile();
                 }
                 result[i] = file1;
@@ -45,30 +45,30 @@ public class BigFileRead {
             }
 
         }
-        assert files!=null;
+        assert files != null;
         LocalDateTime now = LocalDateTime.now();
-        Arrays.stream(files).forEach(each->{
-            CompletableFuture<Void> voidCompletableFuture = CompletableFuture.runAsync(() ->{
+        Arrays.stream(files).forEach(each -> {
+            CompletableFuture<Void> voidCompletableFuture = CompletableFuture.runAsync(() -> {
                 try {
-                    read(result,each);
+                    read(result, each);
                 } catch (IOException e) {
                     log.error(e.toString());
                 }
-            },threadPoolExecutor);
+            }, threadPoolExecutor);
             list.add(voidCompletableFuture);
         });
-        CompletableFuture.allOf(list.toArray(new CompletableFuture[0])).whenComplete((t,r)->{
-            Duration duration = Duration.between(LocalDateTime.now(),now);
-            System.out.println("is over" + duration.toMillis()/1000);
+        CompletableFuture.allOf(list.toArray(new CompletableFuture[0])).whenComplete((t, r) -> {
+            Duration duration = Duration.between(LocalDateTime.now(), now);
+            System.out.println("is over" + duration.toMillis() / 1000);
         });
         threadPoolExecutor.shutdown();
     }
 
-    private static void read(File[] result,File each) throws IOException{
+    private static void read(File[] result, File each) throws IOException {
         BufferedReader bufferedReader = null;
         BufferedWriter temp = null;
         List<BufferedWriter> list = new ArrayList<>();
-        Arrays.asList(result).forEach(other->{
+        Arrays.asList(result).forEach(other -> {
             try {
                 list.add(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(other, true))));
             } catch (FileNotFoundException e) {
@@ -79,18 +79,18 @@ public class BigFileRead {
         try {
             bufferedReader = new BufferedReader(new FileReader(each));
             String tempString;
-            while ((tempString = bufferedReader.readLine())!=null){
-                int hashCode = Math.abs(tempString.hashCode()%10);
+            while ((tempString = bufferedReader.readLine()) != null) {
+                int hashCode = Math.abs(tempString.hashCode() % 10);
                 temp = list.get(hashCode);
                 temp.newLine();
                 temp.write(tempString);
                 temp.flush();
             }
         } finally {
-            if (bufferedReader!=null){
+            if (bufferedReader != null) {
                 bufferedReader.close();
             }
-            if (temp!=null){
+            if (temp != null) {
                 temp.close();
             }
         }

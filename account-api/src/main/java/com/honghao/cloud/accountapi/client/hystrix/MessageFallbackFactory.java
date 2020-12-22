@@ -2,7 +2,7 @@ package com.honghao.cloud.accountapi.client.hystrix;
 
 import com.honghao.cloud.accountapi.client.MessageClient;
 import com.honghao.cloud.accountapi.dto.request.MsgInfoDTO;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

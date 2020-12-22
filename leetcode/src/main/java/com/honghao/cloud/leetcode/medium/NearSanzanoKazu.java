@@ -13,10 +13,10 @@ import java.util.Arrays;
  */
 public class NearSanzanoKazu {
     @Test
-    public void test(){
-        int[] nums = new int[]{-1,2,1,-4};
+    public void test() {
+        int[] nums = new int[]{-1, 2, 1, -4};
         int target = 1;
-        System.out.println(threeSumClosest(nums,target));
+        System.out.println(threeSumClosest(nums, target));
     }
 
     private int threeSumClosest(int[] nums, int target) {
@@ -25,26 +25,26 @@ public class NearSanzanoKazu {
         Arrays.sort(nums);
         for (int i = 0; i < nums.length; i++) {
 
-            int j = i+1;
-            int k = nums.length-1;
+            int j = i + 1;
+            int k = nums.length - 1;
 
             while (j < k) {
                 int sum = nums[i] + nums[j] + nums[k];
                 int abs1 = Math.abs(sum - target);
 
-                if (sum < target){
+                if (sum < target) {
                     j++;
-                    if (abs1 <abs){
+                    if (abs1 < abs) {
                         abs = abs1;
                         value = sum;
                     }
-                }else if (sum > target){
+                } else if (sum > target) {
                     k--;
-                    if (abs1 <abs){
+                    if (abs1 < abs) {
                         abs = abs1;
                         value = sum;
                     }
-                }else {
+                } else {
                     return target;
                 }
             }

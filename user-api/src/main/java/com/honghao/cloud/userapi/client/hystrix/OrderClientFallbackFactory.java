@@ -1,7 +1,7 @@
 package com.honghao.cloud.userapi.client.hystrix;
 
 import com.alibaba.fastjson.JSONObject;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import feign.hystrix.FallbackFactory;
@@ -29,7 +29,7 @@ public class OrderClientFallbackFactory implements FallbackFactory<OrderClient> 
 
             @Override
             public BaseResponse<String> createUser(JSONObject data) {
-                if (throwable instanceof IOException){
+                if (throwable instanceof IOException) {
 
                 }
                 return BaseResponse.successData("");
@@ -43,7 +43,7 @@ public class OrderClientFallbackFactory implements FallbackFactory<OrderClient> 
             @Override
             public BaseResponse<List<WaybillBcList>> batchQuery(List<String> list) {
                 System.out.println(throwable.getMessage());
-                return BaseResponse.successData(list.stream().map(each-> WaybillBcList.builder().wId(each).build()).collect(Collectors.toList()));
+                return BaseResponse.successData(list.stream().map(each -> WaybillBcList.builder().wId(each).build()).collect(Collectors.toList()));
             }
 
             @Override

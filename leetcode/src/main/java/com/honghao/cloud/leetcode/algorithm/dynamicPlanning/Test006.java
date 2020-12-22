@@ -11,23 +11,26 @@ public class Test006 {
     public static void main(String[] args) {
         Test006 test006 = new Test006();
         String haystack = "helabclo", needle = "abcdabd";
-        System.out.println(test006.getMax(haystack,needle));
+        System.out.println(test006.getMax(haystack, needle));
     }
-    public int getMax(String haystack,String needle){
+
+    public int getMax(String haystack, String needle) {
         char[] p = haystack.toCharArray();
         char[] n = needle.toCharArray();
-        int[][] temp = new int[haystack.length()+1][needle.length()+1];
+        int[][] temp = new int[haystack.length() + 1][needle.length() + 1];
 
         for (int i = 0; i < p.length; i++) {
             for (int j = 0; j < n.length; j++) {
-                if (p[i] == n[j]){
-                    temp[i+1][j+1] = temp[i][j] + 1;
-                }else {
-                    temp[i+1][j+1] = Math.max(temp[i][j+1],temp[i+1][j]);
+                if (p[i] == n[j]) {
+                    temp[i + 1][j + 1] = temp[i][j] + 1;
+                } else {
+                    temp[i + 1][j + 1] = Math.max(temp[i][j + 1], temp[i + 1][j]);
                 }
             }
         }
 
-      return temp[p.length][n.length];
-    };
+        return temp[p.length][n.length];
+    }
+
+    ;
 }

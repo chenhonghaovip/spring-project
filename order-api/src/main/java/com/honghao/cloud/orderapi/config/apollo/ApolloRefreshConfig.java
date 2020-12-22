@@ -25,6 +25,7 @@ public class ApolloRefreshConfig implements ApplicationContextAware {
     public void onChange(ConfigChangeEvent changeEvent) {
         refreshTaskScheduleProperties(changeEvent);
     }
+
     private void refreshTaskScheduleProperties(ConfigChangeEvent changeEvent) {
         log.info("Refreshing TaskSchedule properties!");
 

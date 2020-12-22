@@ -1,7 +1,7 @@
 package com.honghao.cloud.userapi.interceptor;
 
 import com.alibaba.fastjson.JSON;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.userapi.aspect.Auth;
 import com.honghao.cloud.userapi.dto.common.TokenInfoDTO;
 import com.honghao.cloud.userapi.dto.request.Operator;
@@ -31,20 +31,19 @@ public class UserInterceptor implements HandlerInterceptor {
     private final static String REQUEST_HEADER_USER_TAG = "tag";
 
 
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (handler instanceof HandlerMethod){
+        if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
 
             Auth annotation = method.getAnnotation(Auth.class);
-            if (ObjectUtils.isEmpty(annotation)){
+            if (ObjectUtils.isEmpty(annotation)) {
                 annotation = handlerMethod.getBeanType().getAnnotation(Auth.class);
             }
-            if (!ObjectUtils.isEmpty(annotation)){
+            if (!ObjectUtils.isEmpty(annotation)) {
                 TokenInfoDTO tokenInfoDTO = TokenInfoDTO.builder().build();
-                if (!validateTokenInfo(request,response)){
+                if (!validateTokenInfo(request, response)) {
                     return false;
                 }
             }
@@ -64,25 +63,26 @@ public class UserInterceptor implements HandlerInterceptor {
     /**
      * 请求头信息校验和信息封装
      *
-     * @param request 请求报文
+     * @param request  请求报文
      * @param response 返回报文
      * @return true/false
      */
-    private Boolean validateTokenInfo(HttpServletRequest request,HttpServletResponse response){
+    private Boolean validateTokenInfo(HttpServletRequest request, HttpServletResponse response) {
         String tag;
-        if (StringUtils.isBlank((tag = request.getHeader(REQUEST_HEADER_USER_TAG)))){
+        if (StringUtils.isBlank((tag = request.getHeader(REQUEST_HEADER_USER_TAG)))) {
             log.info("header中用户tag信息缺失:{}", tag);
             response(response, missInfoResponse("请求中tag信息缺失"));
             return false;
         }
-        log.info("请求报文信息：{}",request.getParameterMap());
+        log.info("请求报文信息：{}", request.getParameterMap());
         return true;
     }
 
     /**
      * 封装返回信息
+     *
      * @param response 返回报文
-     * @param message 返回的信息
+     * @param message  返回的信息
      */
     private void response(HttpServletResponse response, String message) {
         response.setCharacterEncoding("UTF-8");

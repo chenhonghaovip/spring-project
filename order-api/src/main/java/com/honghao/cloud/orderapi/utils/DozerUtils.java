@@ -12,12 +12,15 @@ import org.dozer.DozerBeanMapper;
 @Slf4j
 public class DozerUtils {
     private static volatile DozerBeanMapper dozerBeanMapper;
-    private DozerUtils(){}
-    public static DozerBeanMapper createDozer(){
-        if (dozerBeanMapper==null){
-            synchronized (dozerBeanMapper){
-                if (dozerBeanMapper==null){
-                    dozerBeanMapper=new DozerBeanMapper();
+
+    private DozerUtils() {
+    }
+
+    public static DozerBeanMapper createDozer() {
+        if (dozerBeanMapper == null) {
+            synchronized (dozerBeanMapper) {
+                if (dozerBeanMapper == null) {
+                    dozerBeanMapper = new DozerBeanMapper();
                 }
             }
         }

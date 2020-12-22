@@ -29,10 +29,11 @@ public class ApolloRefreshConfig implements ApplicationContextAware {
     @Resource
     private LoggingSystem loggingSystem;
 
-    @ApolloConfigChangeListener(value = {"application","BusinessDataSource"})
+    @ApolloConfigChangeListener(value = {"application", "BusinessDataSource"})
     public void onChange(ConfigChangeEvent changeEvent) {
         refreshTaskScheduleProperties(changeEvent);
     }
+
     private void refreshTaskScheduleProperties(ConfigChangeEvent changeEvent) {
         log.info("Refreshing TaskSchedule properties!");
 
@@ -40,11 +41,11 @@ public class ApolloRefreshConfig implements ApplicationContextAware {
         this.applicationContext.publishEvent(new EnvironmentChangeEvent(changeEvent.changedKeys()));
 
         // 监听指定字段的修改，实现动态修改日志级别的功能
-        if (changeEvent.changedKeys().contains(LOG_PREFIX)){
+        if (changeEvent.changedKeys().contains(LOG_PREFIX)) {
             ConfigChange change = changeEvent.getChange(LOG_PREFIX);
             String newValue = change.getNewValue();
             LogLevel level = LogLevel.valueOf(newValue.toUpperCase());
-            loggingSystem.setLogLevel("",level);
+            loggingSystem.setLogLevel("", level);
         }
         log.info("TaskSchedule properties refreshed!");
     }

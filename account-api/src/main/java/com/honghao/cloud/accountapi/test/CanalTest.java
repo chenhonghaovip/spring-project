@@ -15,34 +15,6 @@ import java.util.List;
  */
 public class CanalTest {
 
-    @Test
-    public void test(){
-        int batchSize = 1000;
-        CanalConnector connector = CanalConnectors.newSingleConnector(new InetSocketAddress("127.0.0.1",
-                11111), "example", "canal", "canal");
-        connector.connect();
-        connector.rollback();
-        while (true) {
-            try {
-                //尝试从master那边拉去数据batchSize条记录，有多少取多少
-                Message message = connector.getWithoutAck(batchSize);
-                long batchId = message.getId();
-                int size = message.getEntries().size();
-                if (batchId == -1 || size == 0) {
-                    Thread.sleep(1000);
-                } else {
-                    System.out.println(111);
-                }
-                connector.ack(batchId);
-                //当队列里面堆积的sql大于一定数值的时候就模拟执行
-//                executeQueueSql();
-            } catch (Exception e){
-                System.out.println(e.getMessage());
-                return;
-            }
-        }
-    }
-
     public static void main(String[] args) throws Exception {
 //canal.ip = 192.168.56.104
 //canal.port = 11111
@@ -68,9 +40,9 @@ public class CanalTest {
                 connector.ack(batchId);// 提交确认，消费成功，通知server删除数据
                 // connector.rollback(batchId);// 处理失败, 回滚数据，后续重新获取数据
             }
-        }catch (Exception e){
+        } catch (Exception e) {
 
-        }finally {
+        } finally {
             connector.disconnect();
         }
     }
@@ -113,6 +85,34 @@ public class CanalTest {
     private static void printColumns(List<CanalEntry.Column> columns) {
         for (CanalEntry.Column column : columns) {
             System.out.println(column.getName() + " : " + column.getValue() + " update=" + column.getUpdated());
+        }
+    }
+
+    @Test
+    public void test() {
+        int batchSize = 1000;
+        CanalConnector connector = CanalConnectors.newSingleConnector(new InetSocketAddress("127.0.0.1",
+                11111), "example", "canal", "canal");
+        connector.connect();
+        connector.rollback();
+        while (true) {
+            try {
+                //尝试从master那边拉去数据batchSize条记录，有多少取多少
+                Message message = connector.getWithoutAck(batchSize);
+                long batchId = message.getId();
+                int size = message.getEntries().size();
+                if (batchId == -1 || size == 0) {
+                    Thread.sleep(1000);
+                } else {
+                    System.out.println(111);
+                }
+                connector.ack(batchId);
+                //当队列里面堆积的sql大于一定数值的时候就模拟执行
+//                executeQueueSql();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                return;
+            }
         }
     }
 }

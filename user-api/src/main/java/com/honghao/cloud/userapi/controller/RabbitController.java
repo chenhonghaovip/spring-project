@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.controller;
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -16,18 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/rabbitMqController")
-@Api(value = "Rabbit测试使用" ,tags = "Rabbit测试使用")
+@Api(value = "Rabbit测试使用", tags = "Rabbit测试使用")
 public class RabbitController {
 
 
     /**
      * 可靠消息服务query
+     *
      * @param data data
      * @return BaseResponse
      */
     @PostMapping("/query")
-    @ApiOperation(value = "可靠消息服务查询",notes = "可靠消息服务查询")
-    public BaseResponse query(@RequestBody String data){
+    @ApiOperation(value = "可靠消息服务查询", notes = "可靠消息服务查询")
+    public BaseResponse query(@RequestBody String data) {
         return BaseResponse.successData(data);
     }
 }

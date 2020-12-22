@@ -34,7 +34,7 @@ public class Test {
         connection.connect();
         //得到响应码
         int responseCode = connection.getResponseCode();
-        if(responseCode == HttpURLConnection.HTTP_OK){
+        if (responseCode == HttpURLConnection.HTTP_OK) {
             //得到响应流
             InputStream inputStream = connection.getInputStream();
         }
@@ -50,11 +50,11 @@ public class Test {
         try {
             //创建httppost
             httpclient = HttpClients.createDefault();
-            String url ="http://192.168.16.36:8081/goSearch/gosuncn/deleteDocs.htm";
+            String url = "http://192.168.16.36:8081/goSearch/gosuncn/deleteDocs.htm";
             HttpPost httpPost = new HttpPost(url);
-            httpPost.addHeader(HTTP.CONTENT_TYPE,"application/x-www-form-urlencoded");
+            httpPost.addHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded");
             //参数
-            String json ="{'ids':['html1','html2']}";
+            String json = "{'ids':['html1','html2']}";
             StringEntity se = new StringEntity(json);
             se.setContentEncoding("UTF-8");
             se.setContentType("application/json");//发送json需要设置contentType
@@ -62,13 +62,13 @@ public class Test {
             response = httpclient.execute(httpPost);
             //解析返结果
             HttpEntity entity = response.getEntity();
-            if(entity != null){
+            if (entity != null) {
                 String resStr = EntityUtils.toString(entity, "UTF-8");
                 System.out.println(resStr);
             }
         } catch (Exception e) {
             throw e;
-        }finally{
+        } finally {
             httpclient.close();
             response.close();
         }

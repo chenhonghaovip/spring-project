@@ -43,13 +43,21 @@ public class RabbitConfig {
      * 10分钟复活消费队列
      */
     public static final String DELAY_TEN_MIN = "delay_ten_min";
-    /** 短信发送队列 */
+    /**
+     * 短信发送队列
+     */
     public static final String QUEUE_MSG_SMS_SEND = "queue_msg_sms_send";
-    /** 短信发送队列 延迟缓冲（按消息） */
+    /**
+     * 短信发送队列 延迟缓冲（按消息）
+     */
     public static final String QUEUE_MSG_SMS_SEND_TTL = "queue_msg_sms_send_ttl";
-    /** 短信发送队列交换机*/
+    /**
+     * 短信发送队列交换机
+     */
     public static final String QUEUE_MSG_SMS_SEND_EXCHANGE = "queue_msg_sms_send_exchange";
-    /** 短信发送队列 通过路由关键字 routing-key*/
+    /**
+     * 短信发送队列 通过路由关键字 routing-key
+     */
     public static final String QUEUE_MSG_SMS_SEND_NAME = "queue_msg_sms_send_name";
 
     /**
@@ -64,13 +72,16 @@ public class RabbitConfig {
      * 推送订单系统失败队列
      */
     public static final String PUSH_TO_ORDER_QUEUE_FAIL = "push_to_order_queue_fail";
-
+    public static final String TEST = "test";
+    /**
+     * 订单状态变更
+     */
+    public static final String WAYBILL_ORDER_EXCHANGE = "waybill_order_exchange";
     /**
      * 消费队列
      */
     private static final String DELAY_PROCESS_QUEUE_NAME = "delay_process_queue_name";
 
-    public static final String TEST = "test";
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
@@ -86,17 +97,20 @@ public class RabbitConfig {
         factory.setMessageConverter(new Jackson2JsonMessageConverter());
         return factory;
     }
+
     /**
      * 实际消费队列
+     *
      * @return
      */
     @Bean
     public Queue delayQueue() {
-        return new Queue(RabbitConfig.DELAY_PROCESS_QUEUE_NAME,true,false,false);
+        return new Queue(RabbitConfig.DELAY_PROCESS_QUEUE_NAME, true, false, false);
     }
 
     /**
      * 短信发送队列
+     *
      * @return
      */
     @Bean
@@ -106,6 +120,7 @@ public class RabbitConfig {
 
     /**
      * 短信发送队列延时
+     *
      * @return smsQueueDelayPerMessageTtl
      */
     @Bean
@@ -113,17 +128,18 @@ public class RabbitConfig {
         Map<String, Object> arguments = new HashMap<>(16);
         arguments.put("x-dead-letter-exchange", QUEUE_MSG_SMS_SEND_EXCHANGE);
         arguments.put("x-dead-letter-routing-key", QUEUE_MSG_SMS_SEND_NAME);
-        return new Queue(QUEUE_MSG_SMS_SEND_TTL,true,false,false,arguments);
+        return new Queue(QUEUE_MSG_SMS_SEND_TTL, true, false, false, arguments);
     }
 
     @Bean
-    public DirectExchange smsDelayExchange(){
+    public DirectExchange smsDelayExchange() {
         // 默认是开启持久化的
         return new DirectExchange(QUEUE_MSG_SMS_SEND_EXCHANGE);
     }
 
     /**
      * 绑定队列到指定的交换机通过关键字topic
+     *
      * @return Binding
      */
     @Bean
@@ -135,19 +151,21 @@ public class RabbitConfig {
 
     /**
      * 用户信息推送队列
+     *
      * @return queue
      */
     @Bean
-    public Queue userPustQueue(){
+    public Queue userPustQueue() {
         return new Queue(USER_PUSH_QUEUE);
     }
 
     /**
      * 延迟队列  consume
+     *
      * @return queue
      */
     @Bean
-    public Queue delayTenQueue(){
+    public Queue delayTenQueue() {
         Map<String, Object> arguments = new HashMap<>(16);
         arguments.put("x-dead-letter-exchange", "");
         arguments.put("x-dead-letter-routing-key", DELAY_TEN_MIN);
@@ -156,28 +174,32 @@ public class RabbitConfig {
 
     /**
      * 延迟后转入消费队列
+     *
      * @return queue
      */
     @Bean
-    public Queue delayConsumeQueue(){
+    public Queue delayConsumeQueue() {
         //队列默认是开启持久化的
         return new Queue(DELAY_TEN_MIN);
     }
 
     /**
      * 正常消费队列
+     *
      * @return queue
      */
     @Bean
-    public Queue pushOrderQueue(){
+    public Queue pushOrderQueue() {
         return new Queue(PUSH_TO_ORDER_QUEUE);
     }
+
     /**
      * 消费失败后转入延迟重试队列
+     *
      * @return queue
      */
     @Bean
-    public Queue pushOrderQueueRetry(){
+    public Queue pushOrderQueueRetry() {
         Map<String, Object> map = new HashMap<>(8);
         //失败后重新将消息路由到具体exchange上
         map.put("x-dead-letter-exchange", "");
@@ -187,44 +209,45 @@ public class RabbitConfig {
         map.put("x-message-ttl", 5000);
         return new Queue(PUSH_TO_ORDER_QUEUE_RETRY, true, false, false, map);
     }
+
     /**
      * 三次失败后转入失败队列
+     *
      * @return queue
      */
     @Bean
-    public Queue pushOrderQueueFail(){
+    public Queue pushOrderQueueFail() {
         return new Queue(PUSH_TO_ORDER_QUEUE_FAIL);
     }
 
     @Bean
-    public Queue testQueue(){
+    public Queue testQueue() {
         return new Queue(TEST_QUEUE);
     }
 
-    /**
-     * 订单状态变更
-     */
-    public static final String WAYBILL_ORDER_EXCHANGE = "waybill_order_exchange";
-
     @Bean
-    public Queue test01(){
+    public Queue test01() {
         return new Queue("11111");
     }
+
     @Bean
-    public Queue test02(){
+    public Queue test02() {
         return new Queue("22222");
     }
+
     /**
      * 创建广播交换机
+     *
      * @return FanoutExchange
      */
     @Bean
-    public FanoutExchange waybillOrderExchange(){
+    public FanoutExchange waybillOrderExchange() {
         return new FanoutExchange(WAYBILL_ORDER_EXCHANGE);
     }
 
     /**
      * 绑定队列1到指定的广播交换机
+     *
      * @return Binding
      */
     @Bean
@@ -235,6 +258,7 @@ public class RabbitConfig {
 
     /**
      * 绑定队列2到指定的广播交换机
+     *
      * @return Binding
      */
     @Bean

@@ -27,9 +27,9 @@ public class ThreadPoolConfig {
     /**
      * 构建 线程池
      *
-     * @param name 线程名称
+     * @param name     线程名称
      * @param corePool 核心池
-     * @param maxPool 最大数量
+     * @param maxPool  最大数量
      * @param capacity 容量
      * @return Executor
      */

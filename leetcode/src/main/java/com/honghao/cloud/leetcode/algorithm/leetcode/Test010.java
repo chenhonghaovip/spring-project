@@ -13,23 +13,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Test010 {
     public static void main(String[] args) {
-        int[] height = new int[]{1,8,6,2,5,4,8,3,7};
+        int[] height = new int[]{1, 8, 6, 2, 5, 4, 8, 3, 7};
         maxArea(height);
         System.out.println(maxArea(height));
     }
+
     private static int maxArea(int[] height) {
-        int start = 0,end = height.length - 1;
+        int start = 0, end = height.length - 1;
         int maxValue = 0;
-        int startValue,endValue,rowNum;
-        while (start < end){
+        int startValue, endValue, rowNum;
+        while (start < end) {
             startValue = height[start];
             endValue = height[end];
             rowNum = end - start;
-            if (startValue < endValue){
-                maxValue = maxValue>startValue*rowNum?maxValue:startValue*rowNum;
+            if (startValue < endValue) {
+                maxValue = maxValue > startValue * rowNum ? maxValue : startValue * rowNum;
                 start++;
-            }else {
-                maxValue = maxValue>endValue*rowNum?maxValue:endValue*rowNum;
+            } else {
+                maxValue = maxValue > endValue * rowNum ? maxValue : endValue * rowNum;
                 end--;
             }
         }

@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class SchedulerConfig {
 
     @Bean
-    public Scheduler scheduler(){
+    public Scheduler scheduler() {
         return QuartzFactory.getInstance();
     }
 }

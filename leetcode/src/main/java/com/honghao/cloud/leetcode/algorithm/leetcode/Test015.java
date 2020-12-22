@@ -16,6 +16,7 @@ public class Test015 {
         System.out.println(isValid(s));
 
     }
+
     private static boolean isValid(String s) {
         Map mappings = new HashMap<String, String>(8);
         mappings.put(")", "(");
@@ -25,13 +26,15 @@ public class Test015 {
         Stack<String> stack = new Stack<>();
         char[] chars = s.toCharArray();
         for (char aChar : chars) {
-            if (mappings.containsValue(String.valueOf(aChar))){
+            if (mappings.containsValue(String.valueOf(aChar))) {
                 stack.push(String.valueOf(aChar));
-            }else {
-                if (stack.empty()){return false;}
-                if (mappings.get(String.valueOf(aChar)).equals(stack.peek())){
+            } else {
+                if (stack.empty()) {
+                    return false;
+                }
+                if (mappings.get(String.valueOf(aChar)).equals(stack.peek())) {
                     stack.pop();
-                }else {
+                } else {
                     return false;
                 }
             }

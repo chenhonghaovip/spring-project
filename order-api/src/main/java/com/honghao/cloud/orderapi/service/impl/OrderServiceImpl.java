@@ -1,9 +1,9 @@
 package com.honghao.cloud.orderapi.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.honghao.cloud.basic.common.base.base.BaseAssert;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
-import com.honghao.cloud.basic.common.base.base.RetryException;
+import com.honghao.cloud.basic.common.base.BaseAssert;
+import com.honghao.cloud.basic.common.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.RetryException;
 import com.honghao.cloud.orderapi.aspect.TryAgain;
 import com.honghao.cloud.orderapi.common.enums.ErrorCodeEnum;
 import com.honghao.cloud.orderapi.domain.entity.Order;
@@ -52,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderMapper.selectByPrimaryKey(wId);
         BaseAssert.notNull(order, ErrorCodeEnum.PARAM_ERROR);
         System.out.println(JSON.toJSONString(order));
-        if (Objects.equals(order.getOrderStatus(),1) && orderMapper.update(wId,order.getVersion())==0){
+        if (Objects.equals(order.getOrderStatus(), 1) && orderMapper.update(wId, order.getVersion()) == 0) {
             throw new RetryException("乐观锁更新失败");
         }
         return BaseResponse.success();

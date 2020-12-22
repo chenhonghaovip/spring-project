@@ -11,7 +11,7 @@ import java.util.Iterator;
  * @author chenhonghao
  * @date 2020-07-17 21:10
  */
-public class Reactor implements Runnable{
+public class Reactor implements Runnable {
     private Selector selector;
     private ServerSocketChannel serverSocketChannel;
 
@@ -38,10 +38,10 @@ public class Reactor implements Runnable{
     public void run() {
         try {
 
-            while (true){
+            while (true) {
                 // 如果与SelectionKey相关的事件发生了，这个SelectionKey就被加入selected-keys集合中
                 int read = selector.select();
-                if (read==0){
+                if (read == 0) {
                     continue;
                 }
                 SelectionKey selectionKey;
@@ -58,15 +58,15 @@ public class Reactor implements Runnable{
         }
     }
 
-    void dispatch(SelectionKey selectionKey){
+    void dispatch(SelectionKey selectionKey) {
         Runnable attachment = (Runnable) selectionKey.attachment();
-        if (attachment!=null){
+        if (attachment != null) {
             attachment.run();
         }
     }
 
 
-    private static class AcceptorHandle implements Runnable{
+    private static class AcceptorHandle implements Runnable {
 
         @Override
         public void run() {

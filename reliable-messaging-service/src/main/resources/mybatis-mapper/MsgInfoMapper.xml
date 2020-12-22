@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.honghao.cloud.message.domain.mapper.MsgInfoMapper">
-  <resultMap id="BaseResultMap" type="com.honghao.cloud.message.domain.entity.MsgInfo">
-    <id column="msg_id" jdbcType="BIGINT" property="msgId" />
-    <result column="business_id" jdbcType="VARCHAR" property="businessId" />
-    <result column="content" jdbcType="VARCHAR" property="content" />
-    <result column="status" jdbcType="TINYINT" property="status" />
-    <result column="app_id" jdbcType="VARCHAR" property="appId" />
-    <result column="url" jdbcType="VARCHAR" property="url" />
-    <result column="retry_time" jdbcType="INTEGER" property="retryTime" />
-    <result column="topic" jdbcType="VARCHAR" property="topic" />
-    <result column="delay" jdbcType="INTEGER" property="delay" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
+    <resultMap id="BaseResultMap" type="com.honghao.cloud.message.domain.entity.MsgInfo">
+        <id column="msg_id" jdbcType="BIGINT" property="msgId"/>
+        <result column="business_id" jdbcType="VARCHAR" property="businessId"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="app_id" jdbcType="VARCHAR" property="appId"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="retry_time" jdbcType="INTEGER" property="retryTime"/>
+        <result column="topic" jdbcType="VARCHAR" property="topic"/>
+        <result column="delay" jdbcType="INTEGER" property="delay"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     msg_id, business_id,content, status, app_id, url, retry_time, topic, delay, create_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from msg_info
-    where msg_id = #{msgId,jdbcType=BIGINT}
-  </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from msg_info
+        where msg_id = #{msgId,jdbcType=BIGINT}
+    </select>
 
     <select id="selectBatch" resultMap="BaseResultMap">
         select <include refid="Base_Column_List"></include> from msg_info
@@ -30,19 +30,19 @@
             #{item}
         </foreach>
     </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from msg_info
     where msg_id = #{msgId,jdbcType=BIGINT}
   </delete>
 
-    <delete id="deleteBatch" >
+    <delete id="deleteBatch">
         delete from msg_info
-    where msg_id in
-     <foreach collection="list" item="item" open="(" close=")" separator=",">
-         #{item}
-     </foreach>
+        where msg_id in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
     </delete>
-  <insert id="insert" parameterType="com.honghao.cloud.message.domain.entity.MsgInfo">
+    <insert id="insert" parameterType="com.honghao.cloud.message.domain.entity.MsgInfo">
     insert into msg_info (msg_id, content, status, 
       app_id, url, retry_time,
       topic, delay, create_time
@@ -52,104 +52,104 @@
       #{topic,jdbcType=VARCHAR}, #{delay,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.honghao.cloud.message.domain.entity.MsgInfo">
-    insert into msg_info
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="msgId != null">
-        msg_id,
-      </if>
-      <if test="businessId != null">
-          business_id,
-      </if>
-       <if test="content != null">
-        content,
-      </if>
-      <if test="status != null">
-        status,
-      </if>
-      <if test="appId != null">
-        app_id,
-      </if>
-      <if test="url != null">
-        url,
-      </if>
-      <if test="retryTime != null">
-        retry_time,
-      </if>
-      <if test="topic != null">
-        topic,
-      </if>
-      <if test="delay != null">
-        delay,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="msgId != null">
-        #{msgId,jdbcType=BIGINT},
-      </if>
-      <if test="businessId != null">
-        #{businessId,jdbcType=VARCHAR},
-      </if>
-        <if test="content != null">
-        #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="status != null">
-        #{status,jdbcType=TINYINT},
-      </if>
-      <if test="appId != null">
-        #{appId,jdbcType=VARCHAR},
-      </if>
-      <if test="url != null">
-        #{url,jdbcType=VARCHAR},
-      </if>
-      <if test="retryTime != null">
-        #{retryTime,jdbcType=INTEGER},
-      </if>
-      <if test="topic != null">
-        #{topic,jdbcType=VARCHAR},
-      </if>
-      <if test="delay != null">
-        #{delay,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.honghao.cloud.message.domain.entity.MsgInfo">
-    update msg_info
-    <set>
-      <if test="content != null">
-        content = #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="status != null">
-        status = #{status,jdbcType=TINYINT},
-      </if>
-      <if test="appId != null">
-        app_id = #{appId,jdbcType=VARCHAR},
-      </if>
-      <if test="url != null">
-        url = #{url,jdbcType=VARCHAR},
-      </if>
-      <if test="retryTime != null">
-        retry_time = #{retryTime,jdbcType=INTEGER},
-      </if>
-      <if test="topic != null">
-        topic = #{topic,jdbcType=VARCHAR},
-      </if>
-      <if test="delay != null">
-        delay = #{delay,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where msg_id = #{msgId,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.message.domain.entity.MsgInfo">
+    <insert id="insertSelective" parameterType="com.honghao.cloud.message.domain.entity.MsgInfo">
+        insert into msg_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="msgId != null">
+                msg_id,
+            </if>
+            <if test="businessId != null">
+                business_id,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="appId != null">
+                app_id,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+            <if test="retryTime != null">
+                retry_time,
+            </if>
+            <if test="topic != null">
+                topic,
+            </if>
+            <if test="delay != null">
+                delay,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="msgId != null">
+                #{msgId,jdbcType=BIGINT},
+            </if>
+            <if test="businessId != null">
+                #{businessId,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="appId != null">
+                #{appId,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="retryTime != null">
+                #{retryTime,jdbcType=INTEGER},
+            </if>
+            <if test="topic != null">
+                #{topic,jdbcType=VARCHAR},
+            </if>
+            <if test="delay != null">
+                #{delay,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.honghao.cloud.message.domain.entity.MsgInfo">
+        update msg_info
+        <set>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="appId != null">
+                app_id = #{appId,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="retryTime != null">
+                retry_time = #{retryTime,jdbcType=INTEGER},
+            </if>
+            <if test="topic != null">
+                topic = #{topic,jdbcType=VARCHAR},
+            </if>
+            <if test="delay != null">
+                delay = #{delay,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where msg_id = #{msgId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.honghao.cloud.message.domain.entity.MsgInfo">
     update msg_info
     set content = #{content,jdbcType=VARCHAR},
       status = #{status,jdbcType=TINYINT},
@@ -164,19 +164,19 @@
 
     <select id="selectByStatus" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from msg_info
         where status in (0,1)
     </select>
 
     <update id="updateBatch">
-      UPDATE msg_info
-      SET
-      status = #{msgStatus}
-      WHERE msg_id in
-      <foreach close=")" collection="list" item="item" open="(" separator=",">
-        #{item}
-      </foreach>
+        UPDATE msg_info
+        SET
+        status = #{msgStatus}
+        WHERE msg_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
     </update>
 
     <update id="updateRetryTimes">

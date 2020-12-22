@@ -9,7 +9,6 @@ import java.util.Set;
 /**
  * 克鲁斯卡尔最小树
  *
- *
  * @author chenhonghao
  * @date 2019-09-19 10:27
  */
@@ -37,18 +36,18 @@ public class Test02 {
             set.add(nodeDTO.getEnd());
             sum += nodeDTO.getWeight();
         }
-        log.info("sum的值为：{}",sum);
+        log.info("sum的值为：{}", sum);
     }
 
-    private static NodeDTO[] initNodes(){
+    private static NodeDTO[] initNodes() {
         int maxSide = 15;
-        NodeDTO nodeDTO ;
+        NodeDTO nodeDTO;
         NodeDTO[] nodes = new NodeDTO[15];
         int begin = 0;
         int end = 0;
         int weight = 0;
-        for (int i = 0;i<maxSide;i++){
-            switch (i){
+        for (int i = 0; i < maxSide; i++) {
+            switch (i) {
                 case 0:
                     begin = 4;
                     end = 7;

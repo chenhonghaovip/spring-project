@@ -15,6 +15,6 @@ public class EventDemoListener implements ApplicationListener<EventDemo> {
     @Override
     public void onApplicationEvent(EventDemo eventDemo) {
         log.info(JSON.toJSONString(eventDemo));
-        log.info("事件监听:{}",eventDemo);
+        log.info("事件监听:{}", eventDemo);
     }
 }

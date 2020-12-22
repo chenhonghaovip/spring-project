@@ -22,10 +22,10 @@ public class SendMessage {
     private MessageSender messageSender;
 
     @RabbitListener(queues = RabbitConfig.QUEUE_MSG_SMS_SEND)
-    public void sendMessage(JSONObject jsonObject){
+    public void sendMessage(JSONObject jsonObject) {
         try {
-            log.info("发送短信,{}",jsonObject);
-        }catch (Exception e){
+            log.info("发送短信,{}", jsonObject);
+        } catch (Exception e) {
             log.info("消息队列发送操作异常");
         }
 

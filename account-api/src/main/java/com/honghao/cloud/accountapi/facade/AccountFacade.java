@@ -1,7 +1,7 @@
 package com.honghao.cloud.accountapi.facade;
 
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 
 /**
  * 订单信息操作
@@ -13,6 +13,7 @@ public interface AccountFacade {
 
     /**
      * 创建订单
+     *
      * @param data data
      * @return Boolean
      */

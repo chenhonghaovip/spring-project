@@ -9,7 +9,7 @@ import org.junit.Test;
  */
 public class NodeMergeTest {
     @Test
-    public void test(){
+    public void test() {
         ListNode l1 = new ListNode(1);
         l1.next = new ListNode(4);
         l1.next.next = new ListNode(5);
@@ -20,28 +20,29 @@ public class NodeMergeTest {
 
         ListNode l3 = new ListNode(2);
         l3.next = new ListNode(6);
-        ListNode[] listNodes = new ListNode[]{l1,l2,l3};
+        ListNode[] listNodes = new ListNode[]{l1, l2, l3};
 
         ListNode node = mergeKLists(listNodes);
         System.out.println(node);
     }
+
     public ListNode mergeKLists(ListNode[] lists) {
         ListNode root = new ListNode(0);
         ListNode first = root;
 
-        while (true){
+        while (true) {
             ListNode minNode = null;
             int minPointer = -1;
             for (int i = 0; i < lists.length; i++) {
-                if (lists[i] == null){
+                if (lists[i] == null) {
                     continue;
                 }
-                if (minNode == null || minNode.val > lists[i].val){
+                if (minNode == null || minNode.val > lists[i].val) {
                     minNode = lists[i];
                     minPointer = i;
                 }
             }
-            if (minPointer == -1){
+            if (minPointer == -1) {
                 break;
             }
 
@@ -86,17 +87,16 @@ public class NodeMergeTest {
 //    }
 
 
-
     public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         ListNode pre = new ListNode(0);
         ListNode first = pre;
 
-        while (l1!=null && l2!=null){
+        while (l1 != null && l2 != null) {
             int value;
-            if (l1.val>l2.val){
+            if (l1.val > l2.val) {
                 value = l2.val;
                 l2 = l2.next;
-            }else {
+            } else {
                 value = l1.val;
                 l1 = l1.next;
             }
@@ -104,12 +104,12 @@ public class NodeMergeTest {
             pre = pre.next;
         }
 
-        while (l1!=null){
+        while (l1 != null) {
             pre.next = l1;
             l1 = null;
         }
 
-        while (l2!=null){
+        while (l2 != null) {
             pre.next = l2;
             l2 = null;
         }

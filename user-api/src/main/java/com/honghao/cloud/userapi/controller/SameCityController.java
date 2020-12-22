@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.controller;
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.dto.response.SameCityNumVO;
 import com.honghao.cloud.userapi.facade.SameCitySearchFacade;
@@ -19,8 +19,9 @@ import java.util.Map;
 
 /**
  * 同城订单控制
- *
+ * <p>
  * restful通过在url资源路径中添加版本号来解决版本不兼容问题
+ *
  * @author chenhonghao
  * @date 2019-12-26 10:37
  */
@@ -36,34 +37,36 @@ public class SameCityController {
     private Scheduler scheduler;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         try {
             scheduler.start();
         } catch (SchedulerException e) {
             e.printStackTrace();
         }
     }
+
     /**
      * 查询同城订单数量
+     *
      * @param knightId 骑士id
      * @return BaseResponse
      */
     @GetMapping("/getNum")
-    public BaseResponse<List<SameCityNumVO>> getNum(@RequestParam("knightId") String knightId){
+    public BaseResponse<List<SameCityNumVO>> getNum(@RequestParam("knightId") String knightId) {
         return BaseResponse.successData(sameCitySearchFacade.getNum(knightId));
     }
 
     @PostMapping("/receive")
-    public BaseResponse receive(@RequestBody @Valid WaybillBcList waybillBcList){
+    public BaseResponse receive(@RequestBody @Valid WaybillBcList waybillBcList) {
         sameCityServiceFacade.receive("chenhonghoa");
         return BaseResponse.success();
     }
 
     @GetMapping("/schedulerStart")
-    public BaseResponse schedulerStart(@RequestParam("name") String name,@RequestParam("group") String group){
-        Map<String,String> map = new HashMap<>();
-        map.put("name",name);
-        map.put("group",group);
+    public BaseResponse schedulerStart(@RequestParam("name") String name, @RequestParam("group") String group) {
+        Map<String, String> map = new HashMap<>();
+        map.put("name", name);
+        map.put("group", group);
         JobDetail jobDetail = JobBuilder.newJob(PrintWordsJob.class)
                 .setJobData(new JobDataMap(map))
                 .withIdentity(name, group).build();
@@ -76,7 +79,7 @@ public class SameCityController {
                         .withRepeatCount(3)).build();
 
         try {
-            scheduler.scheduleJob(jobDetail,trigger);
+            scheduler.scheduleJob(jobDetail, trigger);
         } catch (SchedulerException e) {
             e.printStackTrace();
         }
@@ -84,9 +87,9 @@ public class SameCityController {
     }
 
     @GetMapping("/schedulerEnd")
-    public BaseResponse schedulerEnd(@RequestParam("name") String name,@RequestParam("group") String group){
+    public BaseResponse schedulerEnd(@RequestParam("name") String name, @RequestParam("group") String group) {
         try {
-            scheduler.deleteJob(new JobKey(name,group));
+            scheduler.deleteJob(new JobKey(name, group));
         } catch (SchedulerException e) {
             e.printStackTrace();
         }

@@ -45,11 +45,13 @@ public class Operator {
     @NotBlank(groups = Second.class)
     private String agentNo;
 
-    public interface First extends Default {}
-
-    public interface Second extends Default{}
-
     public Operator(String operatorNo) {
         this.operatorNo = operatorNo;
+    }
+
+    public interface First extends Default {
+    }
+
+    public interface Second extends Default {
     }
 }

@@ -18,16 +18,13 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration
 public class RabbitConfig {
+    public static final String CREATE_ORDER = "create_order";
+    public static final String CREATE_ORDER_1 = "create_order_1";
+
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
         return rabbitTemplate;
     }
-
-
-    public static final String CREATE_ORDER = "create_order";
-
-
-    public static final String CREATE_ORDER_1 = "create_order_1";
 }

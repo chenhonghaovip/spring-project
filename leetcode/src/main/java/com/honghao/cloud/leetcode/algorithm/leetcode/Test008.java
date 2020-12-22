@@ -12,10 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 public class Test008 {
     public static void main(String[] args) {
         myAtoi("");
-        log.info("{}",myAtoi(""));
+        log.info("{}", myAtoi(""));
     }
+
     private static int myAtoi(String str) {
-        if (str == null || str == ""){
+        if (str == null || str == "") {
             return 0;
         }
         char[] chars = str.trim().toCharArray();
@@ -23,22 +24,22 @@ public class Test008 {
         int sum = 0;
 
         char[] chars1 = str.trim().substring(1).toCharArray();
-        if (chars[0]=='-'){
+        if (chars[0] == '-') {
             carry = -1;
             chars = chars1;
-        }else if (chars[0]=='+'){
+        } else if (chars[0] == '+') {
             carry = 1;
             chars = chars1;
         }
         for (char aChar : chars) {
-            if (aChar - 48 > 9 || aChar - 48 < 0){
+            if (aChar - 48 > 9 || aChar - 48 < 0) {
                 break;
             }
-            if (sum > Integer.MAX_VALUE/10){
-                if (carry == 1){
+            if (sum > Integer.MAX_VALUE / 10) {
+                if (carry == 1) {
                     return Integer.MAX_VALUE;
                 }
-                if (carry == -1){
+                if (carry == -1) {
                     return Integer.MIN_VALUE;
                 }
 
@@ -46,6 +47,6 @@ public class Test008 {
             }
             sum = sum * 10 + aChar - 48;
         }
-        return sum*carry;
+        return sum * carry;
     }
 }

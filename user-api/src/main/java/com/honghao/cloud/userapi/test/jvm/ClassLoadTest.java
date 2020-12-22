@@ -18,14 +18,14 @@ public class ClassLoadTest {
             @Override
             public Class<?> loadClass(String name) throws ClassNotFoundException {
                 try {
-                    String fileName = name.substring(name.lastIndexOf(".")+1)+".class";
+                    String fileName = name.substring(name.lastIndexOf(".") + 1) + ".class";
                     InputStream in = getClass().getResourceAsStream(fileName);
-                    if (in == null){
+                    if (in == null) {
                         return super.loadClass(name);
                     }
                     byte[] bytes = new byte[in.available()];
                     in.read(bytes);
-                    return defineClass(name,bytes,0,bytes.length);
+                    return defineClass(name, bytes, 0, bytes.length);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

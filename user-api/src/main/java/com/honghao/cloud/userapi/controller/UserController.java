@@ -1,7 +1,7 @@
 package com.honghao.cloud.userapi.controller;
 
-import com.honghao.cloud.basic.common.base.base.BaseAssert;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseAssert;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.userapi.common.enums.ErrorCodeEnum;
 import com.honghao.cloud.userapi.facade.WaybillBcListFacade;
 import io.swagger.annotations.Api;
@@ -33,8 +33,8 @@ public class UserController {
 
 
     @GetMapping("/test")
-    public BaseResponse test(@RequestParam("wId") String data){
-        BaseAssert.isNull(data,ErrorCodeEnum.OBJECT_CANNOT_BE_EMPTY);
+    public BaseResponse test(@RequestParam("wId") String data) {
+        BaseAssert.isNull(data, ErrorCodeEnum.OBJECT_CANNOT_BE_EMPTY);
         return BaseResponse.success();
     }
 }

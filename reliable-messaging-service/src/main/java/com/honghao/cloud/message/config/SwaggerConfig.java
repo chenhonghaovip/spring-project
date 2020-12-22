@@ -25,8 +25,8 @@ import java.util.List;
 public class SwaggerConfig {
     @Bean
     public Docket createRestApi() {
-        ParameterBuilder parameterBuilder=new ParameterBuilder();
-        List<Parameter> pars=new ArrayList<>();
+        ParameterBuilder parameterBuilder = new ParameterBuilder();
+        List<Parameter> pars = new ArrayList<>();
         parameterBuilder.name("tag").description("标记")
                 .modelRef(new ModelRef("string")).parameterType("header")
                 .required(false).defaultValue("Bearer ").build();

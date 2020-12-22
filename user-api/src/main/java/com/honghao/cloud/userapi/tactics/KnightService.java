@@ -1,7 +1,7 @@
 package com.honghao.cloud.userapi.tactics;
 
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 
 /**
  * 骑士操作接口
@@ -13,8 +13,9 @@ public interface KnightService {
 
     /**
      * 到店操作
+     *
      * @param data data
      * @return Result
      */
-    BaseResponse receiveShop(String data) ;
+    BaseResponse receiveShop(String data);
 }

@@ -21,6 +21,9 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration
 public class RabbitConfig {
+    public static final String CREATE_ORDER = "create_order";
+    public static final String CREATE_ORDER_1 = "create_order_1";
+
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
@@ -37,21 +40,19 @@ public class RabbitConfig {
         return factory;
     }
 
-
-    public static final String CREATE_ORDER = "create_order";
-
-
-    public static final String CREATE_ORDER_1 = "create_order_1";
     /**
      * 创建订单消费队列
+     *
      * @return Queue
      */
     @Bean
     public Queue createOrder() {
         return new Queue(RabbitConfig.CREATE_ORDER);
     }
-  /**
+
+    /**
      * 创建订单消费队列
+     *
      * @return Queue
      */
     @Bean

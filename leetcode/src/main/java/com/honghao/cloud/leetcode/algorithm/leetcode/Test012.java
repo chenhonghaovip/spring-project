@@ -18,30 +18,31 @@ public class Test012 {
         String s = "LVIII";
         romanToInt(s);
     }
+
     private static int romanToInt(String s) {
-        int[] arr = new int[]{1,4,5,9,10,40,50,90,100,400,500,900,1000};
-        String[] strs = new String[]{"I","IV","V","IX","X","XL","L","XC","C","CD","D","CM","M"};
-        Map<String,Integer> map = new HashMap<>(strs.length*2);
+        int[] arr = new int[]{1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000};
+        String[] strs = new String[]{"I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M"};
+        Map<String, Integer> map = new HashMap<>(strs.length * 2);
         for (int i = 0; i < arr.length; i++) {
-            map.put(strs[i],arr[i]);
+            map.put(strs[i], arr[i]);
         }
         char[] chars = s.toCharArray();
         int i = 0;
         int sum = 0;
-        System.out.println(getNum(map,sum,chars,i));
-        return getNum(map,sum,chars,i);
+        System.out.println(getNum(map, sum, chars, i));
+        return getNum(map, sum, chars, i);
     }
 
-    private static int getNum(Map<String,Integer> map,int sum ,char[] chars ,int i){
-        if (i+1 <= chars.length-1 && map.get(String.valueOf(chars[i])) < map.get(String.valueOf(chars[i+1]))){
-            sum = sum + map.get(chars[i] + String.valueOf(chars[i+1]));
-            i = i+2;
-        }else if (i<=chars.length-1){
+    private static int getNum(Map<String, Integer> map, int sum, char[] chars, int i) {
+        if (i + 1 <= chars.length - 1 && map.get(String.valueOf(chars[i])) < map.get(String.valueOf(chars[i + 1]))) {
+            sum = sum + map.get(chars[i] + String.valueOf(chars[i + 1]));
+            i = i + 2;
+        } else if (i <= chars.length - 1) {
             sum += map.get(String.valueOf(chars[i]));
             i++;
-        }else {
+        } else {
             return sum;
         }
-        return getNum(map,sum,chars,i);
+        return getNum(map, sum, chars, i);
     }
 }

@@ -17,6 +17,4 @@ public class Dict {
     public static final String SERVICE_NAME = "order-api";
 
 
-
-
 }

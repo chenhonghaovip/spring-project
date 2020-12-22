@@ -14,6 +14,7 @@ public interface SameCitySearchFacade {
 
     /**
      * 查询同城订单数量
+     *
      * @param knightId 骑士id
      * @return BaseResponse
      */

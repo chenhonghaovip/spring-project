@@ -14,7 +14,7 @@ public class PropertiesLoaderUtilsTest {
     private static final String FACTORIES_RESOURCE_LOCATION = "META-INF/shareniu-single.factories";
 
     public static void main(String[] args) throws IOException {
-        Properties properties = PropertiesLoaderUtils.loadAllProperties(FACTORIES_RESOURCE_LOCATION,null);
+        Properties properties = PropertiesLoaderUtils.loadAllProperties(FACTORIES_RESOURCE_LOCATION, null);
         System.out.println(properties);
     }
 }

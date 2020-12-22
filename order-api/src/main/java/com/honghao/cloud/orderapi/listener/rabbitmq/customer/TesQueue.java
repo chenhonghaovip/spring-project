@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class TesQueue {
 
-//    @RabbitListener(queues = RabbitConfig.TEST_QUEUE_1)
-    public void sendMessage(String message){
+    //    @RabbitListener(queues = RabbitConfig.TEST_QUEUE_1)
+    public void sendMessage(String message) {
         try {
             log.info("");
-            log.info("开始消费,{}",message);
-            CardDTO cardDTO=new CardDTO();
-        }catch (Exception e){
+            log.info("开始消费,{}", message);
+            CardDTO cardDTO = new CardDTO();
+        } catch (Exception e) {
             log.info("消息队列发送操作异常");
         }
     }

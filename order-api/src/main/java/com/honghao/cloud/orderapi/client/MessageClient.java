@@ -1,6 +1,6 @@
 package com.honghao.cloud.orderapi.client;
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.orderapi.client.hystrix.MessageFallbackFactory;
 import com.honghao.cloud.orderapi.dto.common.BatchMsgInfoDTO;
 import com.honghao.cloud.orderapi.dto.common.MsgInfoDTO;
@@ -19,12 +19,13 @@ import java.util.List;
  * @author chenhonghao
  * @date 2019-07-31 13:19
  */
-@FeignClient(name = MessageClient.SERVICE_ID,fallbackFactory = MessageFallbackFactory.class)
+@FeignClient(name = MessageClient.SERVICE_ID, fallbackFactory = MessageFallbackFactory.class)
 public interface MessageClient {
-    String SERVICE_ID="ReliableMessagingService";
+    String SERVICE_ID = "ReliableMessagingService";
 
     /**
      * 存入消息表
+     *
      * @param msgInfoDTO msgInfoDTO
      * @return BaseResponse
      */
@@ -33,6 +34,7 @@ public interface MessageClient {
 
     /**
      * 修改消息状态
+     *
      * @param msgInfoDTO msgInfoDTO
      * @return BaseResponse
      */
@@ -41,6 +43,7 @@ public interface MessageClient {
 
     /**
      * 删除消息
+     *
      * @param msgInfoDTO msgInfoDTO
      * @return BaseResponse
      */
@@ -49,6 +52,7 @@ public interface MessageClient {
 
     /**
      * 批量预发布消息
+     *
      * @param batchMsgInfoDTO batchMsgInfoDTO
      * @return BaseResponse
      */
@@ -57,6 +61,7 @@ public interface MessageClient {
 
     /**
      * 批量发送消息到队列
+     *
      * @param batchMsgInfoDTO batchMsgInfoDTO
      * @return BaseResponse
      */

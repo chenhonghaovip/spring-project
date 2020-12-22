@@ -11,7 +11,7 @@ import org.junit.Test;
  */
 public class ChangeNodeTest {
     @Test
-    public void test(){
+    public void test() {
         ListNode l1 = new ListNode(1);
         l1.next = new ListNode(2);
         l1.next.next = new ListNode(3);
@@ -21,7 +21,7 @@ public class ChangeNodeTest {
     }
 
     public ListNode swapPairs(ListNode head) {
-        if (head==null || head.next==null){
+        if (head == null || head.next == null) {
             return head;
         }
         ListNode next = head.next;

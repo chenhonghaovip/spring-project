@@ -1,6 +1,6 @@
 package com.honghao.cloud.orderapi.service;
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.orderapi.domain.entity.Order;
 
 import java.util.List;
@@ -14,6 +14,7 @@ import java.util.List;
 public interface OrderService {
     /**
      * 插入用户数据
+     *
      * @param data data
      * @return BaseResponse
      */
@@ -21,6 +22,7 @@ public interface OrderService {
 
     /**
      * 插入用户数据
+     *
      * @param data data
      * @return BaseResponse
      */
@@ -28,6 +30,7 @@ public interface OrderService {
 
     /**
      * 插入用户数据
+     *
      * @param wIds data
      * @return BaseResponse
      */
@@ -35,7 +38,8 @@ public interface OrderService {
 
     /**
      * 乐观锁更新重试测试
-     * @param  wId wId
+     *
+     * @param wId wId
      * @return BaseResponse
      */
     BaseResponse update(String wId);

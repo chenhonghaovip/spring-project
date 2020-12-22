@@ -30,13 +30,13 @@ public class SameCitySearchFacadeImpl implements SameCitySearchFacade {
 
     @Override
     public List<SameCityNumVO> getNum(String knightId) {
-        Page<SameCityNumVO> page = PageHelper.startPage(5,20).doSelectPage(()->waybillBcListService.getNum(knightId));
+        Page<SameCityNumVO> page = PageHelper.startPage(5, 20).doSelectPage(() -> waybillBcListService.getNum(knightId));
 
         List<SameCityNumDTO> list = waybillBcListService.getNum(knightId);
 
         //测试自定义DozerUtils.customizeMap()
         SameCityNumVO sameCityNumVO = SameCityNumVO.builder().orderStatus(3).build();
-        DozerUtils.customizeMap(list.get(0),sameCityNumVO);
+        DozerUtils.customizeMap(list.get(0), sameCityNumVO);
         System.out.println(JSON.toJSONString(sameCityNumVO));
 
         return list.stream().map(each -> SameCityNumVO.builder().orderStatus(each.getOrderStatus()).num(each.getNum()).build()).collect(Collectors.toList());

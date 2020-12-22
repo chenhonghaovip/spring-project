@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.test.face.file;
 
-import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
+import com.honghao.cloud.basic.common.factory.ThreadPoolFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -22,40 +22,38 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Slf4j
 public class SuperBigFileRead {
     private static int bufferSize = 1024;
-    private long fileLength;
     private static RandomAccessFile rAccessFile;
     private static Set<StartEndPair> startEndPairs;
-
-    private SuperBigFileRead(File file){
+    private static ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();
+    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(4, 100, "file—import");
+    private long fileLength;
+    private SuperBigFileRead(File file) {
         this.fileLength = file.length();
         try {
-            rAccessFile = new RandomAccessFile(file,"r");
+            rAccessFile = new RandomAccessFile(file, "r");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         startEndPairs = new HashSet<>();
     }
-    private static ConcurrentHashMap<String,Integer> map = new ConcurrentHashMap<>();
-    private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(4,100,"file—import");
-
 
     public static void main(String[] args) {
         String path = "F:\\u02\\logs\\waybill\\waybill-DESKTOP-O5RAEHE.log";
         File file = new File(path);
         long length = file.length();
-        long ever = length/threadPoolExecutor.getCorePoolSize();
+        long ever = length / threadPoolExecutor.getCorePoolSize();
         SuperBigFileRead bigFileReader = new SuperBigFileRead(file);
         try {
-            bigFileReader.calculateStartEnd(0,ever);
+            bigFileReader.calculateStartEnd(0, ever);
         } catch (IOException e) {
             log.error(e.toString());
         }
 
-        for(StartEndPair pair:startEndPairs){
-            System.out.println("分配分片："+pair);
-            threadPoolExecutor.execute(()->{
+        for (StartEndPair pair : startEndPairs) {
+            System.out.println("分配分片：" + pair);
+            threadPoolExecutor.execute(() -> {
                 try {
-                    long sliceSize = pair.end - pair.start+1;
+                    long sliceSize = pair.end - pair.start + 1;
                     byte[] readBuff = new byte[bufferSize];
 
                     MappedByteBuffer mapBuffer = rAccessFile.getChannel().map(FileChannel.MapMode.READ_ONLY, pair.start, sliceSize);
@@ -79,39 +77,39 @@ public class SuperBigFileRead {
 
     }
 
-    private static void handle(byte[] array){
-        System.out.println(Thread.currentThread().getName()+"===" + new String(array,StandardCharsets.UTF_8));
+    private static void handle(byte[] array) {
+        System.out.println(Thread.currentThread().getName() + "===" + new String(array, StandardCharsets.UTF_8));
     }
 
 
-    private void calculateStartEnd(long start,long size) throws IOException{
-        if(start>fileLength-1){
+    private void calculateStartEnd(long start, long size) throws IOException {
+        if (start > fileLength - 1) {
             return;
         }
         StartEndPair pair = new StartEndPair();
-        pair.start=start;
-        long endPosition = start+size-1;
-        if(endPosition>=fileLength-1){
-            pair.end=fileLength-1;
+        pair.start = start;
+        long endPosition = start + size - 1;
+        if (endPosition >= fileLength - 1) {
+            pair.end = fileLength - 1;
             startEndPairs.add(pair);
             return;
         }
         // 定位到endPosition位置
         rAccessFile.seek(endPosition);
-        byte tmp =(byte) rAccessFile.read();
-        while(tmp!='\n' && tmp!='\r'){
+        byte tmp = (byte) rAccessFile.read();
+        while (tmp != '\n' && tmp != '\r') {
             endPosition++;
-            if(endPosition>=fileLength-1){
-                endPosition=fileLength-1;
+            if (endPosition >= fileLength - 1) {
+                endPosition = fileLength - 1;
                 break;
             }
             rAccessFile.seek(endPosition);
-            tmp =(byte) rAccessFile.read();
+            tmp = (byte) rAccessFile.read();
         }
-        pair.end=endPosition;
+        pair.end = endPosition;
         startEndPairs.add(pair);
 
-        calculateStartEnd(endPosition+1, size);
+        calculateStartEnd(endPosition + 1, size);
     }
 
 
@@ -121,18 +119,18 @@ public class SuperBigFileRead {
 
         @Override
         public String toString() {
-            return "star="+start+";end="+end;
+            return "star=" + start + ";end=" + end;
         }
 
         @Override
         public int hashCode() {
-            return (int) ((start+end*100)%Integer.MAX_VALUE);
+            return (int) ((start + end * 100) % Integer.MAX_VALUE);
         }
 
         @Override
         public boolean equals(Object obj) {
-            if (obj instanceof StartEndPair){
-                StartEndPair startEndPair = (StartEndPair)obj;
+            if (obj instanceof StartEndPair) {
+                StartEndPair startEndPair = (StartEndPair) obj;
                 return startEndPair.start == start && startEndPair.end == end;
             }
             return false;

@@ -9,22 +9,22 @@ import lombok.Getter;
  * @date 2019-09-18 14:03
  */
 @Getter
-public enum  MsgStatusEnum {
+public enum MsgStatusEnum {
 
     /**
      * 待确认
      */
-    TO_BE_CONFIRMED(0,"待确认"),
+    TO_BE_CONFIRMED(0, "待确认"),
 
     /**
      * 已发送
      */
-    HAS_BEEN_SENT(1,"已发送"),
+    HAS_BEEN_SENT(1, "已发送"),
 
     /**
      * 已完成
      */
-    COMPLETED(2,"已完成"),
+    COMPLETED(2, "已完成"),
     ;
 
     private Integer code;

@@ -1,6 +1,6 @@
 package com.honghao.cloud.orderapi.facade;
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.orderapi.dto.request.MsgDTO;
 
 import java.util.List;
@@ -15,6 +15,7 @@ public interface OrderFacade {
 
     /**
      * 创建订单
+     *
      * @param data data
      * @return Boolean
      */
@@ -22,6 +23,7 @@ public interface OrderFacade {
 
     /**
      * 创建批量订单
+     *
      * @param data data
      * @return Boolean
      */
@@ -30,6 +32,7 @@ public interface OrderFacade {
 
     /**
      * 批次查询
+     *
      * @param list list
      * @return List<WaybillBcList>
      */
@@ -37,7 +40,8 @@ public interface OrderFacade {
 
     /**
      * 乐观锁更新重试测试
-     * @param  wId wId
+     *
+     * @param wId wId
      * @return BaseResponse
      */
     BaseResponse update(String wId);

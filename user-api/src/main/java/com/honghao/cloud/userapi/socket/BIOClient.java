@@ -12,7 +12,7 @@ import java.util.Scanner;
  * @date 2020-07-17 20:28
  */
 @Slf4j
-public class BIOClient extends Thread{
+public class BIOClient extends Thread {
     private String host;
 
     private int port;
@@ -22,19 +22,19 @@ public class BIOClient extends Thread{
         this.port = port;
     }
 
+    public static void main(String[] args) {
+        BIOClient bioClient = new BIOClient("localhost", 9010);
+        bioClient.start();
+    }
+
     @Override
     public void run() {
-        try(Socket socket = new Socket(host,port); OutputStream o = socket.getOutputStream()){
+        try (Socket socket = new Socket(host, port); OutputStream o = socket.getOutputStream()) {
             Scanner scanner = new Scanner(System.in);
             String msg = scanner.nextLine();
             o.write(msg.getBytes(StandardCharsets.UTF_8));
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
-    }
-
-    public static void main(String[] args) {
-        BIOClient bioClient = new BIOClient("localhost",9010);
-        bioClient.start();
     }
 }

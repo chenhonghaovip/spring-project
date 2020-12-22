@@ -2,7 +2,7 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-    <property name="log" value="/logs/user-api/user.log" />
+    <property name="log" value="/logs/user-api/user.log"/>
 
     <appender name="LOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log}</file>
@@ -19,7 +19,8 @@
         </triggeringPolicy>
         <!--定义输出格式-->
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} [%file : %line] %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} [%file : %line] %msg%n
+            </pattern>
         </encoder>
     </appender>
 
@@ -29,7 +30,7 @@
     <!--root是默认的logger 这里设定输出级别是debug-->
     <root level="INFO">
         <!--定义了两个appender，日志会通过往这两个appender里面写-->
-        <appender-ref ref="LOGFILE" />
+        <appender-ref ref="LOGFILE"/>
     </root>
 
 </configuration>

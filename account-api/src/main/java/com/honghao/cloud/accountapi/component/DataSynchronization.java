@@ -7,7 +7,7 @@ import com.alibaba.otter.canal.protocol.Message;
 import com.alibaba.otter.canal.protocol.exception.CanalClientException;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.honghao.cloud.accountapi.config.DataSynchronizationConfig;
-import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
+import com.honghao.cloud.basic.common.factory.ThreadPoolFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -34,9 +34,9 @@ public class DataSynchronization {
     private static CanalConnector connector;
 
     public DataSynchronization(DataSynchronizationConfig data) {
-        scheduledThreadPoolExecutor.scheduleAtFixedRate(()->{
+        scheduledThreadPoolExecutor.scheduleAtFixedRate(() -> {
             try {
-                if (connector==null){
+                if (connector == null) {
                     connector = CanalConnectors.newSingleConnector(new InetSocketAddress(data.getCanalAddress(),
                             data.getPort()), data.getDestination(), data.getUserName(), data.getPassword());
                     connector.connect();
@@ -47,33 +47,8 @@ public class DataSynchronization {
 //                log.error(e.getMessage());
                 connector = null;
             }
-        },0,10, TimeUnit.SECONDS);
+        }, 0, 10, TimeUnit.SECONDS);
     }
-
-    public void init(){
-        int batchSize = 1000;
-        while (true) {
-            try {
-                //尝试从master那边拉去数据batchSize条记录，有多少取多少
-                Message message = connector.getWithoutAck(batchSize);
-                long batchId = message.getId();
-                int size = message.getEntries().size();
-                if (batchId == -1 || size == 0) {
-                    Thread.sleep(1000);
-                } else {
-                    dataHandle(message.getEntries());
-                }
-                connector.ack(batchId);
-                //当队列里面堆积的sql大于一定数值的时候就模拟执行
-                executeQueueSql();
-            } catch (Exception e){
-                connector = null;
-                log.error(e.getMessage());
-                return;
-            }
-        }
-    }
-
 
     /**
      * 模拟执行队列里面的sql语句
@@ -169,6 +144,7 @@ public class DataSynchronization {
 
     /**
      * 保存插入语句
+     *
      * @param entry entry
      */
     private static void saveInsertSql(CanalEntry.Entry entry) {
@@ -196,6 +172,30 @@ public class DataSynchronization {
             }
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void init() {
+        int batchSize = 1000;
+        while (true) {
+            try {
+                //尝试从master那边拉去数据batchSize条记录，有多少取多少
+                Message message = connector.getWithoutAck(batchSize);
+                long batchId = message.getId();
+                int size = message.getEntries().size();
+                if (batchId == -1 || size == 0) {
+                    Thread.sleep(1000);
+                } else {
+                    dataHandle(message.getEntries());
+                }
+                connector.ack(batchId);
+                //当队列里面堆积的sql大于一定数值的时候就模拟执行
+                executeQueueSql();
+            } catch (Exception e) {
+                connector = null;
+                log.error(e.getMessage());
+                return;
+            }
         }
     }
 }

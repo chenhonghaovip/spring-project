@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi;
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.facade.BatchFacade;
 import lombok.extern.slf4j.Slf4j;
@@ -25,16 +25,17 @@ import java.util.concurrent.TimeUnit;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = UserApiApplication.class)
 public class MvcTest {
-    ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1000,1200,20, TimeUnit.SECONDS, new ArrayBlockingQueue<>(10));
+    ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1000, 1200, 20, TimeUnit.SECONDS, new ArrayBlockingQueue<>(10));
     @Resource
     private BatchFacade batchFacade;
+
     @Test
-    public void test02(){
+    public void test02() {
         log.info("开始接口测试工作");
     }
 
     @Test
-    public void test(){
+    public void test() {
         CountDownLatch countDownLatch = new CountDownLatch(1000);
         for (int i = 0; i < 1000; i++) {
             int finalI = i;
@@ -42,7 +43,7 @@ public class MvcTest {
                 try {
                     countDownLatch.await();
                     BaseResponse<WaybillBcList> response = batchFacade.queryCommon(String.valueOf(finalI));
-                    System.out.println("请求结果为"+response.getData());
+                    System.out.println("请求结果为" + response.getData());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -50,8 +51,9 @@ public class MvcTest {
             countDownLatch.countDown();
         }
     }
+
     @Test
-    public void test03(){
+    public void test03() {
         CountDownLatch countDownLatch = new CountDownLatch(1000);
         for (int i = 0; i < 1000; i++) {
             int finalI = i;
@@ -60,7 +62,7 @@ public class MvcTest {
                     countDownLatch.countDown();
                     countDownLatch.await();
                     BaseResponse<WaybillBcList> response = batchFacade.queryCommon1(String.valueOf(finalI));
-                    System.out.println("请求结果为"+response.getData());
+                    System.out.println("请求结果为" + response.getData());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

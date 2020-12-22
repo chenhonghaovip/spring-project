@@ -1,6 +1,6 @@
 package com.honghao.cloud.accountapi.template;
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 
 /**
  * @author chenhonghao
@@ -8,5 +8,5 @@ import com.honghao.cloud.basic.common.base.base.BaseResponse;
  */
 @FunctionalInterface
 public interface RabbitLoad {
-   BaseResponse run();
+    BaseResponse run();
 }

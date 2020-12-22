@@ -1,6 +1,6 @@
 package com.honghao.cloud.userapi.facade.impl;
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.userapi.client.OrderClient;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import com.honghao.cloud.userapi.facade.BatchFacade;
@@ -33,19 +33,9 @@ public class BatchFacadeImpl implements BatchFacade {
 
     @Resource
     private OrderClient orderClient;
-    @Data
-    private class Request{
-        private String movieCode;
-
-        private CompletableFuture<WaybillBcList> future;
-
-        private Thread thread;
-
-        private WaybillBcList waybillBcList;
-    }
 
     @PostConstruct
-    public void init(){
+    public void init() {
 //        ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(1, t-> new Thread(""+ATOMIC_INTEGER.getAndIncrement()));
         ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         scheduledExecutorService.scheduleAtFixedRate(() -> {
@@ -73,7 +63,7 @@ public class BatchFacadeImpl implements BatchFacade {
 //            }
 
             try {
-                if (queues1.size()==0){
+                if (queues1.size() == 0) {
                     return;
                 }
                 List<Request> list1 = new ArrayList<>();
@@ -85,8 +75,8 @@ public class BatchFacadeImpl implements BatchFacade {
                 BaseResponse<List<WaybillBcList>> listBaseResponse = orderClient.batchQuery(data1);
 
                 List<WaybillBcList> responses1 = listBaseResponse.getData();
-                log.info("合并请求数量为：{}，参数为：{}，结果为：{}",list1.size(),data1,responses1);
-                Map<String,WaybillBcList> resultMap1 = new HashMap<>(list1.size()*2);
+                log.info("合并请求数量为：{}，参数为：{}，结果为：{}", list1.size(), data1, responses1);
+                Map<String, WaybillBcList> resultMap1 = new HashMap<>(list1.size() * 2);
                 responses1.forEach(each -> resultMap1.put(each.getWId(), each));
                 for (Request request : list1) {
                     request.setWaybillBcList(resultMap1.get(request.getMovieCode()));
@@ -96,12 +86,11 @@ public class BatchFacadeImpl implements BatchFacade {
                 log.error(e.getMessage());
             }
 
-        },0,100, TimeUnit.MILLISECONDS);
+        }, 0, 100, TimeUnit.MILLISECONDS);
     }
 
-
     @Override
-    public BaseResponse<WaybillBcList> queryCommon(String data) throws Exception{
+    public BaseResponse<WaybillBcList> queryCommon(String data) throws Exception {
         Request request = new Request();
         request.setMovieCode(data);
         CompletableFuture<WaybillBcList> future = new CompletableFuture<>();
@@ -109,7 +98,6 @@ public class BatchFacadeImpl implements BatchFacade {
         queues.add(request);
         return BaseResponse.successData(future.get());
     }
-
 
     @Override
     public BaseResponse<WaybillBcList> queryCommon1(String data) {
@@ -119,6 +107,17 @@ public class BatchFacadeImpl implements BatchFacade {
         queues1.add(request);
         LockSupport.park();
         return BaseResponse.successData(request.getWaybillBcList());
+    }
+
+    @Data
+    private class Request {
+        private String movieCode;
+
+        private CompletableFuture<WaybillBcList> future;
+
+        private Thread thread;
+
+        private WaybillBcList waybillBcList;
     }
 
 

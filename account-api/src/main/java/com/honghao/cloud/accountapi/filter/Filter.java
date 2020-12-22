@@ -1,7 +1,7 @@
 package com.honghao.cloud.accountapi.filter;
 
-import com.honghao.cloud.basic.common.base.base.BaseRequest;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseRequest;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 
 /**
  * 抽象过滤器
@@ -12,9 +12,10 @@ import com.honghao.cloud.basic.common.base.base.BaseResponse;
 public interface Filter {
     /**
      * 过滤器执行
-     * @param request request
+     *
+     * @param request  request
      * @param response response
-     * @param chain chain
+     * @param chain    chain
      */
     void doFilter(BaseRequest request, BaseResponse response, FilterChain chain);
 }

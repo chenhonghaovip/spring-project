@@ -3,8 +3,6 @@ package com.honghao.cloud.leetcode.simple;
 import org.junit.Test;
 
 /**
- *
- *
  * @author chenhonghao
  * @date 2020-07-08 16:15
  */
@@ -13,10 +11,10 @@ public class DeleteElem {
      * 给你一个数组 nums 和一个值 val，你需要 原地 移除所有数值等于 val 的元素，并返回移除后数组的新长度。
      */
     @Test
-    public void test(){
+    public void test() {
         int val = 3;
-        int[] nums = new int[]{3,2,2,3};
-        System.out.println(removeElement(nums,val));
+        int[] nums = new int[]{3, 2, 2, 3};
+        System.out.println(removeElement(nums, val));
     }
 
     public int removeElement(int[] nums, int val) {
@@ -36,9 +34,9 @@ public class DeleteElem {
      */
 
     @Test
-    public void test1(){
+    public void test1() {
         String haystack = "hello", needle = "ll";
-        System.out.println(strStr(haystack,needle));
+        System.out.println(strStr(haystack, needle));
     }
 
 
@@ -54,32 +52,33 @@ public class DeleteElem {
     }
 
     @Test
-    public void test2(){
+    public void test2() {
         int dividend = 7, divisor = -3;
-        System.out.println(divide(dividend,divisor));
+        System.out.println(divide(dividend, divisor));
     }
+
     public int divide(int dividend, int divisor) {
         int basic = 1;
-        if (dividend>0 && divisor <0 || dividend<0 && divisor>0){
+        if (dividend > 0 && divisor < 0 || dividend < 0 && divisor > 0) {
             basic = -1;
         }
-        int mod ;
+        int mod;
         int value = 0;
 
-        while ((mod = Math.abs(dividend) - Math.abs(divisor))>=0){
+        while ((mod = Math.abs(dividend) - Math.abs(divisor)) >= 0) {
             dividend = mod;
             value++;
         }
-        if (basic>0){
+        if (basic > 0) {
             return value;
-        }else {
-            return 0-value;
+        } else {
+            return 0 - value;
         }
     }
 
     @Test
-    public void test3(){
-        int[] height = new int[]{0,1,0,2,1,0,1,3,2,1,2,1};
+    public void test3() {
+        int[] height = new int[]{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1};
         System.out.println(trap(height));
     }
 
@@ -87,37 +86,24 @@ public class DeleteElem {
         int maxValue = 0;
         int maxIndex = -1;
         for (int i = 0; i < height.length; i++) {
-            if (maxValue <= height[i]){
+            if (maxValue <= height[i]) {
                 maxValue = height[i];
                 maxIndex = i;
             }
         }
 
         int sum = 0;
-        for (int i = 1; i < height.length-1; i++) {
-            if (i < maxIndex && height[i] < height[i-1]) {
-                sum+=height[i-1] - height[i];
+        for (int i = 1; i < height.length - 1; i++) {
+            if (i < maxIndex && height[i] < height[i - 1]) {
+                sum += height[i - 1] - height[i];
             }
-            if (i>maxIndex && height[i+1] > height[i]){
-                sum+=height[i+1] - height[i];
+            if (i > maxIndex && height[i + 1] > height[i]) {
+                sum += height[i + 1] - height[i];
             }
         }
 
         return sum;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

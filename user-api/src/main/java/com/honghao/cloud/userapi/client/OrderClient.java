@@ -1,7 +1,7 @@
 package com.honghao.cloud.userapi.client;
 
 import com.alibaba.fastjson.JSONObject;
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.userapi.client.hystrix.OrderClientFallbackFactory;
 import com.honghao.cloud.userapi.domain.entity.WaybillBcList;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -20,13 +20,14 @@ import java.util.List;
  */
 @FeignClient(
         name = OrderClient.SERVER_ID
-        ,fallbackFactory = OrderClientFallbackFactory.class
+        , fallbackFactory = OrderClientFallbackFactory.class
 )
 public interface OrderClient {
     String SERVER_ID = "ORDER-API";
 
     /**
      * 批量删除token
+     *
      * @param data string
      * @return 删除
      */
@@ -35,6 +36,7 @@ public interface OrderClient {
 
     /**
      * 批量删除token
+     *
      * @param data string
      * @return 删除
      */
@@ -43,6 +45,7 @@ public interface OrderClient {
 
     /**
      * 批次查询
+     *
      * @param list list
      * @return List<WaybillBcList>
      */
@@ -52,7 +55,8 @@ public interface OrderClient {
 
     /**
      * 查询
-     * @param wId 订单号
+     *
+     * @param wId     订单号
      * @param batchId 批次号
      * @return BaseResponse
      */

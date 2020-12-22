@@ -5,7 +5,7 @@ import com.alibaba.otter.canal.client.CanalConnectors;
 import com.alibaba.otter.canal.protocol.Message;
 import com.honghao.cloud.accountapi.common.dict.Dict;
 import com.honghao.cloud.accountapi.service.RedisService;
-import com.honghao.cloud.basic.common.base.factory.ThreadPoolFactory;
+import com.honghao.cloud.basic.common.factory.ThreadPoolFactory;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,42 +26,43 @@ public class AccountApiApplicationTests {
     @Resource
     private RedisService redisService;
     @Resource
-    private RedisTemplate<String,Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
     @Resource
     private RestHighLevelClient restHighLevelClient;
+
     @Test
     public void contextLoads() {
         // 初始化构建过去30天的数据
-        long hour = System.currentTimeMillis()/(1000*60*60);
-        for (int i = 1; i < 24*30; i++) {
+        long hour = System.currentTimeMillis() / (1000 * 60 * 60);
+        for (int i = 1; i < 24 * 30; i++) {
             String testkey = Dict.WEIBO;
-            testkey +=(hour - i);
+            testkey += (hour - i);
             for (int j = 1; j <= 26; j++) {
-                redisTemplate.opsForZSet().add(testkey,String.valueOf((char)(96+j)),random.nextInt(10));
+                redisTemplate.opsForZSet().add(testkey, String.valueOf((char) (96 + j)), random.nextInt(10));
             }
         }
     }
 
     @Test
-    public void redisTest(){
+    public void redisTest() {
         for (int i = 0; i < 1000; i++) {
             int i1 = random.nextInt(26);
-            String key = String.valueOf((char)(97+i1));
+            String key = String.valueOf((char) (97 + i1));
             redisService.hotSearchOnWeibo(key);
         }
     }
 
     @Test
-    public void timeTask(){
+    public void timeTask() {
         ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1);
-        scheduledThreadPoolExecutor.scheduleAtFixedRate(()->{
+        scheduledThreadPoolExecutor.scheduleAtFixedRate(() -> {
             // 刷新过去24小时的数据到日热点数据
-            long hour = System.currentTimeMillis()/(1000*60*60);
+            long hour = System.currentTimeMillis() / (1000 * 60 * 60);
 
             String key = Dict.WEIBO_WEEK + hour;
 
 
-        },0,2, TimeUnit.SECONDS);
+        }, 0, 2, TimeUnit.SECONDS);
     }
 
     // 测试elasticsearchTemplate搜索
@@ -85,7 +86,7 @@ public class AccountApiApplicationTests {
                 }
                 connector.ack(batchId);
                 //当队列里面堆积的sql大于一定数值的时候就模拟执行
-            } catch (Exception e){
+            } catch (Exception e) {
                 return;
             }
         }

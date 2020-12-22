@@ -20,15 +20,15 @@ public class Test01 {
             sum += i;
         }
         long middleTime = System.currentTimeMillis();
-        log.info("时间为：{}，结果为：{}",middleTime-time ,sum);
+        log.info("时间为：{}，结果为：{}", middleTime - time, sum);
 
-        long num = (1 + n) * n ;
+        long num = (1 + n) * n;
         long endTime = System.currentTimeMillis();
-        log.info("时间为：{}，结果为：{}",endTime - middleTime ,num);
+        log.info("时间为：{}，结果为：{}", endTime - middleTime, num);
 
         BigDecimal bigDecimal = BigDecimal.valueOf(1);
         BigDecimal bigDecimal1 = BigDecimal.valueOf(2);
-        log.info(":{}",bigDecimal.equals(bigDecimal1));
-        log.info("{}",bigDecimal.add(bigDecimal1));
+        log.info(":{}", bigDecimal.equals(bigDecimal1));
+        log.info("{}", bigDecimal.add(bigDecimal1));
     }
 }

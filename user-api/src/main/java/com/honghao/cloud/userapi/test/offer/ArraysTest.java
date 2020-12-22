@@ -18,34 +18,35 @@ public class ArraysTest {
      * 4 7 10 13
      * 6 8 11 15
      * 解决思路：
-     *每次取右上角的数字和当前数字做对比，如果大于当前数字，则该列都大于当前数字，过滤
+     * 每次取右上角的数字和当前数字做对比，如果大于当前数字，则该列都大于当前数字，过滤
      * 如果小于当前数字，则该行都小于当前数字，也过滤，不断循环查询
      */
     @Test
-    public void test(){
-        int[][] arr = {{1,2,4,6},{2,4,7,8},{8,9,10,11},{9,12,13,15}};
+    public void test() {
+        int[][] arr = {{1, 2, 4, 6}, {2, 4, 7, 8}, {8, 9, 10, 11}, {9, 12, 13, 15}};
         int k = 7;
         int h = 0;
         int w = arr.length - 1;
-        while (w >= 0 && h < arr[0].length){
-            if (arr[w][h]==k){
+        while (w >= 0 && h < arr[0].length) {
+            if (arr[w][h] == k) {
                 System.out.println("w = " + w + " h = " + h);
                 return;
-            }else if (arr[w][h]>k){
+            } else if (arr[w][h] > k) {
                 w = w - 1;
-            }else {
+            } else {
                 h = h + 1;
             }
         }
         System.out.println("error");
     }
+
     /**
      * 题目：输入一个链表的头结点，从尾到头反过来打印出每个结点的值。
      * 解决思路1：利用栈功能实现
      * 解决思路2：利用递归实现
      */
     @Test
-    public void test1(){
+    public void test1() {
         ListNode listNode = new ListNode(1);
         ListNode listNode2 = new ListNode(2);
         ListNode listNode3 = new ListNode(3);
@@ -54,19 +55,19 @@ public class ArraysTest {
 
         Stack<Integer> stack = new Stack<>();
         ListNode p = listNode;
-        while (p!=null){
+        while (p != null) {
             stack.push(p.value);
             p = p.next;
         }
-        while (!stack.isEmpty()){
+        while (!stack.isEmpty()) {
             System.out.print(stack.pop());
         }
         System.out.println();
         digui(listNode);
     }
 
-    private void digui(ListNode listNode){
-        if (listNode!=null){
+    private void digui(ListNode listNode) {
+        if (listNode != null) {
             digui(listNode.next);
             System.out.print(listNode.value);
         }
@@ -78,16 +79,16 @@ public class ArraysTest {
      * 解决思路：双指针，长度为k,尾指针指向最后一个节点时，头指针正好指向倒数第k个节点
      */
     @Test
-    public void test2(){
+    public void test2() {
 
         ListNode listNode = createList();
         int k = 2;
         ListNode first = listNode;
         ListNode second = listNode;
-        for (int i = 0; i < k -1; i++) {
+        for (int i = 0; i < k - 1; i++) {
             second = second.next;
         }
-        while (second.next!=null){
+        while (second.next != null) {
             second = second.next;
             first = first.next;
         }
@@ -95,7 +96,7 @@ public class ArraysTest {
 
     }
 
-    private ListNode createList(){
+    private ListNode createList() {
         ListNode listNode = new ListNode(1);
         ListNode listNode2 = new ListNode(2);
         ListNode listNode3 = new ListNode(3);
@@ -116,12 +117,13 @@ public class ArraysTest {
      * 翻转后为6-5-4-3-2-1
      */
     @Test
-    public void test3(){
+    public void test3() {
         ListNode head = createList();
         reverseList(head);
 
 
     }
+
     public ListNode reverseList(ListNode head) {
         if (head == null || head.next == null) {
             return head;
@@ -130,11 +132,11 @@ public class ArraysTest {
         prev = null;
         cur = head;
         end = head.next;
-        while (cur!=null){
+        while (cur != null) {
             cur.next = prev;
             prev = cur;
             cur = end;
-            if (end!=null){
+            if (end != null) {
                 end = end.next;
             }
         }
@@ -142,12 +144,12 @@ public class ArraysTest {
 
     }
 
-        /**
-         * 删除链表的倒数第N个节点
-         * 1-2-3-4-5-6
-         */
+    /**
+     * 删除链表的倒数第N个节点
+     * 1-2-3-4-5-6
+     */
     @Test
-    public void test4(){
+    public void test4() {
         int k = 3;
         ListNode listNode = createList();
         ListNode head = listNode;
@@ -156,7 +158,7 @@ public class ArraysTest {
         for (int i = 0; i < k; i++) {
             end = end.next;
         }
-        while (end.next!=null){
+        while (end.next != null) {
             end = end.next;
             tail = tail.next;
         }
@@ -168,13 +170,13 @@ public class ArraysTest {
      * 两两交换链表中的节点
      */
     @Test
-    public void test5(){
+    public void test5() {
         ListNode list = createList();
         swapPairs(list);
     }
 
     private ListNode swapPairs(ListNode head) {
-        if (head == null || head.next == null){
+        if (head == null || head.next == null) {
             return head;
         }
         ListNode next = head.next;
@@ -190,28 +192,28 @@ public class ArraysTest {
         ListNode end = pre;
 
         for (int i = 0; i < k; i++) {
-            if (end.next==null){
+            if (end.next == null) {
                 break;
             }
             end = end.next;
         }
 
 
-        head.next = reverseKGroup(end.next,k);
+        head.next = reverseKGroup(end.next, k);
         return head;
     }
 
 
     @Test
-    public void test6(){
-        int[] a = {1,3,5,6};
+    public void test6() {
+        int[] a = {1, 3, 5, 6};
         int tag = 0;
-        System.out.println(searchInsert(a,tag));
+        System.out.println(searchInsert(a, tag));
     }
 
     public int searchInsert(int[] nums, int target) {
         for (int i = 0; i < nums.length; i++) {
-            if (nums[i]>=target){
+            if (nums[i] >= target) {
                 return i;
             }
         }
@@ -219,7 +221,7 @@ public class ArraysTest {
     }
 
 
-    public static class ListNode{
+    public static class ListNode {
         private int value;
         private ListNode next;
 

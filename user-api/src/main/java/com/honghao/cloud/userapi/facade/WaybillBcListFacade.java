@@ -1,7 +1,7 @@
 package com.honghao.cloud.userapi.facade;
 
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 
 /**
  * 订单信息操作
@@ -12,6 +12,7 @@ import com.honghao.cloud.basic.common.base.base.BaseResponse;
 public interface WaybillBcListFacade {
     /**
      * 多数据源测试
+     *
      * @return BaseResponse
      */
     BaseResponse dateSource();

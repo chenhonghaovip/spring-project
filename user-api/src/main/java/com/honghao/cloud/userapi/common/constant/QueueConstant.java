@@ -10,5 +10,5 @@ public class QueueConstant {
     /**
      * 测试队列名称
      */
-    public static final String TEST_QUEUE="test_queue";
+    public static final String TEST_QUEUE = "test_queue";
 }
