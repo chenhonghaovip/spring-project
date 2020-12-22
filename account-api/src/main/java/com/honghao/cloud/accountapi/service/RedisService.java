@@ -51,14 +51,6 @@ public interface RedisService {
     BaseResponse redisLock(String userId);
 
     /**
-     * redisson加锁操作
-     *
-     * @param userId userId
-     * @return BaseResponse
-     */
-    BaseResponse redissonLock(String userId);
-
-    /**
      * redis实现list
      *
      * @param userId userId

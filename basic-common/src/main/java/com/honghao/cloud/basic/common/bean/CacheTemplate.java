@@ -79,7 +79,7 @@ public class CacheTemplate<T> {
      * @param bloomKey   布隆过滤器的key值
      * @return BaseResponse
      */
-    public BaseResponse redisStringCache(String prefix, String businessId, long expire, TimeUnit timeUnit, CacheLoad<T> cacheLoad, String bloomKey) {
+    private BaseResponse redisStringCache(String prefix, String businessId, long expire, TimeUnit timeUnit, CacheLoad<T> cacheLoad, String bloomKey) {
         // 布隆过滤器校验
         if (StringUtils.isNotBlank(bloomKey)) {
             boolean b = redisBloomFilter.includeByBloomFilter(bloomFilterHelper, bloomKey, businessId);

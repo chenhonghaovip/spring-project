@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import com.honghao.cloud.basic.common.utils.BloomFilterHelper;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.util.Objects;
+
 /**
  * redis布隆过滤器
  *
@@ -40,11 +42,12 @@ public class RedisBloomFilter {
     /**
      * 根据给定的布隆过滤器判断值是否存在
      */
-    public <T> boolean includeByBloomFilter(BloomFilterHelper<T> bloomFilterHelper, String key, T value) {
+    <T> boolean includeByBloomFilter(BloomFilterHelper<T> bloomFilterHelper, String key, T value) {
         Preconditions.checkArgument(bloomFilterHelper != null, "bloomFilterHelper不能为空");
         int[] offset = bloomFilterHelper.murmurHashOffset(value);
         for (int i : offset) {
-            if (!redisTemplate.opsForValue().getBit(key, i)) {
+            Boolean bit = redisTemplate.opsForValue().getBit(key, i);
+            if (Objects.isNull(bit) || !bit) {
                 return false;
             }
         }

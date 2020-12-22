@@ -100,17 +100,17 @@ public class RedisController {
         return redisService.redisLock(userId);
     }
 
-    /**
-     * redisson加锁操作
-     *
-     * @param userId userId
-     * @return BaseResponse
-     */
-    @PostMapping("/redissonLock")
-    @ApiOperation(value = "redisson加锁操作", notes = "redisson加锁操作")
-    public BaseResponse redissonLock(@RequestBody String userId) {
-        return redisService.redissonLock(userId);
-    }
+//    /**
+//     * redisson加锁操作
+//     *
+//     * @param userId userId
+//     * @return BaseResponse
+//     */
+//    @PostMapping("/redissonLock")
+//    @ApiOperation(value = "redisson加锁操作", notes = "redisson加锁操作")
+//    public BaseResponse redissonLock(@RequestBody String userId) {
+//        return redisService.redissonLock(userId);
+//    }
 
     /**
      * redis实现list

@@ -15,7 +15,6 @@ import com.honghao.cloud.basic.common.bean.CacheTemplate;
 import com.honghao.cloud.basic.common.factory.ThreadPoolFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
-import org.redisson.api.RLock;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisConnection;
@@ -230,17 +229,6 @@ public class RedisServiceImpl implements RedisService {
         return BaseResponse.success();
     }
 
-    @Override
-    public BaseResponse redissonLock(String userId) {
-        RLock lock = redisson.getLock(userId);
-        lock.lock(10, TimeUnit.SECONDS);
-
-        try {
-            return BaseResponse.success();
-        } finally {
-            lock.unlock();
-        }
-    }
 
     @Override
     public BaseResponse redisList(String userId) {
