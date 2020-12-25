@@ -36,6 +36,7 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchAllQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.search.Scroll;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.web.bind.annotation.*;
@@ -264,6 +265,25 @@ public class ElasticsearchController {
         return commonSearch(index, new BoolQueryBuilder().filter(termQuery));
     }
 
+
+    /**
+     * 大量获取文档，使用Scroll方法
+     *
+     * @return BaseResponse
+     */
+    @GetMapping("/batchDocument")
+    @ApiOperation(value = "获取文档", notes = "获取文档")
+    public BaseResponse batchDocument(@RequestParam("index") String index) {
+        // 查询全部
+        MatchAllQueryBuilder matchAllQueryBuilder = QueryBuilders.matchAllQuery();
+        System.out.println(matchAllQueryBuilder);
+
+        // 精确匹配
+        TermQueryBuilder termQuery = QueryBuilders.termQuery("shopName", "string");
+
+        return commonSearch(index, new BoolQueryBuilder().filter(termQuery));
+    }
+
     /**
      * @return BaseResponse
      */
@@ -310,6 +330,10 @@ public class ElasticsearchController {
         searchSourceBuilder.query(boolQueryBuilder);
         searchSourceBuilder.timeout(new TimeValue(5, TimeUnit.SECONDS));
         searchRequest.source(searchSourceBuilder);
+
+        // 初始化scroll,设定滚动时间间隔,这个时间并不需要长到可以处理所有的数据，仅仅需要足够长来处理前一批次的结果。每个 scroll 请求（包含 scroll 参数）设置了一个新的失效时间。
+        final Scroll scroll = new Scroll(TimeValue.timeValueMinutes(1L));
+        searchRequest.scroll(scroll);
 
         try {
             SearchResponse search = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);

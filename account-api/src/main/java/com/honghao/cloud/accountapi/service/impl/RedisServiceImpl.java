@@ -14,7 +14,6 @@ import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.basic.common.bean.CacheTemplate;
 import com.honghao.cloud.basic.common.factory.ThreadPoolFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.Redisson;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisConnection;
@@ -28,6 +27,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -44,6 +45,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @Slf4j
 @Service
 public class RedisServiceImpl implements RedisService {
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final ScheduledThreadPoolExecutor SCHEDULED_THREAD_POOL_EXECUTOR = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1);
     private static final ThreadPoolExecutor POOL_EXECUTOR = ThreadPoolFactory.buildThreadPoolExecutor(1, 10, "add_redis");
     private static final ScheduledThreadPoolExecutor EXECUTOR = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1);
@@ -58,8 +60,6 @@ public class RedisServiceImpl implements RedisService {
     }
 
     private ConcurrentHashMap<String, ReentrantLock> concurrentHashMap = new ConcurrentHashMap<>();
-    @Resource
-    private Redisson redisson;
     @Resource
     private ShopInfoMapper shopInfoMapper;
     @Resource
@@ -88,7 +88,7 @@ public class RedisServiceImpl implements RedisService {
         // 每分钟往令牌桶里面放入10个令牌
         String key = "tokenBucket";
         EXECUTOR.scheduleAtFixedRate(() -> redisTemplate.execute((RedisCallback<String>) redisConnection -> {
-            System.out.println("sssssss");
+//            System.out.println("sssssss");
             redisConnection.eval(RedisConfig.TOKEN_BUCKET_CURRENT_LIMIT.getBytes(), ReturnType.VALUE, 1, key.getBytes(), String.valueOf(10).getBytes(), String.valueOf(9).getBytes());
             return null;
         }), 0, 1, TimeUnit.MINUTES);
@@ -222,9 +222,8 @@ public class RedisServiceImpl implements RedisService {
 //                redisTemplate.delete(userId);
 //            }
             // 优化为如下代码，利用lua来确保查询和删除直减不会被插入其他redis操作
-            redisTemplate.execute((RedisCallback<String>) redisConnection -> redisConnection.eval(RedisConfig.UNLOCK.getBytes(), ReturnType.VALUE, 1, userId.getBytes(), clientId.getBytes())
-
-            );
+            String client = "\"" + clientId + "\"";
+            redisTemplate.execute((RedisCallback<Long>) redisConnection -> redisConnection.eval(RedisConfig.UNLOCK.getBytes(), ReturnType.VALUE, 1, userId.getBytes(), client.getBytes()));
         }
         return BaseResponse.success();
     }
@@ -483,7 +482,8 @@ public class RedisServiceImpl implements RedisService {
                 redisTemplate.expire(key, 60, TimeUnit.SECONDS);
             }
         } finally {
-            redisTemplate.execute((RedisCallback<Integer>) redisConnection -> redisConnection.eval(RedisConfig.UNLOCK.getBytes(), ReturnType.VALUE, 1, key.getBytes(), uuid.getBytes()));
+            String client = "\"" + uuid + "\"";
+            redisTemplate.execute((RedisCallback<Integer>) redisConnection -> redisConnection.eval(RedisConfig.UNLOCK.getBytes(), ReturnType.VALUE, 1, key.getBytes(), client.getBytes()));
         }
         return BaseResponse.success();
     }
@@ -505,6 +505,7 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public BaseResponse tokenBucket(String param) {
+        redisTemplate.opsForValue().setIfAbsent("tttt",ShopInfo.builder().shopName("111").shopUrl("tedd").build());
         String key = "tokenBucket";
         Object o = redisTemplate.opsForList().leftPop(key);
         if (Objects.isNull(o)) {
@@ -517,7 +518,7 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public BaseResponse leakyBucket(String param) {
         String key = "leakyBucket";
-        Object o = redisTemplate.opsForList().rightPush(key, UUID.randomUUID());
+        Object o = redisTemplate.opsForList().rightPush(key, UUID.randomUUID().toString());
         if (Objects.isNull(o)) {
             return BaseResponse.error("达到请求阈值阀门,请稍后重试");
         }
@@ -556,5 +557,28 @@ public class RedisServiceImpl implements RedisService {
             list.add(Dict.WEIBO + (time - i));
         }
         redisTemplate.opsForZSet().unionAndStore(Dict.WEIBO + time, list, Dict.WEIBO_MONTH);
+    }
+
+    public void test(String shipNo, String company) {
+        LocalDate localDate = LocalDate.now();
+        String k = shipNo + company;
+        // 基于当前业务量，基本稳定在700w左右，预留到1000w容量，分为2500个key,保持每隔key中数量不超过5000个
+        int index = (k).hashCode() % 2500;
+
+        // 防止跨天重复，需要对比今天和昨天的数据
+        String todayKey = "Ship:Id" + localDate.format(FORMATTER) + index;
+        String yesKey = "Ship:Id" + localDate.minusDays(1).format(FORMATTER) + index;
+
+        // 只有两个hash结构中都不存在该key时，才会认为是初次处理，否则已经处理过了，直接返回，保证幂等性
+        Object o = redisTemplate.opsForHash().get(yesKey, k);
+        Boolean today = redisTemplate.opsForHash().putIfAbsent(todayKey, k, k);
+
+        Random random = new Random();
+        // 需要为key设置过期时间，而且要尽量分散开来，避免key集中过期，造成阻塞,设置过期时间为24到26个小时
+        redisTemplate.expire(todayKey, random.nextInt(60) + 24 * 60, TimeUnit.MINUTES);
+
+        if (Objects.isNull(o) && today) {
+            System.out.println("执行业务逻辑");
+        }
     }
 }

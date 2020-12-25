@@ -40,13 +40,18 @@ public class RedisConfig {
      */
     public static final String TOKEN_BUCKET_CURRENT_LIMIT = "for i=1,ARGV[1] do redis.call('RPUSH',KEYS[1],i) end redis.call('LTRIM',KEYS[1],tonumber(0),tonumber(ARGV[2]))";
 
+    /**
+     * 存在问题，通过这种序列化方式存进去的value值，会带引号""
+     * @param redisConnectionFactory redisConnectionFactory
+     * @return RedisTemplate
+     */
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
-        redisTemplate.setValueSerializer(stringRedisSerializer);
+        redisTemplate.setValueSerializer(genericJackson2JsonRedisSerializer);
         redisTemplate.setKeySerializer(stringRedisSerializer);
         redisTemplate.setHashKeySerializer(stringRedisSerializer);
         redisTemplate.setHashValueSerializer(genericJackson2JsonRedisSerializer);
