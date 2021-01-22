@@ -88,8 +88,7 @@ public class RedisServiceImpl implements RedisService {
         // 每分钟往令牌桶里面放入10个令牌
         String key = "tokenBucket";
         EXECUTOR.scheduleAtFixedRate(() -> redisTemplate.execute((RedisCallback<String>) redisConnection -> {
-//            System.out.println("sssssss");
-            redisConnection.eval(RedisConfig.TOKEN_BUCKET_CURRENT_LIMIT.getBytes(), ReturnType.VALUE, 1, key.getBytes(), String.valueOf(10).getBytes(), String.valueOf(9).getBytes());
+            redisConnection.eval(RedisConfig.TOKEN_BUCKET_CURRENT_LIMIT_RESYNC.getBytes(), ReturnType.VALUE, 1, key.getBytes(), String.valueOf(10).getBytes(), String.valueOf(9).getBytes());
             return null;
         }), 0, 1, TimeUnit.MINUTES);
 
@@ -505,7 +504,6 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public BaseResponse tokenBucket(String param) {
-        redisTemplate.opsForValue().setIfAbsent("tttt",ShopInfo.builder().shopName("111").shopUrl("tedd").build());
         String key = "tokenBucket";
         Object o = redisTemplate.opsForList().leftPop(key);
         if (Objects.isNull(o)) {

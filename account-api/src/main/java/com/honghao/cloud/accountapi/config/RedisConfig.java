@@ -41,6 +41,15 @@ public class RedisConfig {
     public static final String TOKEN_BUCKET_CURRENT_LIMIT = "for i=1,ARGV[1] do redis.call('RPUSH',KEYS[1],i) end redis.call('LTRIM',KEYS[1],tonumber(0),tonumber(ARGV[2]))";
 
     /**
+     * 令牌桶限流，只保持存有固定个数的令牌，满了之后不再往里面放
+     * KEYS[1] redis中的key值
+     * argv[1] = 每次放入的令牌个数
+     * argv[2] = 该队列中最多持有的令牌个数 - 1
+     */
+    public static final String TOKEN_BUCKET_CURRENT_LIMIT_RESYNC = "for i=1,ARGV[1] do redis.call('RPUSH',KEYS[1],i) end redis.call('LTRIM',KEYS[1],tonumber(0),tonumber(ARGV[2]))";
+
+
+    /**
      * 存在问题，通过这种序列化方式存进去的value值，会带引号""
      * @param redisConnectionFactory redisConnectionFactory
      * @return RedisTemplate
