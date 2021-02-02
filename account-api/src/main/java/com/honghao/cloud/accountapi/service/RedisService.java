@@ -27,6 +27,14 @@ public interface RedisService {
     BaseResponse delBigHash(String userId);
 
     /**
+     * redis的bigKey访问问题
+     *
+     * @param userId userId
+     * @return BaseResponse
+     */
+    BaseResponse bigKey(long userId);
+
+    /**
      * redis缓存击穿处理
      *
      * @param userId userId

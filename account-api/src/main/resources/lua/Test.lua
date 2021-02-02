@@ -11,12 +11,13 @@ for _ = 1, tonumber(c) do
     redis.call('RPUSH', KEYS[1], ARGV[1])
 end
 redis.call('LTRIM', KEYS[1], tonumber(0), tonumber(ARGV[3]));
-local count = redis.call('LLEN', KEYS[1]);
-local min = math.min(tonumber(count), tonumber(ARGV[4]));
+--local count = redis.call('LLEN', KEYS[1]);
+local min = math.min(tonumber(ARGV[3]),tonumber(a) + tonumber(c));
+--local min = math.min(tonumber(count), tonumber(ARGV[4]));
 for _ = 1, tonumber(min) do
     redis.call('LPOP', KEYS[1]);
 end
 return min;
 
-eval "" 1 tokenBucket 10000 500 100 5
+--eval "" 1 tokenBucket 10000 500 100 5
 

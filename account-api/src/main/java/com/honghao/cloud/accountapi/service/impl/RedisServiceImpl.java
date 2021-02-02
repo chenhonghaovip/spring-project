@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.honghao.cloud.accountapi.common.dict.Dict;
 import com.honghao.cloud.accountapi.common.enums.ErrorCodeEnum;
+import com.honghao.cloud.accountapi.component.MessageSender;
 import com.honghao.cloud.accountapi.config.RedisConfig;
 import com.honghao.cloud.accountapi.domain.entity.ShopInfo;
 import com.honghao.cloud.accountapi.domain.mapper.ShopInfoMapper;
@@ -36,6 +37,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static com.honghao.cloud.accountapi.common.dict.CommonMap.HASH_MAP;
+
 /**
  * reids各个数据测试
  *
@@ -49,6 +52,7 @@ public class RedisServiceImpl implements RedisService {
     private static final ScheduledThreadPoolExecutor SCHEDULED_THREAD_POOL_EXECUTOR = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1);
     private static final ThreadPoolExecutor POOL_EXECUTOR = ThreadPoolFactory.buildThreadPoolExecutor(1, 10, "add_redis");
     private static final ScheduledThreadPoolExecutor EXECUTOR = ThreadPoolFactory.buildScheduledThreadPoolExecutor(1);
+//    private static final ConcurrentHashMap<String, Boolean> MAP = new ConcurrentHashMap<>();
     private static volatile boolean flag = true;
     private static List<ShopInfo> ids = new ArrayList<>();
 
@@ -63,6 +67,8 @@ public class RedisServiceImpl implements RedisService {
     @Resource
     private ShopInfoMapper shopInfoMapper;
     @Resource
+    private MessageSender messageSender;
+    @Resource
     private CacheTemplate<ShopInfo> cacheTemplate;
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
@@ -76,7 +82,6 @@ public class RedisServiceImpl implements RedisService {
             while (Objects.nonNull(object = redisTemplate.opsForList().rightPop(key))) {
                 System.out.println(object);
             }
-
             // 刷新每日，每周，每月的热点数据
             long times = System.currentTimeMillis() / (60 * 60 * 1000);
             refreshDay(times);
@@ -157,6 +162,71 @@ public class RedisServiceImpl implements RedisService {
             e.printStackTrace();
         }
         return BaseResponse.success();
+    }
+
+    /**
+     * redis的bigKey访问问题
+     *
+     * @param userId userId
+     * @return BaseResponse
+     */
+    @Override
+    public BaseResponse bigKey(long userId) {
+        // 判断对应用户是否已经秒杀过对应商品，防止重复秒杀
+        String shopName = "apple";
+        Boolean aBoolean1 = redisTemplate.opsForHash().putIfAbsent(shopName, String.valueOf(userId), String.valueOf(userId));
+        if (!Objects.equals(aBoolean1, true)) {
+            return BaseResponse.error("已经参加过秒杀活动");
+        }
+
+        for (int i = 0; i < 98; i++) {
+            String key = "shopName-" + i;
+            redisTemplate.delete(key);
+        }
+        // 判断分段之中是否任然存在库存数据
+       if (!segmentProcessing(userId,0,shopName)){
+           return BaseResponse.error("无库存");
+       }
+        //入队，进入异步队列,在异步队列中写入用户信息和对应商品ID，因为服务端可以根据用户ID和商品ID定位用户是否秒杀过对应商品，并且服务端需要根据商品ID去查询数据库中对应商品的库存是否足够。
+        messageSender.publicQueueProcessing("", "");
+        return BaseResponse.success();
+    }
+
+    private boolean segmentProcessing(long userId,int times,String shopName){
+        ++times;
+        boolean flag = true;
+        // 对访问的热点key或者bigKey进行切分
+        String key = "shopName-" + (userId % 100);
+        ConcurrentHashMap<String,Boolean> map = new ConcurrentHashMap<>();
+        if (HASH_MAP.putIfAbsent(shopName,map)!=null){
+            map = HASH_MAP.get(shopName);
+        }
+
+        // 先通过本地缓存判断是否正确，本地都失败的话，没必要访问redis
+        Boolean aBoolean = map.putIfAbsent(key, true);
+        if (Objects.equals(aBoolean, false)) {
+            flag = false;
+        }
+        if (flag){
+            // 从Redis缓存中进行预减库存
+            Long decrement = redisTemplate.opsForValue().decrement(key);
+            if (decrement == null) {
+                return false;
+            }
+            // 预减库存时库存不足，当前段的库存不足时，自动切换到下一段进行重试处理
+            if (decrement < 0) {
+                // 一旦商品库存没有了，设置对应商品内存标志为false
+                map.put(key, false);
+                flag = false;
+            }
+        }
+        // 通过递归访问，遍历所有(当某一个成功或者全部失败时，退出递归)
+        // 自动切换到下一段进行重试处理,直到成功或者全部失败，表示全部库存为0，但是最好不要直接访问redis，
+        // 如果遍历100个key,严重影响性能,可以设置一个阈值，如果访问了5个段，任然无库存，就认为当前用户访问时确实无库存了
+        if (!flag && times <= 5){
+            flag = segmentProcessing((userId % 100) + 1,times,shopName);
+        }
+        return flag;
     }
 
     @Override

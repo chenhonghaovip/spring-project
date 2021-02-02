@@ -23,6 +23,12 @@ public interface LimitService {
     BaseResponse singleTokenBucket();
 
     /**
+     * 单机漏桶
+     * @return BaseResponse
+     */
+    BaseResponse singleLeakyBucket();
+
+    /**
      * redis滑动窗口计数器限流升级版本-改进使用lua脚本，防止redis高并发下重复操作问题
      *
      * @param param param

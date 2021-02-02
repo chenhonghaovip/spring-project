@@ -65,6 +65,18 @@ public class RedisController {
 
 
     /**
+     * redis的bigKey访问问题
+     *
+     * @param userId userId
+     * @return BaseResponse
+     */
+    @PostMapping("/bigKey")
+    @ApiOperation(value = "redis的bigKey访问问题", notes = "redis的bigKey访问问题")
+    public BaseResponse bigKey(@RequestBody long userId) {
+        return redisService.bigKey(userId);
+    }
+
+    /**
      * redis缓存击穿处理
      *
      * @param userId userId

@@ -1,5 +1,6 @@
 package com.honghao.cloud.accountapi.service.impl;
 
+import com.google.common.util.concurrent.RateLimiter;
 import com.honghao.cloud.accountapi.config.RedisConfig;
 import com.honghao.cloud.accountapi.dto.common.SlidingWindow;
 import com.honghao.cloud.accountapi.dto.common.TokenBucket;
@@ -8,6 +9,7 @@ import com.honghao.cloud.basic.common.base.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.RedisZSetCommands;
 import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -30,6 +32,10 @@ public class LimitServiceImpl implements LimitService {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
+    /**
+     * 单机滑动窗口算法
+     * @return BaseResponse
+     */
     @Override
     public BaseResponse singleMachineSlidingWindow() {
         String key = "singleMachineSlidingWindow";
@@ -48,7 +54,6 @@ public class LimitServiceImpl implements LimitService {
 
     /**
      * 单机令牌桶 -- 通过延迟写的方式存入令牌，好处是存入令牌时不需要创建不同的定时任务来操作，简化流程
-     *
      * @return BaseResponse
      */
     @Override
@@ -64,6 +69,17 @@ public class LimitServiceImpl implements LimitService {
         }
         System.out.println("执行业务逻辑" + l);
         return BaseResponse.success();
+    }
+
+    /**
+     * 单机漏桶
+     * @return BaseResponse
+     */
+    @Override
+    public BaseResponse singleLeakyBucket() {
+        RateLimiter rateLimiter = RateLimiter.create(0.5);
+        String key = "singleLeakyBucket";
+        return null;
     }
 
     /**
@@ -92,6 +108,16 @@ public class LimitServiceImpl implements LimitService {
             }
         });
 
+        redisTemplate.executePipelined(new RedisCallback<String>() {
+            @Override
+            public String doInRedis(RedisConnection redisConnection) throws DataAccessException {
+                redisConnection.openPipeline();
+                RedisZSetCommands redisZSetCommands = redisConnection.zSetCommands();
+                redisZSetCommands.zCard(key.getBytes());
+                return null;
+            }
+        });
+
 
 
         Object o = redisTemplate.opsForList().leftPop(key);
@@ -107,7 +133,7 @@ public class LimitServiceImpl implements LimitService {
      * 问题：当令牌桶中令牌很长时间不消费时，造成令牌桶中最后一个令牌的时间距离现在很长，突然大流量访问，导致令牌桶
      * 瞬间清空，再次延迟计算令牌时，本来只应该放入单位时间令牌，
      *
-     * @param key                该令牌桶对应的接口或业务
+     * @param key 该令牌桶对应的接口或业务
      * @param rate 令牌入桶频率(n个/s)
      */
     private synchronized boolean resync(String key, int rate, long currentTimeMillis) {
