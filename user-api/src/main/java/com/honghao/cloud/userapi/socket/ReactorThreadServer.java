@@ -208,6 +208,7 @@ public class ReactorThreadServer implements Runnable {
                         while (iterator.hasNext()){
                             SelectionKey next = iterator.next();
                             ((Runnable)next.attachment()).run();
+                            iterator.remove();
                         }
                     }
                 }

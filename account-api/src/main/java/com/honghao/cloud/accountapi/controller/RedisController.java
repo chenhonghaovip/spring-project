@@ -3,11 +3,15 @@ package com.honghao.cloud.accountapi.controller;
 import com.honghao.cloud.accountapi.dto.common.MonitorEntity;
 import com.honghao.cloud.accountapi.dto.request.LikePointVO;
 import com.honghao.cloud.accountapi.service.RedisService;
+import com.honghao.cloud.accountapi.service.RedissonService;
 import com.honghao.cloud.basic.common.base.BaseResponse;
 import com.honghao.cloud.basic.common.factory.ThreadPoolFactory;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +39,8 @@ public class RedisController {
     private static ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.buildThreadPoolExecutor(1000, 10000, "123");
     @Resource
     private RedisService redisService;
+    @Resource
+    private RedissonService redissonService;
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -339,5 +345,25 @@ public class RedisController {
     @GetMapping("/leakyBucket")
     public BaseResponse leakyBucket(String value) {
         return redisService.leakyBucket(value);
+    }
+
+    /**
+     * redis漏桶限流
+     *
+     * @return BaseResponse
+     */
+    @GetMapping("/leakyBucket")
+    public BaseResponse redissonBloomFilter(String value) {
+        redisTemplate.execute(new RedisCallback<String>() {
+            @Override
+            public String doInRedis(RedisConnection redisConnection) throws DataAccessException {
+                redisConnection.setBit("1111".getBytes(),2,true);
+                return null;
+            }
+        });
+
+
+        return BaseResponse.success();
+//        return redissonService.redissonBloomFilter(value);
     }
 }

@@ -17,6 +17,27 @@ public interface RedissonService {
      * @return BaseResponse
      */
     BaseResponse redissonLock(String userId);
+    /**
+     * redisson加锁操作
+     *
+     * @param userId userId
+     * @return BaseResponse
+     */
+    BaseResponse redissonBloomFilter(String userId);
 
+    /**
+     * redisson加锁操作
+     *
+     * @param userId userId
+     * @return BaseResponse
+     */
+    BaseResponse redissonUpdate(String userId);
 
+    /**
+     * redisson加锁操作
+     *
+     * @param userId userId
+     * @return BaseResponse
+     */
+    BaseResponse redissonQuery(String userId);
 }
