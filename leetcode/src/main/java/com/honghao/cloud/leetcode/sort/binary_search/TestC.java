@@ -1001,7 +1001,7 @@ public class TestC {
         while (cur != null) {
             value = 0;
             next = cur.next;
-            while (next != null && (value +=next.val) != 0) {
+            while (next != null && (value += next.val) != 0) {
                 next = next.next;
             }
             if (value == 0 && next != null) {
@@ -1011,6 +1011,101 @@ public class TestC {
             cur = cur.next;
         }
         return pre.next;
+    }
+
+
+    @Test
+    public void Test1111() {
+        int[] arr = new int[]{-1, 2, 1, -4};
+        System.out.println(threeSumClosest(arr, 1));
+    }
+
+    public int threeSumClosest(int[] nums, int target) {
+        Arrays.sort(nums);
+        int ans = nums[0] + nums[1] + nums[2];
+        for (int i = 0; i < nums.length; i++) {
+            int start = i + 1;
+            int end = nums.length - 1;
+            while (start < end) {
+                int sum = nums[start] + nums[end] + nums[i];
+                if (Math.abs(target - sum) < Math.abs(target - ans))
+                    ans = sum;
+                if (sum > target)
+                    end--;
+                else if (sum < target)
+                    start++;
+                else
+                    return ans;
+            }
+        }
+
+        return ans;
+    }
+
+    public List<String> letterCombinations(String digits) {
+        if (digits.length() == 0) {
+            return Collections.emptyList();
+        }
+        List<String> list = new ArrayList<>();
+        Map<Character, String> phoneMap = new HashMap<Character, String>() {{
+            put('2', "abc");
+            put('3', "def");
+            put('4', "ghi");
+            put('5', "jkl");
+            put('6', "mno");
+            put('7', "pqrs");
+            put('8', "tuv");
+            put('9', "wxyz");
+        }};
+        StringBuilder result = new StringBuilder();
+        ddd(digits, 0, phoneMap, result, list);
+        return list;
+    }
+
+    public void ddd(String digits, int index, Map<Character, String> map, StringBuilder result, List<String> list) {
+        if (index == digits.length()) {
+            list.add(result.toString());
+        } else {
+            String s = map.get(digits.charAt(index));
+            for (int i = 0; i < s.length(); i++) {
+                result.append(s.charAt(i));
+                ddd(digits, index + 1, map, result, list);
+                result.deleteCharAt(index);
+            }
+        }
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (k == 1) {
+            return head;
+        }
+        ListNode hair = new ListNode(0);
+        hair.next = head;
+        ListNode pre = hair;
+
+
+        while (head!=null){
+            ListNode cur = head;
+            for (int i = 0; i < k; i++) {
+                head = head.next;
+                if (head == null){
+                    return hair.next;
+                }
+            }
+        }
+        return pre.next;
+    }
+
+    public ListNode revert(ListNode head) {
+        ListNode cur = head;
+        ListNode pre = null;
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = next;
+        }
+        return pre;
     }
 
 }
