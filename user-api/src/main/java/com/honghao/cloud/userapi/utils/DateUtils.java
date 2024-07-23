@@ -22,4 +22,11 @@ public class DateUtils {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(STYLE_1);
         return simpleDateFormat.format(date);
     }
+
+    public static void main(String[] args) {
+        String date = "1997年03月";
+        String str = date.replace("年", "-");
+        System.out.println(str);
+        System.out.println(date);
+    }
 }

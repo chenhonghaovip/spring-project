@@ -1,7 +1,7 @@
 package com.honghao.cloud.userapi.tactics;
 
 
-import com.honghao.cloud.basic.common.base.base.BaseResponse;
+import com.honghao.cloud.basic.common.base.BaseResponse;
 
 /**
  * 骑士操作接口

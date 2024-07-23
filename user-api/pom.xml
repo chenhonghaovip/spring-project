@@ -142,6 +142,10 @@
             <artifactId>spring-boot-starter-quartz</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.honghao.cloud</groupId>
+            <artifactId>basic-common</artifactId>
+        </dependency>
 
     </dependencies>
 
