@@ -3,9 +3,12 @@ package com.honghao.cloud.userapi.config;
 import com.honghao.cloud.userapi.interceptor.UserInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
+import java.util.List;
 
 /**
  * 拦截器注册
@@ -41,6 +44,11 @@ public class WebConfig extends WebMvcConfigurationSupport {
                 .excludePathPatterns("/user/login")
                 .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**");
         super.addInterceptors(registry);
+    }
+
+    @Override
+    protected void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        super.addArgumentResolvers(argumentResolvers);
     }
 
     /**
