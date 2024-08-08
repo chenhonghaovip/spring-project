@@ -2,7 +2,11 @@ package com.honghao.cloud.accountapi.filter;
 
 import com.honghao.cloud.basic.common.base.BaseRequest;
 import com.honghao.cloud.basic.common.base.BaseResponse;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 import org.junit.Test;
+
+import java.io.StringWriter;
 
 /**
  * 责任链模式
@@ -14,6 +18,24 @@ public class MainTest {
 
     @Test
     public void test() {
+        // 初始化Velocity引擎
+        VelocityEngine ve = new VelocityEngine();
+        ve.init();
+
+        // 创建上下文对象
+        VelocityContext ctx = new VelocityContext();
+
+        // 模拟数据
+        ctx.put("name", "World");
+
+        // 使用Velocity解析模板字符串
+        String template = "Hello $name!";
+        StringWriter stringWriter = new StringWriter();
+        ve.evaluate(ctx, stringWriter, "", template);
+
+        // 输出结果
+        System.out.println(stringWriter);
+
         //过滤请求
         BaseRequest request = new BaseRequest();
         //set方法，将待处理字符串传递进去
