@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.honghao.cloud.basic.common.dto.RpcMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
@@ -68,19 +69,27 @@ public class SpelUtil {
         classes.add(String.class);
         classes.add(List.class);
 
-        SpelUtil spelUtil = new SpelUtil();
         Method[] declaredMethods = SpelUtil.class.getDeclaredMethods();
         Method getResult = Arrays.stream(declaredMethods).filter(each -> Objects.equals(each.getName(), "getResult")).findFirst().orElse(null);
         Object[] r = new Object[3];
         r[0] = "1";
         r[1] = Lists.newArrayList("1", "2", "4");
-        r[2] = RpcMessage.builder().id(1).messageType(1).body(new Object()).build();
+        r[2] = RpcMessage.builder().id(8).messageType(1).body(new Object()).build();
 
         if (Objects.nonNull(getResult)) {
-            System.out.println(SpelUtil.parseSpEl(getResult, r, "#t1"));
-            Class<?> aClass = classes.get(0);
-            Object o = SpelUtil.parseSpEl(getResult, r, "#t1", aClass);
-            Class<?> aClass1 = Type.VARCHAR.getAClass();
+            String spel = "#t1[0] && #rpcMessage.id";
+
+            StringBuilder stringBuilder = new StringBuilder();
+            Arrays.stream(spel.split("&&"))
+                    .map(String::trim).filter(StringUtils::isNotBlank).forEach(each -> {
+                        String str = SpelUtil.parseSpEl(getResult, r, each);
+                        stringBuilder.append(":").append(str);
+                        System.out.println(str);
+                    });
+
+            System.out.println(stringBuilder);
+
+
         }
 
     }
@@ -94,7 +103,7 @@ public class SpelUtil {
     @Getter
     @AllArgsConstructor
     public enum Type {
-        VARCHAR("VARCHAR", String.class){
+        VARCHAR("VARCHAR", String.class) {
             @Override
             public <T> T getInfo() {
                 return null;
